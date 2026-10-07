@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v47</title>
+<title>Philip Life Tracker v48</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1272,7 +1272,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
   .cg-rule-head,.cg-rule{min-width:124px!important;max-width:124px!important;}
 }
 </style>
-<style id="v47-fixes">
+<style id="v48-fixes">
 .weekly-progress-row{justify-content:space-between!important;gap:6px!important;margin:11px 0 15px!important;}
 .weekly-progress-row .day-ring-item{flex:1!important;min-width:0!important;}
 .snapshot-ring-label{inset:10%!important;overflow:hidden!important;white-space:nowrap!important;}
@@ -1309,6 +1309,46 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
 .cg-grid-preview .cg-day-head,.cg-grid-preview .cg-grid-cell{min-width:27px!important;width:27px!important;}
 @media(max-width:420px){.cg-grid-full .cg-day-head,.cg-grid-full .cg-grid-cell{min-width:42px!important;width:42px!important;}.cg-grid-full .cg-rule-head,.cg-grid-full .cg-rule{min-width:150px!important;max-width:150px!important;}}
 </style>
+<style id="v48-fixes">
+/* v48 readability and visual fixes */
+.stat-sub{font-size:12.5px!important;}
+.stat-date{font-size:11px!important;}
+.score-sub{font-size:12px!important;}
+.stitle{font-size:11px!important;}
+.plan-tmr-sub{font-size:12px!important;}
+.tmeta{font-size:11px!important;}
+.rmeta{font-size:11px!important;}
+.cat-count{font-size:11px!important;}
+.cat-pct{font-size:12px!important;}
+.cday-lbl{font-size:11px!important;}
+.cday-badge{font-size:10px!important;}
+.content-brand-meta{font-size:10.5px!important;}
+.content-channel-meta{font-size:10.5px!important;}
+.content-record-compact .record-note{font-size:11.5px!important;}
+.snapshot-meta{font-size:12px!important;}
+.snapshot-ring-sub{font-size:10.5px!important;}
+.day-ring-label{font-size:10px!important;}
+.day-ring-pct{font-size:9.5px!important;}
+.quick-sub{font-size:10.5px!important;}
+.cs-meta{font-size:11px!important;}
+.cs-section-count{font-size:10px!important;}
+.cs-note{font-size:11px!important;}
+.settings-row-sub{font-size:10.5px!important;}
+.pp-hint{font-size:12px!important;}
+.pp-meta{font-size:11px!important;}
+.flbl{font-size:10px!important;}
+.rollbar-s{font-size:11px!important;}
+.fromday{font-size:10px!important;}
+.cbadge{font-size:10px!important;}
+.content-carry-row{align-items:center!important;}
+.content-move-btn{width:32px!important;height:32px!important;border:1px solid #3a2a64!important;border-radius:9px!important;background:#17122d!important;color:#b7a5f6!important;font-size:22px!important;line-height:1!important;font-weight:800!important;display:flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;padding:0!important;cursor:pointer!important;}
+.content-move-btn:active{transform:scale(.88)!important;}
+.day-ring{--pct:0%;--ring:#7650c8!important;background:conic-gradient(var(--ring) var(--pct),#171d27 0)!important;padding:3px!important;}
+.cg-grid-cell.missed span{display:inline-block!important;color:#ef4444!important;font-size:12px!important;line-height:1!important;}
+.snapshot-ring-label{inset:8%!important;overflow:hidden!important;white-space:nowrap!important;}
+.snapshot-ring-pct{font-size:clamp(18px,5.5vw,23px)!important;line-height:1!important;letter-spacing:-.06em!important;white-space:nowrap!important;max-width:100%!important;overflow:hidden!important;}
+@media(max-width:420px){.snapshot-ring-pct{font-size:19px!important;}}
+</style>
 </head>
 <body>
 
@@ -1317,7 +1357,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v47</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v48</span></div>
     </div>
     <button class="profile-avatar" id="profileAvatar" onclick="go('settings')" aria-label="Open profile photo">👤</button>
   </div>
@@ -1336,7 +1376,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
 <div class="toast" id="toast"></div>
 
 <script>
-// v47: challenge day view + weekly progress + compact content navigation + progress ring fixes
+// v48: challenge day view + weekly progress + compact content navigation + progress ring fixes
 const SK={t:'plt_t4',h:'plt_h4',hl:'plt_hl4',c:'plt_c4',pt:'plt_pt4',chl:'plt_chl4',cpl:'plt_cpl5',cc:'plt_cc4',cpv:'plt_cpv',cg:'plt_cg4',rt:'plt_rt1',rl:'plt_rl1',bk:'plt_bk1',co:'plt_co1',cst:'plt_cst1',pi:'plt_pi1',clog:'plt_clog1'};
 const DCATS=[
   {id:'cyt',name:'YouTube',icon:'🎬',color:'#a855f7'},
@@ -1546,6 +1586,25 @@ function carriedContent(){
   }
   out.sort((a,b)=>b.days-a.days);
   return out;
+}
+function moveContentToToday(date,id){
+  const today=tod();
+  const srcDay=new Date(date+'T00:00:00').getDay();
+  const item=cget(srcDay).find(x=>x.id===id);
+  if(!item)return toast('Content item not found');
+  const existing=(T[today]||[]).some(t=>t._contentCarry&&t._contentCarry.date===date&&t._contentCarry.id===id);
+  if(existing)return toast('Already added to today ✅');
+  if(!T[today])T[today]=[];
+  T[today].push({
+    id:'t'+uid(),
+    text:item.text,
+    time:item.time||'',
+    catId:'cyt',
+    done:false,
+    createdAt:Date.now(),
+    _contentCarry:{date,id}
+  });
+  sT();render();toast('Added to today ✅');
 }
 function togContentCarried(date,id){
   if(!CC[date])CC[date]={};
@@ -1916,6 +1975,7 @@ function rToday(){
   const today=tod();
   const tl=gt(today);
   const sc=todayScore();
+  const snapColor=sc.pct>=80?'#22c55e':(sc.pct>=50?'#f5c84b':'#ef4444');
   const weekDates=currentWeekDates(today);
   const ovd=bkOverdue();
   let h=`<div class="fi">`;
@@ -1925,7 +1985,7 @@ function rToday(){
   h+=`<div class="day-ring-row weekly-progress-row">`;
   weekDates.forEach(function(d){
     const ds=dayScore(d),dt=new Date(d+'T00:00:00'),isT=d===today;
-    const ring=ds.pct?'#6a4fd0':'#1d2433';
+    const ring='#7650c8';
     h+=`<div class="day-ring-item ${isT?'today':''}" title="${ds.done} of ${ds.total} completed">
       <div class="day-ring ${isT?'active':''}" style="--pct:${ds.pct}%;--ring:${ring}"><div></div></div>
       <div class="day-ring-label">${DAYS[dt.getDay()].slice(0,3)}</div>
@@ -1938,9 +1998,9 @@ function rToday(){
     <div class="snapshot-ring">
       <svg viewBox="0 0 120 120">
         <circle class="ring-track" cx="60" cy="60" r="50" fill="none" stroke-width="9"/>
-        <circle class="ring-value" cx="60" cy="60" r="50" fill="none" stroke-width="9" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="${314.16*(1-sc.pct/100)}"/>
+        <circle class="ring-value" cx="60" cy="60" r="50" fill="none" stroke-width="9" stroke-linecap="round" stroke="${snapColor}" stroke-dasharray="314.16" stroke-dashoffset="${314.16*(1-sc.pct/100)}"/>
       </svg>
-      <div class="snapshot-ring-label"><div class="snapshot-ring-pct">${sc.pct}%</div><div class="snapshot-ring-sub">TODAY</div></div>
+      <div class="snapshot-ring-label"><div class="snapshot-ring-pct" style="color:${snapColor}">${sc.pct}%</div><div class="snapshot-ring-sub">TODAY</div></div>
     </div>
     <div class="snapshot-copy">
       <div class="snapshot-kicker">Today’s Snapshot</div>
@@ -1973,7 +2033,7 @@ function rToday(){
     h+=`<div class="rollbar" style="background:${cc.bg};border-color:${cc.bd}" onclick="togRolledContent()"><div class="rollbar-c" style="color:${cc.text}">🎬 ${cCar.length}</div><div style="flex:1;min-width:0"><div class="rollbar-t" style="color:${cc.text}">Content Not Done</div><div class="rollbar-s">${cCar.length} pending · oldest ${cOld} day${cOld!==1?'s':''} ago · tap to ${showRolledContent?'hide':'show'}</div></div><div class="rollbar-a" style="color:${cc.text}">${showRolledContent?'▲':'▼'}</div></div>`;
     if(showRolledContent){
       h+=`<div class="rollwrap">`;
-      cCar.forEach(c=>{const col=carryCol(c.days);h+=`<div class="content-task-box" style="border-left:3px solid ${col.line}"><div class="ctask" style="border:0;padding:0"><div class="chk sm" onclick="togContentCarried('${c.date}','${c.it.id}')"></div><div class="ctxt">${esc(c.it.text)}<span class="cbadge" style="background:${col.bg};color:${col.text};border:1px solid ${col.bd}">↻ ${c.days} day${c.days!==1?'s':''} ago</span></div></div></div>`;});
+      cCar.forEach(c=>{const col=carryCol(c.days);h+=`<div class="content-task-box" style="border-left:3px solid ${col.line}"><div class="ctask content-carry-row" style="border:0;padding:0"><div class="chk sm" onclick="togContentCarried('${c.date}','${c.it.id}')"></div><div class="ctxt">${esc(c.it.text)} <span class="cbadge" style="background:${col.bg};color:${col.text};border:1px solid ${col.bd}">↻ ${c.days} day${c.days!==1?'s':''} ago</span></div><button class="content-move-btn" title="Add to today's tasks" onclick="event.stopPropagation();moveContentToToday('${c.date}','${c.it.id}')">+</button></div></div>`;});
       h+=`<button class="btn btn-full" style="margin-top:8px" onclick="copyRolledContent()">⏰ Copy Pending Content</button><button class="btn btn-full btn-outline" onclick="clearPendingContent()">🧹 Clear This List</button></div>`;
     }
   }
@@ -2852,7 +2912,7 @@ function cgGridHTML(g,full){
       const past=!p.isFuture&&!p.isCurrent;
       const cls=done?'done':(p.isFuture?'future':(p.isCurrent?'today-cell':'missed'));
       const aria=done?'Completed':past?'Missed':p.isCurrent?'Today':'Upcoming';
-      h+=`<td class="cg-grid-cell ${cls} ${p.isCurrent?'current':''}" onclick="togGroupItemGrid('${g.id}','${it.id}','${p.pdate}')" title="${aria}"><span>${done?'✓':''}</span></td>`;
+      h+=`<td class="cg-grid-cell ${cls} ${p.isCurrent?'current':''}" onclick="togGroupItemGrid('${g.id}','${it.id}','${p.pdate}')" title="${aria}"><span>${done?'✓':(past?'❌':'')}</span></td>`;
     });
     h+=`<td class="cg-rate">${rate}%</td></tr>`;
   });
@@ -3424,7 +3484,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:47,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:48,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -3473,5 +3533,5 @@ registerAppServiceWorker();
 updateInstallUI();
 </script>
 </body>
-<!-- v47 final deployment marker -->
+<!-- v48 final deployment marker -->
 </html>
