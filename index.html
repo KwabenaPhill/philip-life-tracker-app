@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v48</title>
+<title>Philip Life Tracker v49</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1357,7 +1357,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v48</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v49</span></div>
     </div>
     <button class="profile-avatar" id="profileAvatar" onclick="go('settings')" aria-label="Open profile photo">👤</button>
   </div>
@@ -1575,13 +1575,16 @@ const CARRY_MAX=10; // tasks stop rolling over after this many days
 // Unfinished CONTENT from past days, kept separate from task roll-over
 function carriedContent(){
   if(!CO)return [];
-  const today=tod();const out=[];
+  const today=tod();const todayTasks=T[today]||[];const out=[];
   for(let n=1;n<=CARRY_MAX;n++){
     const d=addDays(today,-n);
     if(CST&&d<CST)break;
     const items=cget(new Date(d+'T00:00:00').getDay());
     items.forEach(it=>{
-      if(!it.paused&&!CC[d]?.[it.id])out.push({it,date:d,days:n});
+      if(!it.paused&&!CC[d]?.[it.id]){
+        const movedToToday=todayTasks.some(t=>t._contentCarry&&t._contentCarry.date===d&&t._contentCarry.id===it.id);
+        if(!movedToToday)out.push({it,date:d,days:n});
+      }
     });
   }
   out.sort((a,b)=>b.days-a.days);
@@ -1593,7 +1596,7 @@ function moveContentToToday(date,id){
   const item=cget(srcDay).find(x=>x.id===id);
   if(!item)return toast('Content item not found');
   const existing=(T[today]||[]).some(t=>t._contentCarry&&t._contentCarry.date===date&&t._contentCarry.id===id);
-  if(existing)return toast('Already added to today ✅');
+  if(existing)return toast('Already moved to today ✅');
   if(!T[today])T[today]=[];
   T[today].push({
     id:'t'+uid(),
@@ -1604,7 +1607,7 @@ function moveContentToToday(date,id){
     createdAt:Date.now(),
     _contentCarry:{date,id}
   });
-  sT();render();toast('Added to today ✅');
+  sT();render();toast('Moved to today ✅');
 }
 function togContentCarried(date,id){
   if(!CC[date])CC[date]={};
@@ -3484,7 +3487,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:48,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:49,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
