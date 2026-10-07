@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v46</title>
+<title>Philip Life Tracker v47</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1272,6 +1272,43 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
   .cg-rule-head,.cg-rule{min-width:124px!important;max-width:124px!important;}
 }
 </style>
+<style id="v47-fixes">
+.weekly-progress-row{justify-content:space-between!important;gap:6px!important;margin:11px 0 15px!important;}
+.weekly-progress-row .day-ring-item{flex:1!important;min-width:0!important;}
+.snapshot-ring-label{inset:10%!important;overflow:hidden!important;white-space:nowrap!important;}
+.snapshot-ring-pct{font-size:clamp(21px,6.4vw,28px)!important;line-height:1!important;white-space:nowrap!important;max-width:100%!important;overflow:hidden!important;}
+.content-record-compact .record-ring-label{inset:5%!important;overflow:hidden!important;white-space:nowrap!important;}
+.content-record-compact .record-pct{font-size:clamp(18px,5vw,20px)!important;line-height:1!important;white-space:nowrap!important;}
+.content-brand-card{min-height:108px!important;padding:10px!important;cursor:pointer!important;user-select:none!important;transition:transform .18s ease,border-color .2s ease,background .2s ease!important;}
+.content-brand-card:active{transform:scale(.985)!important;}
+.content-brand-card:hover{border-color:#2c2452!important;background:#0b0d13!important;}
+.content-brand-icon{width:38px!important;height:38px!important;margin-bottom:7px!important;}
+.content-brand-name{font-size:12px!important;}
+.content-brand-meta{font-size:9px!important;line-height:1.35!important;}
+.content-channel-hero{display:flex!important;align-items:center!important;gap:11px!important;background:#090b10!important;border:1px solid #1a202a!important;border-radius:20px!important;padding:13px!important;margin-bottom:13px!important;}
+.content-channel-icon{width:48px!important;height:48px!important;display:flex!important;align-items:center!important;justify-content:center!important;border-radius:14px!important;overflow:hidden!important;background:#141827!important;font-size:21px!important;flex:0 0 auto!important;}
+.content-channel-icon img{width:100%!important;height:100%!important;object-fit:cover!important;display:block!important;}
+.content-channel-name{font-size:17px!important;font-weight:900!important;}
+.content-channel-meta{font-size:9.5px!important;color:#697487!important;margin-top:3px!important;}
+.content-back-btn{margin-bottom:10px!important;}
+.content-channel-day{margin-bottom:10px!important;}
+.cg-view-row{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:-4px 0 9px!important;}
+.cg-view-all{border:1px solid #3a2a64!important;background:#17122d!important;color:#b6a5f6!important;border-radius:10px!important;padding:7px 10px!important;font-size:9px!important;font-weight:900!important;letter-spacing:.4px!important;cursor:pointer!important;white-space:nowrap!important;}
+.cg-view-all:active{transform:scale(.97)!important;}
+.challenge-all-overlay{position:fixed!important;inset:0!important;z-index:260!important;background:rgba(0,0,0,.86)!important;display:flex!important;align-items:center!important;justify-content:center!important;padding:10px!important;backdrop-filter:blur(4px)!important;-webkit-backdrop-filter:blur(4px)!important;}
+.challenge-all-dialog{width:min(1100px,96vw)!important;max-height:92vh!important;background:#090b10!important;border:1px solid #28233e!important;border-radius:18px!important;box-shadow:0 22px 70px rgba(0,0,0,.7)!important;padding:12px!important;display:flex!important;flex-direction:column!important;gap:8px!important;}
+.challenge-all-head{display:flex!important;align-items:center!important;gap:10px!important;justify-content:space-between!important;}
+.challenge-all-title{font-size:16px!important;font-weight:900!important;color:#eef1f7!important;}
+.challenge-all-sub{font-size:9px!important;color:#6e7788!important;margin-top:2px!important;}
+.challenge-all-close{padding:7px 10px!important;font-size:9px!important;flex:0 0 auto!important;}
+.challenge-all-scroll{overflow:auto!important;min-height:0!important;max-height:calc(92vh - 65px)!important;border-radius:12px!important;}
+.cg-grid-full .cg-day-head,.cg-grid-full .cg-grid-cell{min-width:46px!important;width:46px!important;}
+.cg-grid-full .cg-rule-head,.cg-grid-full .cg-rule{min-width:180px!important;max-width:180px!important;}
+.cg-grid-full .cg-day-head{font-size:7px!important;white-space:nowrap!important;}
+.cg-grid-full .cg-grid-cell{height:30px!important;}
+.cg-grid-preview .cg-day-head,.cg-grid-preview .cg-grid-cell{min-width:27px!important;width:27px!important;}
+@media(max-width:420px){.cg-grid-full .cg-day-head,.cg-grid-full .cg-grid-cell{min-width:42px!important;width:42px!important;}.cg-grid-full .cg-rule-head,.cg-grid-full .cg-rule{min-width:150px!important;max-width:150px!important;}}
+</style>
 </head>
 <body>
 
@@ -1280,7 +1317,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v46</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v47</span></div>
     </div>
     <button class="profile-avatar" id="profileAvatar" onclick="go('settings')" aria-label="Open profile photo">👤</button>
   </div>
@@ -1299,7 +1336,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
 <div class="toast" id="toast"></div>
 
 <script>
-// v45: deep reference UI + compact Today + per-channel logos + habit matrix
+// v47: challenge day view + weekly progress + compact content navigation + progress ring fixes
 const SK={t:'plt_t4',h:'plt_h4',hl:'plt_hl4',c:'plt_c4',pt:'plt_pt4',chl:'plt_chl4',cpl:'plt_cpl5',cc:'plt_cc4',cpv:'plt_cpv',cg:'plt_cg4',rt:'plt_rt1',rl:'plt_rl1',bk:'plt_bk1',co:'plt_co1',cst:'plt_cst1',pi:'plt_pi1',clog:'plt_clog1'};
 const DCATS=[
   {id:'cyt',name:'YouTube',icon:'🎬',color:'#a855f7'},
@@ -1747,6 +1784,8 @@ function updHeader(){
   if(hd)hd.textContent=`${DAYS[d.getDay()]} ${MONS[d.getMonth()].slice(0,3)} ${d.getDate()}`.toUpperCase();
 }
 
+let contentChannelView=null;
+let challengeAllViewId=null;
 let curTab='today';
 const TABS=['today','plan','history','content','challenges','settings'];
 function go(tab){
@@ -1860,17 +1899,40 @@ function groupHTML(list,date,editable=false){
   }).join('');
 }
 
+// ---- TODAY WEEKLY PROGRESS ----
+function weekMonday(date){
+  const d=new Date(date+'T00:00:00');
+  const offset=(d.getDay()+6)%7;
+  d.setDate(d.getDate()-offset);
+  return d.toISOString().split('T')[0];
+}
+function currentWeekDates(date){
+  const mon=weekMonday(date);
+  return Array.from({length:7},function(_,i){return addDays(mon,i);});
+}
 // ---- TODAY ----
 function rToday(){
   const m=document.getElementById('main');
   const today=tod();
   const tl=gt(today);
   const sc=todayScore();
-  const past=Array.from({length:7},(_,i)=>off(i-6));
+  const weekDates=currentWeekDates(today);
   const ovd=bkOverdue();
   let h=`<div class="fi">`;
 
   if(ovd)h+=`<div class="alertbar" onclick="go('plan')">⚠️ ${ovd} planned task${ovd!==1?'s':''} past the finish date — tap to open Task Bank</div>`;
+
+  h+=`<div class="day-ring-row weekly-progress-row">`;
+  weekDates.forEach(function(d){
+    const ds=dayScore(d),dt=new Date(d+'T00:00:00'),isT=d===today;
+    const ring=ds.pct?'#6a4fd0':'#1d2433';
+    h+=`<div class="day-ring-item ${isT?'today':''}" title="${ds.done} of ${ds.total} completed">
+      <div class="day-ring ${isT?'active':''}" style="--pct:${ds.pct}%;--ring:${ring}"><div></div></div>
+      <div class="day-ring-label">${DAYS[dt.getDay()].slice(0,3)}</div>
+      <div class="day-ring-pct">${ds.pct}%</div>
+    </div>`;
+  });
+  h+=`</div>`;
 
   h+=`<div class="snapshot-card">
     <div class="snapshot-ring">
@@ -1886,19 +1948,6 @@ function rToday(){
       <div class="snapshot-meta">Tasks + routines + content + tomorrow planning. Keep pushing until the ring is full.</div>
     </div>
   </div>`;
-
-  h+=`<div class="day-ring-row">`;
-  past.forEach(d=>{
-    const ds=dayScore(d),isT=d===today,dt=new Date(d+'T00:00:00');
-    const ring=ds.pct?`#5a3fc7`:`#1d2433`;
-    h+=`<div class="day-ring-item ${isT?'today':''}">
-      <div class="day-ring ${isT?'active':''}" style="--pct:${ds.pct}%;--ring:${ring}"><div></div></div>
-      <div class="day-ring-label">${isT?'Today':DAYS[dt.getDay()].slice(0,3)}</div>
-      <div class="day-ring-pct">${ds.pct}%</div>
-    </div>`;
-  });
-  h+=`</div>`;
-
   h+=`<div class="stitle">🎬 Content — Today</div>`;
   const ct=contentToday();
   const activeCt=ct.filter(t=>!t.paused),doneCt=activeCt.filter(t=>CC[today]?.[t.id]).length;
@@ -2775,20 +2824,31 @@ function restartPanel(g){
     <button class="btn btn-full btn-green" style="padding:10px;font-size:12.5px;margin-bottom:0" onclick="restartGroup('${g.id}')">🔄 Restart Challenge</button>
   </div>`;
 }
-function cgGridHTML(g){
-  const s=cgStats(g),periods=cgPeriods(g),items=g.items||[],log=g.log||{};
-  const cellLabel=p=>g.mode==='weekly'?`W${p.i+1}`:new Date(p.pdate+'T00:00:00').getDate();
-  let h=`<div class="cg-grid-scroll"><table class="cg-grid"><thead><tr><th class="cg-rule-head">HABITS</th>`;
-  periods.forEach(p=>{h+=`<th class="cg-day-head ${p.isCurrent?'current':''}">${cellLabel(p)}</th>`;});
+function cgPreviewPeriods(g){
+  const all=cgPeriods(g);
+  const current=all.findIndex(function(p){return p.isCurrent;});
+  if(all.length<=7)return all;
+  const center=current>=0?current:0;
+  const start=Math.max(0,Math.min(all.length-7,center-3));
+  return all.slice(start,start+7);
+}
+function cgGridHTML(g,full){
+  full=!!full;
+  const allPeriods=cgPeriods(g);
+  const periods=full?allPeriods:cgPreviewPeriods(g);
+  const items=g.items||[],log=g.log||{};
+  const cellLabel=function(p){return full?fshort(p.pdate):(g.mode==='weekly'?('W'+(p.i+1)):new Date(p.pdate+'T00:00:00').getDate());};
+  let h=`<div class="cg-grid-scroll ${full?'cg-grid-full-scroll':''}"><table class="cg-grid ${full?'cg-grid-full':'cg-grid-preview'}"><thead><tr><th class="cg-rule-head">HABITS</th>`;
+  periods.forEach(function(p){h+=`<th class="cg-day-head ${p.isCurrent?'current':''}">${cellLabel(p)}</th>`;});
   h+=`<th class="cg-rate-head">%</th></tr></thead><tbody>`;
-  items.forEach(it=>{
+  items.forEach(function(it){
     let doneCount=0;
-    periods.forEach(p=>{const key=g.mode==='weekly'?'W'+p.pdate:p.pdate;if(log[key]?.[it.id])doneCount++;});
-    const rate=periods.length?Math.round(doneCount/periods.length*100):0;
+    allPeriods.forEach(function(p){const key=g.mode==='weekly'?'W'+p.pdate:p.pdate;if(log[key]&&log[key][it.id])doneCount++;});
+    const rate=allPeriods.length?Math.round(doneCount/allPeriods.length*100):0;
     h+=`<tr><th class="cg-rule" title="${esc(it.text)}"><span class="cg-rule-num">${String(items.indexOf(it)+1).padStart(2,'0')}</span><span>${esc(it.text)}</span></th>`;
-    periods.forEach(p=>{
+    periods.forEach(function(p){
       const key=g.mode==='weekly'?'W'+p.pdate:p.pdate;
-      const done=!!log[key]?.[it.id];
+      const done=!!(log[key]&&log[key][it.id]);
       const past=!p.isFuture&&!p.isCurrent;
       const cls=done?'done':(p.isFuture?'future':(p.isCurrent?'today-cell':'missed'));
       const aria=done?'Completed':past?'Missed':p.isCurrent?'Today':'Upcoming';
@@ -2799,7 +2859,28 @@ function cgGridHTML(g){
   h+=`</tbody></table></div><div class="cg-grid-legend"><span><i class="cg-legend done"></i>Done</span><span><i class="cg-legend missed"></i>Missed</span><span><i class="cg-legend today"></i>Today</span><span><i class="cg-legend future"></i>Future</span></div>`;
   return h;
 }
-
+function openChallengeAll(id){
+  const g=CG.find(function(x){return x.id===id;});
+  if(!g)return;
+  challengeAllViewId=id;
+  document.getElementById('challengeAllOverlay')?.remove();
+  const ov=document.createElement('div');
+  ov.id='challengeAllOverlay';
+  ov.className='challenge-all-overlay';
+  ov.innerHTML=`<div class="challenge-all-dialog" role="dialog" aria-modal="true">
+    <div class="challenge-all-head">
+      <div style="min-width:0"><div class="challenge-all-title">${esc(g.name)}</div><div class="challenge-all-sub">${fshort(g.start)} → ${fshort(g.end)} · ${g.mode==='weekly'?'weekly':'daily'} · all ${cgLen(g)} ${g.mode==='weekly'?'weeks':'days'}</div></div>
+      <button class="btn btn-outline challenge-all-close" onclick="closeChallengeAll()">Close</button>
+    </div>
+    <div class="challenge-all-scroll">${cgGridHTML(g,true)}</div>
+  </div>`;
+  document.body.appendChild(ov);
+  ov.addEventListener('click',function(e){if(e.target===ov)closeChallengeAll();});
+}
+function closeChallengeAll(){
+  document.getElementById('challengeAllOverlay')?.remove();
+  challengeAllViewId=null;
+}
 function cgCard(g){
   const s=cgStats(g),items=g.items||[];
   const cur=s.curKey&&g.log?.[s.curKey]?g.log[s.curKey]:{};
@@ -2808,8 +2889,8 @@ function cgCard(g){
     <div class="cg-top">
       <div style="flex:1;min-width:0"><div class="cg-name">${esc(g.name)}</div>
         <div class="cg-sub">${fshort(g.start)} → ${fshort(g.end)} · ${s.weekly?'weekly':'daily'}</div></div>
-      <div class="cg-day">${dayLabel}</div>
     </div>
+    <div class="cg-view-row"><div class="cg-day">${dayLabel}</div><button class="cg-view-all" onclick="openChallengeAll('${g.id}')">VIEW ALL DAYS</button></div>
     <div class="cg-scorebar"><div><span class="cg-score">${s.todayDone}/${s.itemCount}</span> <span class="cg-scorelbl">${s.weekly?'this week':'today'}</span></div><div class="cg-pct">${s.overallPct}% overall</div></div>
     <div class="cg-bar"><div class="cg-fill" style="width:${s.overallPct}%"></div></div>
     ${items.length?cgGridHTML(g):`<div class="empty" style="padding:10px 0">No habits yet. Add one below.</div>`}
@@ -2959,6 +3040,7 @@ function togGroupItemGrid(gid,iid,date){
   if(!g.log)g.log={};if(!g.log[key])g.log[key]={};
   if(g.log[key][iid])delete g.log[key][iid];else g.log[key][iid]=true;
   sCG();rChallenges();
+  if(challengeAllViewId===gid)openChallengeAll(gid);
 }
 
 // ---- CONTENT ----
@@ -2979,18 +3061,65 @@ function channelLogoInput(b){
     ${has?`<button class="brand-logo-remove" onclick="removeContentLogo('${b.id}')">Remove</button>`:''}
   </div>`;
 }
+function contentBrandMatches(id,item,day){
+  const text=String(item&&item.text||'').toLowerCase();
+  if(id==='xtech' && /xtech/.test(text))return true;
+  if(id==='device' && /device guardian/.test(text))return true;
+  if(id==='cine' && /cine cascade/.test(text))return true;
+  if(id==='vellox' && /velloxplay|vellox play/.test(text))return true;
+  if(day===1)return id==='xtech';
+  if(day===2)return id==='device';
+  if(day===3)return id==='cine';
+  if(day===4)return id==='vellox';
+  return false;
+}
+function contentIsShared(item){
+  const text=String(item&&item.text||'').toLowerCase();
+  return /all 14 videos|export and upload everything|publish date|check analytics|weak titles|thumbnails/.test(text);
+}
+function renderContentChannel(id){
+  const m=document.getElementById('main');
+  const brand=CONTENT_BRANDS.find(x=>x.id===id)||CONTENT_BRANDS[0];
+  const order=[1,2,3,4,5,6,0];
+  const logo=CLOG[brand.id];
+  let h='<div class="fi">';
+  h+='<button class="btn btn-outline btn-full content-back-btn" onclick="closeContentChannel()">← Back to Content</button>';
+  h+='<div class="content-channel-hero"><div class="content-channel-icon">'+(logo?'<img src="'+logo+'" alt="'+esc(brand.name)+' logo"/>':brand.icon)+'</div><div style="flex:1;min-width:0"><div class="content-channel-name">'+esc(brand.name)+'</div><div class="content-channel-meta">Plan · Track · Ideas · '+brand.meta+'</div></div></div>';
+  h+='<div class="stitle">🎬 '+esc(brand.name)+' — All Content</div>';
+  let shown=0;
+  order.forEach(function(d){
+    const items=cget(d).filter(function(t){return contentBrandMatches(brand.id,t,d)||contentIsShared(t);});
+    if(!items.length)return;
+    shown+=items.length;
+    h+='<div class="cday content-channel-day"><div class="cday-hdr"><div><div class="cday-name">'+CDAY_FULL[d]+'</div><div class="cday-lbl">'+items.length+' content items</div></div></div>';
+    items.forEach(function(t){
+      const today=tod();
+      const isToday=d===new Date(today+'T00:00:00').getDay();
+      const done=isToday&&!t.paused&&!!CC[today]&&!!CC[today][t.id];
+      const check=isToday&&!t.paused?'<div class="chk sm '+(done?'on':'')+'" onclick="togContent(\''+t.id+'\')">'+(done?'✓':'')+'</div>':'<div class="cbullet"></div>';
+      h+='<div class="content-task-box"><div class="ctask '+(done?'done':'')+'" style="border:0">'+check+'<div class="ctxt">'+(t.time?'<span class="rtime">'+t12(t.time)+'</span> — ':'')+esc(t.text)+(t.paused?' <span class="cs-badge paused">⏸ Paused</span>':'')+'</div></div></div>';
+    });
+    h+='</div>';
+  });
+  if(!shown)h+='<div class="empty">No content items found for this channel.</div>';
+  h+='</div>';
+  m.innerHTML=h;
+}
+function openContentChannel(id){contentChannelView=id;rContent();window.scrollTo({top:0,behavior:'smooth'});}
+function closeContentChannel(){contentChannelView=null;rContent();window.scrollTo({top:0,behavior:'smooth'});}
+
 function rContent(){
+  if(contentChannelView)return renderContentChannel(contentChannelView);
   const m=document.getElementById('main');
   const today=tod(),wd=new Date(today+'T00:00:00').getDay();
   const order=[];for(let i=0;i<7;i++)order.push((wd+i)%7);
   let h=`<div class="fi"><div class="stitle">🎬 Content</div><div class="content-brand-grid">`;
   CONTENT_BRANDS.forEach(b=>{
     const logo=CLOG[b.id];
-    h+=`<div class="content-brand-card">
+    h+=`<div class="content-brand-card" role="button" tabindex="0" onclick="openContentChannel('${b.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openContentChannel('${b.id}')}" aria-label="Open ${esc(b.name)}">
       <div class="content-brand-icon" style="border-color:${b.accent}33;background:#0d1020">${logo?`<img src="${logo}" alt="${esc(b.name)} logo"/>`:b.icon}</div>
       <div class="content-brand-name">${b.name}</div>
       <div class="content-brand-meta">Plan · Track · Ideas<br>${b.meta}</div>
-      ${channelLogoInput(b)}
     </div>`;
   });
   h+=`</div><div class="stitle">Today’s Content Tasks</div>`;
@@ -3175,7 +3304,6 @@ function rSettings(){
   if(settingsMode==='content')return rContentSettings();
   const m=document.getElementById('main');
   let h=`<div class="fi">`;
-  h+=progressHTML();
   h+=`<div class="divider"></div>
   <div class="stitle">📲 App</div>
   <div class="app-install-card">
@@ -3296,7 +3424,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:46,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:47,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -3345,5 +3473,5 @@ registerAppServiceWorker();
 updateInstallUI();
 </script>
 </body>
-<!-- v45 final deployment marker -->
+<!-- v47 final deployment marker -->
 </html>
