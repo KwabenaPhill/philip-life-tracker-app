@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v50</title>
+<title>Philip Life Tracker v51</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1365,6 +1365,69 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
   box-shadow:inset 0 0 0 1px #1b2230!important;
 }
 </style>
+<style id="design-premium">
+:root{--acc:#0A84FF;--accRGB:10,132,255;--onAcc:#FFFFFF}
+/* ===== LIFE TRACKER PREMIUM DESIGN (visual only) ===== */
+@font-face{font-family:Inter;font-weight:400;font-display:swap;src:url(./fonts/inter-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:500;font-display:swap;src:url(./fonts/inter-latin-500-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:600;font-display:swap;src:url(./fonts/inter-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:700;font-display:swap;src:url(./fonts/inter-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:Inter;font-weight:800;font-display:swap;src:url(./fonts/inter-latin-800-normal.woff2) format('woff2')}
+:root{--bg:#000!important;--surface:#111113!important;--surface2:#1A1A1D!important;--surface3:#232327!important;--border:#232326!important;--gold:var(--acc)!important;--gold2:var(--acc)!important;--purple:var(--acc)!important;--blue:var(--acc)!important;--text:#F5F5F7!important;--muted:#6B6B72!important;--muted2:#9A9AA0!important;--ring:var(--acc)!important}
+html,body{background:#000!important}
+body,button,input,select,textarea{font-family:Inter,-apple-system,system-ui,sans-serif!important}
+body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;color:#F5F5F7!important}
+/* header */
+.header{background:#000!important;border:none!important;padding:16px 16px 8px!important}
+.header-toprow{display:grid!important;grid-template-columns:1fr auto!important;grid-template-areas:"date avatar" "brand avatar";align-items:center!important;row-gap:2px}
+.header-date{grid-area:date;font-size:13px!important;font-weight:500!important;letter-spacing:0!important;text-transform:none!important;color:#9A9AA0!important;text-align:left!important}
+.brand-wrap{grid-area:brand;text-align:left!important;align-items:flex-start!important}
+.header-eyebrow{display:none!important}
+.header-name{font-size:28px!important;font-weight:700!important;letter-spacing:-.7px!important;color:#F5F5F7!important;background:none!important;-webkit-text-fill-color:#F5F5F7!important}
+.header-ver{font-size:12px!important;font-weight:600!important;color:#6B6B72!important;-webkit-text-fill-color:#6B6B72!important;margin-left:6px}
+.profile-avatar{grid-area:avatar;width:46px!important;height:46px!important;border:2px solid var(--acc)!important;box-shadow:none!important}
+/* section titles */
+.stitle{font-size:17px!important;font-weight:700!important;letter-spacing:-.2px!important;text-transform:none!important;color:#F5F5F7!important;margin:22px 2px 10px!important}
+.stitle::after{display:none!important}
+/* cards */
+.snapshot-card,.record-card,.metric-card,.cg-card,.add-form,.cday,.content-task-box{background:#111113!important;border:1px solid #1C1C1F!important;border-radius:20px!important;box-shadow:none!important}
+.snapshot-ring .ring-value,.record-ring .ring-value{stroke:var(--acc)!important;filter:none!important}
+.snapshot-ring .ring-track,.ring-track{stroke:#232327!important}
+.input{background:#1A1A1D!important;border:1px solid #26262A!important;border-radius:12px!important;color:#F5F5F7!important}
+.input:focus{border-color:var(--acc)!important}
+.flbl{color:#9A9AA0!important;letter-spacing:.3px!important}
+/* buttons */
+.btn{border-radius:14px!important;font-weight:600!important}
+.btn-full,.paste-plan-btn,.btn-primary{background:var(--acc)!important;color:var(--onAcc)!important;border:none!important;box-shadow:none!important}
+.btn-green{background:var(--acc)!important;color:var(--onAcc)!important;border:none!important}
+.btn-ghost,.btn-outline{background:#1A1A1D!important;border:1px solid #26262A!important;color:#F5F5F7!important}
+.btn-danger{background:rgba(255,69,58,.12)!important;border:1px solid rgba(255,69,58,.4)!important;color:#FF6B61!important}
+/* checkboxes: round, fill on done */
+.chk{border-radius:50%!important;border:2px solid #3A3A40!important;background:transparent!important}
+.done .chk,.chk.on,.chk.done{background:var(--acc)!important;border-color:var(--acc)!important}
+/* chips and badges */
+.cday-badge,.cs-badge,.cbadge{background:rgba(var(--accRGB),.14)!important;color:var(--acc)!important;border:none!important}
+.cday-name{color:#F5F5F7!important}
+/* bottom tab bar */
+.tabs{left:0!important;right:0!important;bottom:0!important;border-radius:0!important;background:rgba(10,10,12,.94)!important;border:none!important;border-top:1px solid #222226!important;box-shadow:none!important;padding:6px 4px calc(8px + env(safe-area-inset-bottom))!important}
+.tab{background:transparent!important;color:#6B6B72!important;font-size:10.5px!important;font-weight:600!important;gap:5px!important}
+.tab.active{background:transparent!important;color:var(--acc)!important}
+.tab::before,.tab::after{display:none!important}
+.tab-icon{font-size:0!important;width:24px!important;height:24px!important;display:block!important;background:currentColor!important;-webkit-mask:var(--ic) center/24px no-repeat;mask:var(--ic) center/24px no-repeat;transform:none!important}
+.tabs .tab:nth-child(1) .tab-icon{--ic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.9%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%224%22%2F%3E%3Cpath%20d%3D%22M12%202v2M12%2020v2M4.9%204.9l1.4%201.4M17.7%2017.7l1.4%201.4M2%2012h2M20%2012h2M4.9%2019.1l1.4-1.4M17.7%206.3l1.4-1.4%22%2F%3E%3C%2Fsvg%3E")}
+.tabs .tab:nth-child(2) .tab-icon{--ic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.9%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%224%22%20y%3D%224%22%20width%3D%2216%22%20height%3D%2217%22%20rx%3D%223%22%2F%3E%3Cpath%20d%3D%22M8%202v4M16%202v4M4%2010h16M9%2015l2%202%204-4%22%2F%3E%3C%2Fsvg%3E")}
+.tabs .tab:nth-child(3) .tab-icon{--ic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.9%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M3%2012a9%209%200%201%200%203-6.7L3%208%22%2F%3E%3Cpath%20d%3D%22M3%203v5h5M12%207v5l3%202%22%2F%3E%3C%2Fsvg%3E")}
+.tabs .tab:nth-child(4) .tab-icon{--ic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.9%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Crect%20x%3D%223%22%20y%3D%226%22%20width%3D%2218%22%20height%3D%2213%22%20rx%3D%223%22%2F%3E%3Cpath%20d%3D%22m10%2010%205%202.5-5%202.5z%22%2F%3E%3C%2Fsvg%3E")}
+.tabs .tab:nth-child(5) .tab-icon{--ic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.9%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M8%2021h8M12%2017v4M7%204h10v5a5%205%200%200%201-10%200z%22%2F%3E%3Cpath%20d%3D%22M17%205h3v2a3%203%200%200%201-3%203M7%205H4v2a3%203%200%200%200%203%203%22%2F%3E%3C%2Fsvg%3E")}
+.tabs .tab:nth-child(6) .tab-icon{--ic:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.9%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27%3E%3Cpath%20d%3D%22M4%207h10M18%207h2M4%2017h4M12%2017h8%22%2F%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%227%22%20r%3D%222.2%22%2F%3E%3Ccircle%20cx%3D%2210%22%20cy%3D%2217%22%20r%3D%222.2%22%2F%3E%3C%2Fsvg%3E")}
+.brand-wrap{justify-self:start!important;position:static!important;transform:none!important;margin:0!important}
+.add-title,.snapshot-kicker,.cday-lbl{font-size:13px!important;font-weight:600!important;letter-spacing:0!important;text-transform:none!important;color:#9A9AA0!important}
+.snapshot-title{font-size:22px!important;font-weight:700!important;color:#F5F5F7!important}
+.cday-hdr .cday-name{font-weight:700!important;letter-spacing:0!important}
+.day-ring{background:conic-gradient(var(--acc) var(--pct),#1C1C1F 0)!important}
+.day-ring-label,.day-ring-pct{color:#8E8E93!important}
+.day-ring-item.today .day-ring-label{color:var(--acc)!important}
+</style>
 </head>
 <body>
 
@@ -1373,7 +1436,7 @@ input[type="date"]::-webkit-calendar-picker-indicator:hover{opacity:1!important;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v50</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v51</span></div>
     </div>
     <button class="profile-avatar" id="profileAvatar" onclick="go('settings')" aria-label="Open profile photo">👤</button>
   </div>
@@ -3503,7 +3566,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:50,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:51,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
