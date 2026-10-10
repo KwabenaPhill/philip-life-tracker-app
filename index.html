@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v51</title>
+<title>Philip Life Tracker v52</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1427,6 +1427,26 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
 .day-ring{background:conic-gradient(var(--acc) var(--pct),#1C1C1F 0)!important}
 .day-ring-label,.day-ring-pct{color:#8E8E93!important}
 .day-ring-item.today .day-ring-label{color:var(--acc)!important}
+/* v52: remove leftover purple */
+.day-ring{--ring:var(--acc)!important;background:#1C1C1F!important}
+.day-ring::after{background:linear-gradient(90deg,var(--acc) 0%,var(--acc) var(--pct),#0B0B0D var(--pct),#0B0B0D 100%)!important;box-shadow:inset 0 0 0 1px #232327!important}
+.day-ring.active{box-shadow:0 0 0 1.5px var(--acc)!important}
+.snapshot-ring-pct{color:#F5F5F7!important}
+.cday.today{border-color:rgba(var(--accRGB),.45)!important}
+.cday-name,.cday.today .cday-name{color:var(--acc)!important}
+.date-chip-day{color:#9A9AA0!important}
+.date-chip-num{color:#F5F5F7!important}
+.date-chip.active{background:rgba(var(--accRGB),.14)!important;border-color:var(--acc)!important;color:#F5F5F7!important}
+.date-chip.active .date-chip-day,.date-chip.active .date-chip-num{color:var(--acc)!important}
+.qbtn.active,.rtbtn.on{background:var(--acc)!important;border-color:var(--acc)!important;color:#FFFFFF!important}
+.btn-icon{background:var(--acc)!important;border-color:var(--acc)!important;color:#FFFFFF!important}
+.cg-day{background:rgba(var(--accRGB),.08)!important;color:var(--acc)!important}
+.cg-view-all{background:rgba(var(--accRGB),.10)!important;color:var(--acc)!important;border-color:rgba(var(--accRGB),.35)!important}
+.cg-pct,.cg-rate,.cg-rate-head,.cg-day-head.current{color:var(--acc)!important}
+.cg-fill{background:var(--acc)!important}
+.cg-day-head.current{background:rgba(var(--accRGB),.10)!important}
+.cg-grid-cell.today-cell{background:rgba(var(--accRGB),.14)!important;outline-color:var(--acc)!important}
+.cg-legend.today{background:rgba(var(--accRGB),.14)!important;border-color:var(--acc)!important}
 </style>
 </head>
 <body>
@@ -1436,7 +1456,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v51</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v52</span></div>
     </div>
     <button class="profile-avatar" id="profileAvatar" onclick="go('settings')" aria-label="Open profile photo">👤</button>
   </div>
@@ -3566,7 +3586,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:51,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:52,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');

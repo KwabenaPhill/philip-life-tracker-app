@@ -1,4 +1,4 @@
-const CACHE='philip-life-tracker-v51';
+const CACHE='philip-life-tracker-v52';
 const SHELL=['./','./manifest.webmanifest','./icons/icon-192.svg','./icons/icon-512.svg','./icons/icon-192.png','./icons/icon-512.png','./icons/icon-maskable-512.png','./fonts/inter-latin-400-normal.woff2','./fonts/inter-latin-500-normal.woff2','./fonts/inter-latin-600-normal.woff2','./fonts/inter-latin-700-normal.woff2','./fonts/inter-latin-800-normal.woff2'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
