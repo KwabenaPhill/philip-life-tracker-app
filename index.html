@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v53</title>
+<title>Philip Life Tracker v54</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1456,7 +1456,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v53</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v54</span></div>
     </div>
     <button class="profile-avatar" id="profileAvatar" onclick="go('settings')" aria-label="Open profile photo">👤</button>
   </div>
@@ -1537,6 +1537,56 @@ const QTS=[
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const MONS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
+// v54 STARTER ROUTINES (used on fresh data and by "Add starter routines")
+const CH_START='2026-11-02';
+function chStart(){const t=tod();return t<CH_START?CH_START:t;}
+const ALLD=[0,1,2,3,4,5,6],WKD=[1,2,3,4,5];
+const DROUTINES=[
+  {id:'rs01',text:'Wake up, drink 1 glass of water, make bed',time:'05:15',catId:'cpe',days:ALLD},
+  {id:'rs02',text:'Morning jog (easy pace)',time:'05:30',catId:'cft',days:[3,6]},
+  {id:'rs03',text:'Sit alone / quiet time (10 min)',time:'06:30',catId:'cpe',days:ALLD},
+  {id:'rs04',text:'Breakfast (morning meal)',time:'07:00',catId:'cft',days:ALLD},
+  {id:'rs05',text:'Plan the day: write top 3 tasks',time:'07:30',catId:'cpe',days:ALLD},
+  {id:'rs06',text:'Study / deep work block (2 hours, phone away)',time:'09:00',catId:'csc',days:WKD},
+  {id:'rs07',text:'Lunch + 10 min walk',time:'13:00',catId:'cpe',days:ALLD},
+  {id:'rs08',text:'YouTube work (1 hour)',time:'15:00',catId:'cyt',days:[1,2,3,4,5,6]},
+  {id:'rs09',text:'Business work (1 hour)',time:'16:00',catId:'cbz',days:WKD},
+  {id:'rs10',text:'Gym (+ home finisher on Tuesday)',time:'17:30',catId:'cft',days:[2,4]},
+  {id:'rs11',text:'Home workout',time:'18:00',catId:'cft',days:[1,5]},
+  {id:'rs12',text:'Shower + dinner (evening meal)',time:'19:30',catId:'cft',days:ALLD},
+  {id:'rs13',text:'Read 10 pages',time:'20:15',catId:'cpe',days:ALLD},
+  {id:'rs14',text:'Review today + plan tomorrow',time:'21:00',catId:'cpe',days:ALLD},
+  {id:'rs15',text:'Journal (5 min)',time:'21:20',catId:'cpe',days:ALLD},
+  {id:'rs16',text:'Phone away (no phone after 10 PM)',time:'22:00',catId:'cpe',days:ALLD},
+  {id:'rs17',text:'Sleep (7+ hours)',time:'22:30',catId:'cpe',days:ALLD},
+  {id:'rs18',text:'Clean room + laundry',time:'10:00',catId:'cpe',days:[6]},
+  {id:'rs19',text:'Weekly review + food shopping list',time:'16:00',catId:'cpe',days:[0]},
+  {id:'rs20',text:'Rest day: stretch 10 min, no training',time:'08:00',catId:'cft',days:[0]}
+];
+function seedRoutines(){return DROUTINES.map(r=>({id:r.id,text:r.text,time:r.time,catId:r.catId,repeatType:'weekly',days:r.days.slice()}));}
+function addStarterRoutines(){
+  const have=new Set(R.map(r=>r.id));const add=seedRoutines().filter(r=>!have.has(r.id));
+  if(!add.length)return toast('Starter routines already added');
+  R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
+}
+function backupChallenges(){
+  const data={kind:'plt_challenges',v:1,appVersion:54,at:new Date().toISOString(),CG};
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
+}
+function restoreChallenges(ev){
+  const file=ev.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{try{
+    const d=JSON.parse(e.target.result);const list=Array.isArray(d.CG)?d.CG:null;
+    if(!list)return toast('Not a challenges backup.');
+    const have=new Set(CG.map(g=>g.id));let n=0;
+    list.forEach(g=>{if(g&&g.id&&!have.has(g.id)){CG.push(g);n++;}});
+    sCG();rChallenges();toast(n+' challenge group'+(n!==1?'s':'')+' restored ✅');
+  }catch{toast('Failed! Check the file.');}};
+  r.readAsText(file);ev.target.value='';
+}
 function ld(k,fb){try{const v=localStorage.getItem(k);return v?JSON.parse(v):fb;}catch{return fb;}}
 function sv(k,v){localStorage.setItem(k,JSON.stringify(v));}
 
@@ -1552,7 +1602,8 @@ if(ld(SK.cpv,0)<CPLVER){CPLAN=JSON.parse(JSON.stringify(DCPLAN));sv(SK.cpl,CPLAN
 let CC=ld(SK.cc,{});
 let CG=ld(SK.cg,seedGroups());
 // ROUTINES: [{id,text,days:[0..6],time:'HH:MM'|'',catId}] ; RL: {date:{routineId:true}}
-let R=ld(SK.rt,[]),RL=ld(SK.rl,{});
+let R=ld(SK.rt,null),RL=ld(SK.rl,{});
+if(!Array.isArray(R)){R=seedRoutines();sv(SK.rt,R);}
 // TASK BANK: [{id,text,catId,due:'YYYY-MM-DD'|'' ,createdAt}]
 let BK=ld(SK.bk,[]);
 // carry-over of unfinished tasks (on by default)
@@ -1628,8 +1679,8 @@ function dDays(a,b){return Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:0
 function addDays(s,n){const d=new Date(s+'T00:00:00');d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];}
 function fshort(s){const d=new Date(s+'T00:00:00');return `${MONS[d.getMonth()].slice(0,3)} ${d.getDate()}`;}
 function ord(n){const x=n%100;if(x>=11&&x<=13)return n+'th';switch(n%10){case 1:return n+'st';case 2:return n+'nd';case 3:return n+'rd';default:return n+'th';}}
-function seedChallenges(){const t=tod();return DCHALS.map(c=>({id:c.id,name:c.name,start:t,end:addDays(t,c.days-1),type:c.type,dates:[]}));}
-function seedGroups(){const t=tod();return [{id:uid(),name:'90 Day Challenge',start:t,end:addDays(t,89),mode:'daily',log:{},items:[
+function seedChallenges(){const t=chStart();return DCHALS.map(c=>({id:c.id,name:c.name,start:t,end:addDays(t,c.days-1),type:c.type,dates:[]}));}
+function seedGroups(){const t=chStart();return [{id:uid(),name:'90 Day Challenge',start:t,end:addDays(t,89),mode:'daily',log:{},items:[
   {id:'i1',text:'No Porn'},{id:'i2',text:'No Sugar'},{id:'i3',text:'7 Hours Sleep'},
   {id:'i4',text:'Workout at Home'},{id:'i5',text:'Drink 2-3L Water'},{id:'i6',text:'Read 10 Pages'},
   {id:'i7',text:'Meditation'},{id:'i8',text:'Wake Up Early'},{id:'i9',text:'Do One Hard Thing'},
@@ -2246,7 +2297,7 @@ function rPlan(){
   // ---- ROUTINES MANAGER ----
   h+=`<div class="divider"></div><div class="stitle">🔁 Your Routines${R.length?' ('+R.length+')':''}</div>`;
   if(!R.length){
-    h+=`<div class="empty">No routines yet. Add one below.</div>`;
+    h+=`<div class="empty">No routines yet. Tap ⚡ Add starter routines below, or add your own.</div>`;
   } else {
     R.slice().sort(rSort).forEach(r=>{
       const cat=gc(r.catId);
@@ -2309,6 +2360,7 @@ function rPlan(){
       <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nrc">${cOpts()}</select></div>
     </div>
     <button class="btn btn-full" style="margin-bottom:0" onclick="addRoutine()">+ Add Routine</button>
+    <button class="btn btn-full" style="margin-bottom:0;margin-top:8px" onclick="addStarterRoutines()">⚡ Add starter routines</button>
   </div>`;
 
   h+=`</div>`;
@@ -3105,11 +3157,15 @@ function rChallenges(){
     <div class="add-title">+ Add Challenge Group</div>
     <input class="input" id="ngn" placeholder="Group name (e.g. 90 Day Challenge)" style="margin-bottom:8px"/>
     <div class="irow">
-      <div style="flex:1"><div class="flbl">Start</div><input type="date" class="input input-sm" id="ngs" value="${t}"/></div>
-      <div style="flex:1"><div class="flbl">End</div><input type="date" class="input input-sm" id="nge" value="${addDays(t,89)}"/></div>
+      <div style="flex:1"><div class="flbl">Start</div><input type="date" class="input input-sm" id="ngs" value="${chStart()}"/></div>
+      <div style="flex:1"><div class="flbl">End</div><input type="date" class="input input-sm" id="nge" value="${addDays(chStart(),89)}"/></div>
     </div>
     <div class="irow"><select class="input input-sm" id="ngm" style="flex:1"><option value="daily">Daily check-in</option><option value="weekly">Weekly check-in</option></select></div>
     <button class="btn btn-full" onclick="addGroup()">+ Create Group</button>
+  </div>
+  <div class="irow" style="margin-bottom:14px">
+    <button class="btn btn-outline" style="flex:1;min-width:0;font-size:13px;padding:10px 6px" onclick="backupChallenges()">📥 Backup</button>
+    <label class="btn btn-outline" style="flex:1;min-width:0;font-size:13px;padding:10px 6px;text-align:center;cursor:pointer">📤 Restore<input type="file" accept=".json,application/json" style="display:none" onchange="restoreChallenges(event)"/></label>
   </div>`;
   const active=CG.filter(g=>!cgStats(g).ended);
   const done=CG.filter(g=>cgStats(g).ended);
@@ -3586,7 +3642,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:52,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:54,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -3625,7 +3681,7 @@ function clearToday(){if(!confirm('Clear today\'s tasks?'))return;delete T[tod()
 function clearAll(){
   if(!confirm('Delete ALL Life Tracker data?\n\nYour other apps are NOT touched.'))return;if(!confirm('Really sure? This cannot be undone.'))return;
   const mine=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('plt_'))mine.push(k);}
-  mine.forEach(k=>localStorage.removeItem(k));T={};H=DHABS;HL={};C=DCATS;PT={};CLOG={};sCLOG();CHL=seedChallenges();CPLAN=JSON.parse(JSON.stringify(DCPLAN));migContent35(CPLAN);CC={};CG=seedGroups();R=[];RL={};BK=[];CO=true;CST=tod();PI='';sCST();sPI();sH();sC();sCHL();sCPL();sCC();sCG();sR();sRL();sBK();sCO();sv(SK.cpv,CPLVER);sv('plt_cmig',CMIG35);render();toast('All cleared');
+  mine.forEach(k=>localStorage.removeItem(k));T={};H=DHABS;HL={};C=DCATS;PT={};CLOG={};sCLOG();CHL=seedChallenges();CPLAN=JSON.parse(JSON.stringify(DCPLAN));migContent35(CPLAN);CC={};CG=seedGroups();R=seedRoutines();RL={};BK=[];CO=true;CST=tod();PI='';sCST();sPI();sH();sC();sCHL();sCPL();sCC();sCG();sR();sRL();sBK();sCO();sv(SK.cpv,CPLVER);sv('plt_cmig',CMIG35);render();toast('All cleared');
 }
 
 // INIT
