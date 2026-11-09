@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v58</title>
+<title>Philip Life Tracker v59</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1510,7 +1510,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="ltb-top">
       <div class="ltb-brand">
         <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v58</span></div>
+        <div class="ltb-name">Life Tracker <span class="header-ver">v59</span></div>
       </div>
       <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
@@ -1630,7 +1630,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:58,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:59,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -3853,7 +3853,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:58,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:59,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -3899,7 +3899,7 @@ function clearToday(){if(!confirm('Clear today\'s tasks?'))return;delete T[tod()
 function clearAll(){
   if(!confirm('Delete ALL Life Tracker data?\n\nYour other apps are NOT touched.'))return;if(!confirm('Really sure? This cannot be undone.'))return;
   const mine=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('plt_'))mine.push(k);}
-  mine.forEach(k=>localStorage.removeItem(k));T={};H=DHABS;HL={};C=DCATS;PT={};CLOG={};sCLOG();CHL=seedChallenges();CPLAN=JSON.parse(JSON.stringify(DCPLAN));migContent35(CPLAN);CC={};CG=seedGroups();R=seedRoutines();RL={};BK=[];CO=true;CPS='';CST=tod();PI='';sCST();sPI();sH();sC();sCHL();sCPL();sCC();sCG();sR();sRL();sBK();sCO();sv(SK.cpv,CPLVER);sv('plt_cmig',CMIG35);render();toast('All cleared');
+  mine.forEach(k=>localStorage.removeItem(k));T={};H=[];HL={};C=DCATS;PT={};CLOG={};sCLOG();CHL=[];CPLAN={0:[],1:[],2:[],3:[],4:[],5:[],6:[]};CC={};CG=[];R=[];RL={};BK=[];CO=true;CPS='';CST=tod();PI='';sCST();sPI();sH();sC();sCHL();sCPL();sCC();sCG();sR();sRL();sBK();sCO();sv(SK.cpv,CPLVER);sv('plt_cmig',CMIG35);render();toast('All cleared');
 }
 
 // INIT
