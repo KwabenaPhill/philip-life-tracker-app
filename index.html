@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v55</title>
+<title>Philip Life Tracker v56</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1472,6 +1472,10 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
 .set-back{margin-bottom:6px!important}
 .ch-add-btn{margin-bottom:12px!important}
 .add-form .add-title{display:flex;align-items:center;justify-content:space-between}
+.add-open-btn{margin-bottom:12px!important}
+.add-mini{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;margin-top:10px;padding:10px;background:#1A1A1D;border:1px dashed #2E2E34;border-radius:12px;color:var(--acc);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.add-mini .lic{width:16px;height:16px}
+.add-mini-close{text-align:right;margin-top:4px}
 .ch-add-cancel{background:none;border:none;color:#9A9AA0;font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:2px 4px}
 </style>
 </head>
@@ -1482,7 +1486,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v55</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v56</span></div>
     </div>
     <button class="profile-avatar" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
   </div>
@@ -1596,7 +1600,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:55,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:56,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -1891,7 +1895,7 @@ function addRoutine(){
   R.push(base);
   const savedR=R[R.length-1];
   newRDays=[];newRType='weekly';newRLastDay=false;
-  sR();rPlan();updHeader();toast(`Saved: ${txt} · ${rScheduleLbl(savedR)}${time?' '+t12(time):''} 🔁`);
+  OPEN_ADD.routine=false;sR();rPlan();updHeader();toast(`Saved: ${txt} · ${rScheduleLbl(savedR)}${time?' '+t12(time):''} 🔁`);
 }
 let newRDays=[];
 let newRType='weekly';
@@ -1970,7 +1974,7 @@ function addBank(){
   const due=document.getElementById('nbd')?.value||'';
   if(!txt)return toast('Type the task first!');
   BK.push({id:'b'+uid(),text:txt,catId:cat,due,createdAt:Date.now()});
-  sBK();rPlan();updHeader();
+  OPEN_ADD.bank=false;sBK();rPlan();updHeader();
   toast(`Added to bank${due?' \u00b7 by '+fshort(due):''} \u{1F4CB}`);
 }
 function togBankEdit(id){document.getElementById('be_'+id)?.classList.toggle('open');}
@@ -2391,8 +2395,9 @@ function rPlan(){
       </div>`;
     });
   }
-  h+=`<div class="add-form" style="margin-top:12px">
-    <div class="add-title">+ Plan a Task</div>
+  if(!OPEN_ADD.bank)h+=`<div style="margin-top:12px">${addOpenBtn('bank','Plan a Task','nbt')}</div>`;
+  else h+=`<div class="add-form" style="margin-top:12px">
+    <div class="add-title"><span>Plan a Task</span>${addCloseBtn('bank')}</div>
     <input class="input" id="nbt" placeholder="e.g. Finish editing Xtech video" style="margin-bottom:8px"/>
     <div class="irow" style="margin-bottom:8px">
       <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nbc">${cOpts()}</select></div>
@@ -2404,7 +2409,7 @@ function rPlan(){
   // ---- ROUTINES MANAGER ----
   h+=`<div class="divider"></div><div class="stitle">${ic('repeat')}Your Routines${R.length?' ('+R.length+')':''}</div>`;
   if(!R.length){
-    h+=`<div class="empty">No routines yet. Tap Add starter routines below, or add your own.</div>`;
+    h+=`<div class="empty">No routines yet. Tap Add New Routine below.</div>`;
   } else {
     R.slice().sort(rSort).forEach(r=>{
       const cat=gc(r.catId);
@@ -2443,8 +2448,9 @@ function rPlan(){
       </div>`;
     });
   }
-  h+=`<div class="add-form" style="margin-top:14px">
-    <div class="add-title">+ Add New Routine</div>
+  if(!OPEN_ADD.routine)h+=`<div style="margin-top:14px">${addOpenBtn('routine','Add New Routine','nrt')}</div>`;
+  else h+=`<div class="add-form" style="margin-top:14px">
+    <div class="add-title"><span>New Routine</span>${addCloseBtn('routine')}</div>
     <input class="input" id="nrt" placeholder="e.g. Trim hair" style="margin-bottom:10px"/>
     <div class="flbl">Repeat</div>
     <div class="rtbar">
@@ -3214,9 +3220,9 @@ function cgCard(g){
     <div class="cg-view-row"><div class="cg-day">${dayLabel}</div><button class="cg-view-all" onclick="openChallengeAll('${g.id}')">VIEW ALL DAYS</button></div>
     <div class="cg-scorebar"><div><span class="cg-score">${s.todayDone}/${s.itemCount}</span> <span class="cg-scorelbl">${s.weekly?'this week':'today'}</span></div><div class="cg-pct">${s.overallPct}% overall</div></div>
     <div class="cg-bar"><div class="cg-fill" style="width:${s.overallPct}%"></div></div>
-    ${items.length?cgGridHTML(g):`<div class="empty" style="padding:10px 0">No habits yet. Add one below.</div>`}
+    ${items.length?cgGridHTML(g):`<div class="empty" style="padding:10px 0">No habits yet. Tap Add habit below.</div>`}
     <div class="cg-grid-summary"><span>Today: <b>${s.todayDone}/${s.itemCount}</b></span><span>Checks: <b>${s.ticks}</b></span><span>Overall: <b>${s.overallPct}%</b></span></div>
-    <div class="cadd"><input class="input input-sm" id="gi_${g.id}" placeholder="Add a habit..."/><button class="btn btn-icon" style="width:36px;height:36px;font-size:17px;flex:none" onclick="addGroupItem('${g.id}')">+</button></div>
+    ${OPEN_ADD['g'+g.id]?`<div class="cadd"><input class="input input-sm" id="gi_${g.id}" placeholder="Add a habit..."/><button class="btn btn-icon" style="width:36px;height:36px;font-size:17px;flex:none" onclick="addGroupItem('${g.id}')">+</button></div><div class="add-mini-close">${addCloseBtn('g'+g.id)}</div>`:addMiniBtn('g'+g.id,'Add habit','gi_'+g.id)}
     <div class="cg-actions">
       <div style="flex:1"></div>
       <button class="ibtn" style="color:var(--green)" onclick="togGroupRestart('${g.id}')">${ic('restart')}</button>
@@ -3258,6 +3264,12 @@ function cgDoneCard(g){
   </div>`;
 }
 let chAddOpen=false;
+// v56: add forms stay closed until you tap their button
+let OPEN_ADD={};
+function togAdd(key,open,focusId){OPEN_ADD[key]=!!open;render();if(open&&focusId)setTimeout(()=>{const el=document.getElementById(focusId);if(el){el.focus();el.scrollIntoView({block:'center',behavior:'smooth'});}},60);}
+function addOpenBtn(key,label,focusId){return `<button class="btn btn-full add-open-btn" onclick="togAdd('${key}',true,'${focusId}')">${ic('plus')}${label}</button>`;}
+function addMiniBtn(key,label,focusId){return `<button class="add-mini" onclick="togAdd('${key}',true,'${focusId}')">${ic('plus')}${label}</button>`;}
+function addCloseBtn(key){return `<button class="ch-add-cancel" onclick="togAdd('${key}',false)">Close</button>`;}
 function togChAdd(open){chAddOpen=!!open;rChallenges();if(open)setTimeout(()=>document.getElementById('ngn')?.focus(),60);}
 function rChallenges(){
   const m=document.getElementById('main');const t=tod();
@@ -3266,7 +3278,7 @@ function rChallenges(){
     h+=`<button class="btn btn-full ch-add-btn" onclick="togChAdd(true)">${ic('plus')}Add New Challenge</button>`;
   }else{
     h+=`<div class="add-form">
-    <div class="add-title"><span>New Challenge</span><button class="ch-add-cancel" onclick="togChAdd(false)">Cancel</button></div>
+    <div class="add-title"><span>New Challenge</span><button class="ch-add-cancel" onclick="togChAdd(false)">Close</button></div>
     <input class="input" id="ngn" placeholder="Group name (e.g. 90 Day Challenge)" style="margin-bottom:8px"/>
     <div class="irow">
       <div style="flex:1"><div class="flbl">Start</div><input type="date" class="input input-sm" id="ngs" value="${chStart()}"/></div>
@@ -3458,7 +3470,7 @@ function rContent(){
     h+=`<div class="cday ${isToday?'today':''}"><div class="cday-hdr"><div><div class="cday-name">${CDAY_FULL[d]}</div><div class="cday-lbl">${CDAY_LBL[d]}</div></div>${isToday?`<span class="cday-badge">TODAY · ${dn}/${activeTasks.length}</span>`:''}</div>`;
     if(!tasks.length)h+=`<div class="empty" style="padding:8px 0">No tasks.</div>`;
     tasks.forEach(t=>{const done=isToday&&!t.paused&&!!dm[t.id];h+=`<div class="content-task-box"><div class="ctask ${done?'done':''}" style="border:0;${t.paused?'opacity:.58':''}">${isToday&&!t.paused?`<div class="chk sm ${done?'on':''}" onclick="togContent('${t.id}')">${done?'✓':''}</div>`:`<div class="cbullet" style="${t.paused?'background:#6e5821':''}"></div>`}<div class="ctxt">${t.time?`<span class="rtime">${t12(t.time)}</span> — `:''}${esc(t.text)}${t.paused?` <span class="cs-badge paused">⏸ Paused</span>`:''}</div></div></div>`;});
-    h+=`<div class="cadd"><input class="input input-sm" id="cadd_${d}" placeholder="Add a task..."/><button class="btn btn-icon" onclick="addContent(${d})">+</button></div></div>`;
+    h+=OPEN_ADD['c'+d]?`<div class="cadd"><input class="input input-sm" id="cadd_${d}" placeholder="Add a task..."/><button class="btn btn-icon" onclick="addContent(${d})">+</button></div><div class="add-mini-close">${addCloseBtn('c'+d)}</div></div>`:`${addMiniBtn('c'+d,'Add task','cadd_'+d)}</div>`;
   });
   h+=`<div style="font-size:12.5px;color:#656e7c;text-align:center;margin-top:4px;line-height:1.5">Pick channel logos above.</div></div>`;
   m.innerHTML=h;
@@ -3540,15 +3552,15 @@ function rContentSettings(){
     <div class="channel-logo-settings">
       ${CONTENT_BRANDS.map(b=>{const logo=CLOG[b.id];return `<div class="channel-logo-setting"><div class="channel-logo-preview">${logo?`<img src="${logo}" alt="${esc(b.name)} logo"/>`:b.icon}</div><div class="channel-logo-main"><div class="channel-logo-name">${b.name}</div><div class="channel-logo-sub">${logo?'Custom logo selected':'No custom logo yet'}</div></div><label class="brand-logo-btn" for="set_clogo_${b.id}">${logo?'Change':'Add'}</label><input class="brand-logo-file" id="set_clogo_${b.id}" type="file" accept="image/*" onchange="setContentLogo(event,'${b.id}')"/>${logo?`<button class="brand-logo-remove" onclick="removeContentLogo('${b.id}')">Remove</button>`:''}</div>`;}).join('')}
     </div>
-    <div class="add-form">
-      <div class="add-title">+ Add New Content</div>
+    ${!OPEN_ADD.cset?addOpenBtn('cset','Add New Content','ncs_text'):`<div class="add-form">
+      <div class="add-title"><span>New Content</span>${addCloseBtn('cset')}</div>
       <input class="input" id="ncs_text" placeholder="e.g. Xtech Guides video" style="margin-bottom:8px"/>
       <div class="irow" style="margin-bottom:8px">
         <div style="flex:1"><div class="flbl">Day</div><select class="input input-sm" id="ncs_day">${Array.from({length:7},(_,i)=>`<option value="${i}">${CDAY_FULL[i]}</option>`).join('')}</select></div>
         <div style="flex:1"><div class="flbl">Time</div><input type="time" class="input input-sm" id="ncs_time"/></div>
       </div>
       <button class="btn btn-full" style="margin-bottom:0" onclick="addContentSetting()">+ Add Content</button>
-    </div>`;
+    </div>`}`;
   for(let d=0;d<7;d++){
     const items=cget(d);
     h+=`<div class="cs-section"><div class="cs-section-title"><span>${ic('calendar')}</span><strong>${CDAY_FULL[d]}</strong><span class="cs-section-count">${items.length} item${items.length!==1?'s':''}</span></div>`;
@@ -3584,7 +3596,7 @@ function addContentSetting(){
   if(isNaN(day)||day<0||day>6)return toast('Pick a day!');
   if(!CPLAN[day])CPLAN[day]=[];
   CPLAN[day].push({id:'c'+uid(),text,time,paused:false});
-  sCPL();contentSettingsOpen={};rSettings();updHeader();toast('Content added ✅');
+  OPEN_ADD.cset=false;sCPL();contentSettingsOpen={};rSettings();updHeader();toast('Content added ✅');
 }
 function saveContentSettings(id,oldDay){
   const src=CPLAN[oldDay]||[];const item=src.find(x=>x.id===id);if(!item)return;
@@ -3764,7 +3776,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:55,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:56,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
