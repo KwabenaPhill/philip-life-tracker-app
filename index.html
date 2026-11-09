@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v59</title>
+<title>Philip Life Tracker v60</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1510,7 +1510,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="ltb-top">
       <div class="ltb-brand">
         <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v59</span></div>
+        <div class="ltb-name">Life Tracker <span class="header-ver">v60</span></div>
       </div>
       <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
@@ -1630,7 +1630,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:59,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:60,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -1760,6 +1760,7 @@ function lastDayOfMonth(y,m){return new Date(y,m+1,0).getDate();}
 function monthsBetween(a,b){const da=new Date(a+'T00:00:00'),db=new Date(b+'T00:00:00');return (db.getFullYear()-da.getFullYear())*12+(db.getMonth()-da.getMonth());}
 function rMatchesDate(r,date){
   if(r.until&&date>r.until)return false;
+  if(r.from&&date<r.from)return false;
   if(r.repeatType==='monthly'){
     const d=new Date(date+'T00:00:00'),y=d.getFullYear(),m=d.getMonth(),day=d.getDate();
     const iv=r.interval||1;
@@ -1772,7 +1773,7 @@ function rMatchesDate(r,date){
 }
 function routinesFor(date){return R.filter(r=>rMatchesDate(r,date)).slice().sort(rSort);}
 function rScheduleLbl(r){
-  const u=r.until?' · until '+fshort(r.until):'';
+  const u=(r.from&&r.from>tod()?' · from '+fshort(r.from):'')+(r.until?' · until '+fshort(r.until):'');
   return rScheduleBase(r)+u;
 }
 function rScheduleBase(r){
@@ -1917,7 +1918,10 @@ function addRoutine(){
   const time=document.getElementById('nrtime')?.value||'';
   const cat=document.getElementById('nrc')?.value;
   if(!txt)return toast('Type the routine first!');
-  let base={id:'r'+uid(),text:txt,time,catId:cat,repeatType:newRType};
+  const from=document.getElementById('nrfrom')?.value||'',until=document.getElementById('nruntil')?.value||'';
+  if(from&&until&&until<from)return toast('End date must be after start date!');
+  let base={id:'r'+uid(),text:txt,time,catId:cat,repeatType:newRType==='monthly'?'monthly':'weekly'};
+  if(from)base.from=from;if(until)base.until=until;
   if(newRType==='monthly'){
     const iv=parseInt(document.getElementById('nrinterval')?.value,10)||1;
     if(iv<1||iv>12)return toast('Months must be 1-12!');
@@ -1927,6 +1931,8 @@ function addRoutine(){
       if(!dom||dom<1||dom>31)return toast('Pick a day of the month (1-31)!');
       base={...base,lastDay:false,dayOfMonth:dom,interval:iv,anchor:tod()};
     }
+  } else if(newRType==='daily'){
+    base={...base,days:[0,1,2,3,4,5,6]};
   } else {
     if(!newRDays.length)return toast('Pick at least one day!');
     base={...base,days:newRDays.slice().sort((a,b)=>a-b)};
@@ -1941,6 +1947,7 @@ let newRType='weekly';
 let newRLastDay=false;
 function setNewRType(type){
   newRType=type;
+  document.getElementById('nrtype_daily')?.classList.toggle('on',type==='daily');
   document.getElementById('nrtype_weekly')?.classList.toggle('on',type==='weekly');
   document.getElementById('nrtype_monthly')?.classList.toggle('on',type==='monthly');
   const wb=document.getElementById('nrweeklybox'),mb=document.getElementById('nrmonthlybox');
@@ -1955,6 +1962,7 @@ function togNewLastDay(){
 function setEditRType(id,type){
   const r=R.find(x=>x.id===id);if(!r)return;
   r._editType=type;
+  document.getElementById('ertype_daily_'+id)?.classList.toggle('on',type==='daily');
   document.getElementById('ertype_weekly_'+id)?.classList.toggle('on',type==='weekly');
   document.getElementById('ertype_monthly_'+id)?.classList.toggle('on',type==='monthly');
   const wb=document.getElementById('erweeklybox_'+id),mb=document.getElementById('ermonthlybox_'+id);
@@ -1969,6 +1977,7 @@ function togEditLastDay(id){
 }
 function togNewRDay(d){const i=newRDays.indexOf(d);if(i>=0)newRDays.splice(i,1);else newRDays.push(d);const c=document.getElementById('ndchip_'+d);if(c)c.classList.toggle('on');}
 function togEditRDay(id,d){const r=R.find(x=>x.id===id);if(!r)return;const days=r.days||[];const i=days.indexOf(d);if(i>=0)days.splice(i,1);else days.push(d);r.days=days;sR();const c=document.getElementById('edchip_'+id+'_'+d);if(c)c.classList.toggle('on');}
+function rEditType(r){if((r.repeatType||'weekly')==='monthly')return 'monthly';return (r.days||[]).length===7?'daily':'weekly';}
 function togRoutineEdit(id){document.getElementById('re_'+id)?.classList.toggle('open');}
 function saveRoutine(id){
   const r=R.find(x=>x.id===id);if(!r)return;
@@ -1976,7 +1985,11 @@ function saveRoutine(id){
   const time=document.getElementById('retime_'+id)?.value||'';
   const cat=document.getElementById('rec_'+id)?.value;
   if(!txt)return toast('Routine cannot be empty!');
-  const type=r._editType||r.repeatType||'weekly';
+  const etype=r._editType||rEditType(r);
+  const type=etype==='monthly'?'monthly':'weekly';
+  const from=document.getElementById('refrom_'+id)?.value||'',until=document.getElementById('reuntil_'+id)?.value||'';
+  if(from&&until&&until<from)return toast('End date must be after start date!');
+  if(etype==='daily')r.days=[0,1,2,3,4,5,6];
   if(type==='monthly'){
     const iv=parseInt(document.getElementById('reinterval_'+id)?.value,10)||1;
     if(iv<1||iv>12)return toast('Months must be 1-12!');
@@ -1992,6 +2005,8 @@ function saveRoutine(id){
     delete r.lastDay;delete r.dayOfMonth;delete r.interval;delete r.anchor;
   }
   r.text=txt;r.time=time;r.catId=cat;r.repeatType=type;
+  if(from)r.from=from;else delete r.from;
+  if(until)r.until=until;else delete r.until;
   delete r._editType;delete r._editLastDay;
   sR();rPlan();updHeader();toast('Routine updated ✅');
 }
@@ -2465,14 +2480,15 @@ function rPlan(){
             <input class="input input-sm" id="ret_${r.id}" value="${esc(r.text)}" style="margin-bottom:8px"/>
             <div class="flbl">Repeat</div>
             <div class="rtbar">
-              <button class="rtbtn ${(r._editType||r.repeatType||'weekly')==='weekly'?'on':''}" id="ertype_weekly_${r.id}" onclick="setEditRType('${r.id}','weekly')">Weekly</button>
-              <button class="rtbtn ${(r._editType||r.repeatType||'weekly')==='monthly'?'on':''}" id="ertype_monthly_${r.id}" onclick="setEditRType('${r.id}','monthly')">Monthly</button>
+              <button class="rtbtn ${(r._editType||rEditType(r))==='daily'?'on':''}" id="ertype_daily_${r.id}" onclick="setEditRType('${r.id}','daily')">Daily</button>
+              <button class="rtbtn ${(r._editType||rEditType(r))==='weekly'?'on':''}" id="ertype_weekly_${r.id}" onclick="setEditRType('${r.id}','weekly')">Weekly</button>
+              <button class="rtbtn ${(r._editType||rEditType(r))==='monthly'?'on':''}" id="ertype_monthly_${r.id}" onclick="setEditRType('${r.id}','monthly')">Monthly</button>
             </div>
-            <div id="erweeklybox_${r.id}" style="display:${(r._editType||r.repeatType||'weekly')==='weekly'?'':'none'}">
+            <div id="erweeklybox_${r.id}" style="display:${(r._editType||rEditType(r))==='weekly'?'':'none'}">
               <div class="flbl">Repeat on</div>
               <div class="dchiprow">${DAYS.map((d,i)=>`<button class="dchip ${(r.days||[]).includes(i)?'on':''}" id="edchip_${r.id}_${i}" onclick="togEditRDay('${r.id}',${i})">${d[0]}</button>`).join('')}</div>
             </div>
-            <div id="ermonthlybox_${r.id}" style="display:${(r._editType||r.repeatType||'weekly')==='monthly'?'':'none'}">
+            <div id="ermonthlybox_${r.id}" style="display:${(r._editType||rEditType(r))==='monthly'?'':'none'}">
               <label class="lastday"><input type="checkbox" id="erlastck_${r.id}" ${(r._editLastDay!==undefined?r._editLastDay:!!r.lastDay)?'checked':''} onchange="togEditLastDay('${r.id}')"/> Last day of month</label>
               <div class="irow" id="erdombox_${r.id}" style="display:${(r._editLastDay!==undefined?r._editLastDay:!!r.lastDay)?'none':''}">
                 <div style="flex:1"><div class="flbl">Day of month</div><input type="number" min="1" max="31" class="input input-sm" id="redom_${r.id}" value="${r.dayOfMonth||''}"/></div>
@@ -2482,6 +2498,10 @@ function rPlan(){
             <div class="erow" style="margin-top:8px">
               <input type="time" class="input input-sm" id="retime_${r.id}" value="${r.time||''}" style="flex:1"/>
               <select class="input input-sm" id="rec_${r.id}" style="flex:1">${cOpts(r.catId)}</select>
+            </div>
+            <div class="irow" style="margin-top:8px">
+              <div style="flex:1"><div class="flbl">Start date</div><input type="date" class="input input-sm" id="refrom_${r.id}" value="${r.from||''}"/></div>
+              <div style="flex:1"><div class="flbl">End date</div><input type="date" class="input input-sm" id="reuntil_${r.id}" value="${r.until||''}"/></div>
             </div>
             <button class="btn btn-green btn-full" style="padding:9px;font-size:14px;margin-bottom:0" onclick="saveRoutine('${r.id}')">Save</button>
           </div>
@@ -3666,6 +3686,7 @@ function routineFormHTML(){let h='';
     <input class="input" id="nrt" placeholder="e.g. Trim hair" style="margin-bottom:10px"/>
     <div class="flbl">Repeat</div>
     <div class="rtbar">
+      <button class="rtbtn ${newRType==='daily'?'on':''}" id="nrtype_daily" onclick="setNewRType('daily')">Daily</button>
       <button class="rtbtn ${newRType==='weekly'?'on':''}" id="nrtype_weekly" onclick="setNewRType('weekly')">Weekly</button>
       <button class="rtbtn ${newRType==='monthly'?'on':''}" id="nrtype_monthly" onclick="setNewRType('monthly')">Monthly</button>
     </div>
@@ -3684,8 +3705,12 @@ function routineFormHTML(){let h='';
       <div style="flex:1"><div class="flbl">Time (optional)</div><input type="time" class="input input-sm" id="nrtime"/></div>
       <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nrc">${cOpts()}</select></div>
     </div>
+    <div class="irow" style="margin-bottom:8px">
+      <div style="flex:1"><div class="flbl">Start date (optional)</div><input type="date" class="input input-sm" id="nrfrom"/></div>
+      <div style="flex:1"><div class="flbl">End date (optional)</div><input type="date" class="input input-sm" id="nruntil"/></div>
+    </div>
     <button class="btn btn-full" style="margin-bottom:0" onclick="addRoutine()">+ Add Routine</button>
-    <button class="btn btn-full" style="margin-bottom:0;margin-top:8px" onclick="addStarterRoutines()">${ic('zap')}Add starter routines</button>
+
   </div>`;
   return h;}
 function challengeFormHTML(){let h='';
@@ -3853,7 +3878,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:59,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:60,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
