@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v54</title>
+<title>Philip Life Tracker v55</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1447,6 +1447,32 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
 .cg-day-head.current{background:rgba(var(--accRGB),.10)!important}
 .cg-grid-cell.today-cell{background:rgba(var(--accRGB),.14)!important;outline-color:var(--acc)!important}
 .cg-legend.today{background:rgba(var(--accRGB),.14)!important;border-color:var(--acc)!important}
+
+/* v55: clean line icons + settings folders + challenge add toggle */
+.lic{width:1.15em;height:1.15em;display:inline-block;vertical-align:-.2em;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.stitle .lic{color:var(--acc);margin-right:7px}
+.btn .lic,.bkb .lic,.alertbar .lic,.missed-title .lic,.copy-title .lic,.pp-title .lic,.pp-undo-main .lic{margin-right:6px}
+.ibtn .lic{width:18px;height:18px;vertical-align:middle;margin:0}
+.pp-remove .lic{width:16px;height:16px;vertical-align:middle}
+.cg-grid-cell .lic{width:13px;height:13px;vertical-align:middle;stroke-width:2.4}
+.profile-avatar .lic{width:24px;height:24px;color:#9A9AA0;vertical-align:middle}
+.profile-preview .lic{width:44px;height:44px;color:#9A9AA0;stroke-width:1.5}
+.set-list{background:#111113;border:1px solid #1C1C1F;border-radius:20px;overflow:hidden;margin-bottom:14px}
+.set-row{display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;background:none;border:none;border-bottom:1px solid #1C1C1F;color:#F5F5F7;text-align:left;cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent}
+.set-row:last-child{border-bottom:none}
+.set-row:active{background:#18181b}
+.set-row-ic{width:40px;height:40px;border-radius:12px;background:rgba(var(--accRGB),.14);color:var(--acc);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.set-row-ic .lic{width:21px;height:21px;vertical-align:0}
+.set-row.danger .set-row-ic{background:rgba(255,69,58,.12);color:#FF6B61}
+.set-row-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.set-row-title{font-size:16px;font-weight:700;color:#F5F5F7}
+.set-row-sub{font-size:13px;color:#9A9AA0;line-height:1.35}
+.set-row-chev{color:#6B6B72;display:flex}
+.set-row-chev .lic{width:18px;height:18px}
+.set-back{margin-bottom:6px!important}
+.ch-add-btn{margin-bottom:12px!important}
+.add-form .add-title{display:flex;align-items:center;justify-content:space-between}
+.ch-add-cancel{background:none;border:none;color:#9A9AA0;font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:2px 4px}
 </style>
 </head>
 <body>
@@ -1456,9 +1482,9 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v54</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v55</span></div>
     </div>
-    <button class="profile-avatar" id="profileAvatar" onclick="go('settings')" aria-label="Open profile photo">👤</button>
+    <button class="profile-avatar" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
   </div>
 </div>
 
@@ -1570,7 +1596,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:54,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:55,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -1780,11 +1806,11 @@ function copyRolledContent(){
   let ov=document.getElementById('copyOverlay');if(ov)ov.remove();
   ov=document.createElement('div');ov.id='copyOverlay';ov.className='copy-overlay';
   ov.innerHTML=`<div class="copy-modal">
-    <div class="copy-title">\ud83c\udfac Copy Pending Content</div>
+    <div class="copy-title">${ic('play')}Copy Pending Content</div>
     <div class="copy-hint">Unticked content from past days.</div>
     <textarea id="copyText" class="copy-text" readonly>${esc(text)}</textarea>
     <div class="copy-btns">
-      <button class="btn" style="flex:1" onclick="doCopy()">\ud83d\udccb Copy</button>
+      <button class="btn" style="flex:1" onclick="doCopy()">${ic('copy')}Copy</button>
       <button class="btn btn-ghost" style="flex:1" onclick="closeCopy()">Close</button>
     </div>
   </div>`;
@@ -2001,8 +2027,10 @@ let challengeAllViewId=null;
 let curTab='today';
 const TABS=['today','plan','history','content','challenges','settings'];
 function go(tab){
+  const sameView=tab===curTab&&settingsMode==='main';
+  if(!sameView)navPush();
   curTab=tab;
-  if(tab!=='settings')settingsMode='main';
+  settingsMode='main';
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',TABS[i]===tab));
   render();
 }
@@ -2010,6 +2038,85 @@ function render(){
   updHeader();
   ({today:rToday,plan:rPlan,history:rHistory,content:rContent,challenges:rChallenges,settings:rSettings})[curTab]?.();
 }
+// ---- v55: clean line icons ----
+const ICP={
+  sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+  clipboard:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
+  calendar:'<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  play:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9.5 5 2.5-5 2.5z"/>',
+  trophy:'<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/>',
+  user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  pencil:'<path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/>',
+  trash:'<path d="M3 6h18M8 6V4h8v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6"/>',
+  restart:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>',
+  repeat:'<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+  alert:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/>',
+  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/>',
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+  phone:'<rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 18h.01"/>',
+  install:'<rect x="5" y="2" width="14" height="20" rx="2.5"/><path d="M12 7v7M9 11l3 3 3-3"/>',
+  chart:'<path d="M3 3v18h18"/><path d="M8 17v-6M13 17V7M18 17v-4"/>',
+  eraser:'<path d="m7 21-4.3-4.3a1 1 0 0 1 0-1.4l10-10a1 1 0 0 1 1.4 0l5.6 5.6a1 1 0 0 1 0 1.4L13 21"/><path d="M22 21H7M5 11l9 9"/>',
+  zap:'<path d="M13 2 3 14h9l-1 8 10-12h-9z"/>',
+  undo:'<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+  copy:'<rect x="8" y="8" width="14" height="14" rx="2"/><path d="M4 16a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2"/>',
+  clock:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M5 3 2 6M22 6l-3-3"/>',
+  checkC:'<circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/>',
+  xC:'<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/>',
+  chevR:'<path d="m9 18 6-6-6-6"/>',
+  chevL:'<path d="m15 18-6-6 6-6"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>',
+  database:'<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/>',
+  tasks:'<path d="M11 6h10M11 12h10M11 18h10"/><path d="m3 6 1.5 1.5L7 5M3 12l1.5 1.5L7 11M3 18l1.5 1.5L7 17"/>',
+  bank:'<path d="M4 7h16M4 12h16M4 17h10"/><rect x="2" y="3" width="20" height="18" rx="3"/>'
+};
+function ic(n){return '<svg class="lic" viewBox="0 0 24 24" aria-hidden="true">'+(ICP[n]||'')+'</svg>';}
+
+// ---- v55: phone Back button goes back inside the app ----
+// Every screen change saves where you were. Back returns there (and to the same scroll spot).
+// Back only leaves the app when you are on Today with nothing open.
+let navStack=[],navSentinel=false,navSkip=false;
+const NAV_OV='.challenge-all-overlay,.pp-overlay,.copy-overlay';
+function navSnap(){return{tab:curTab,sm:settingsMode,ccv:contentChannelView,y:window.scrollY||0};}
+function navEnsure(){if(navSentinel)return;try{history.pushState({plt:1},'',location.href);navSentinel=true;}catch(e){}}
+function navPush(){navStack.push(navSnap());if(navStack.length>40)navStack.shift();navEnsure();}
+function navAtRoot(){return !document.querySelector(NAV_OV)&&!navStack.length&&curTab==='today';}
+function navApply(st){
+  curTab=st.tab;settingsMode=st.sm||'main';contentChannelView=st.ccv||null;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',TABS[i]===curTab));
+  render();
+  const y=st.y||0;requestAnimationFrame(()=>window.scrollTo(0,y));
+}
+function navBack(){
+  if(navSentinel){history.back();return;}
+  if(navStack.length){navApply(navStack.pop());return;}
+  navApply({tab:curTab,sm:'main',ccv:null,y:0});
+}
+window.addEventListener('popstate',()=>{
+  navSentinel=false;
+  if(navSkip){navSkip=false;return;}
+  const ovs=document.querySelectorAll(NAV_OV);
+  if(ovs.length){
+    const ov=ovs[ovs.length-1];
+    if(ov.id==='challengeAllOverlay')closeChallengeAll();
+    else if(ov.id==='pastePlanOverlay')closePasteWholePlan();
+    else if(ov.id==='copyOverlay')closeCopy();
+    else ov.remove();
+  }else if(navStack.length){navApply(navStack.pop());}
+  else if(curTab!=='today'||settingsMode!=='main'){navApply({tab:'today',sm:'main',ccv:contentChannelView,y:0});}
+  if(!navAtRoot())navEnsure();
+});
+// Pop-ups (View All Days, Copy, Paste Plan) also respond to Back.
+new MutationObserver(()=>{
+  if(document.querySelector(NAV_OV))navEnsure();
+  else if(navSentinel&&navAtRoot()){navSkip=true;navSentinel=false;history.back();}
+}).observe(document.body,{childList:true});
+function openProfileSettings(){go('settings');settingsMode='app';rSettings();window.scrollTo(0,0);}
+
 
 // ---- PLAN TOMORROW LEGACY ----
 // Kept only for compatibility with older saved data. No UI uses this legacy control.
@@ -2025,7 +2132,7 @@ function tcHTML(t,date,carry,pfx){
     <div class="cdot" style="background:${cat.color}"></div>
     <div style="flex:1;min-width:0">
       <div class="ttext">${esc(t.text)}${carry?carryBadge(carry.days):''}</div>
-      <div class="tmeta">${t.time?`⏰ ${t12(t.time)} · `:''}${cat.icon} ${cat.name}${carry?` · <span class="fromday">from ${fshort(carry.date)}</span>`:''}</div>
+      <div class="tmeta">${t.time?`${ic('clock')} ${t12(t.time)} · `:''}${cat.icon} ${cat.name}${carry?` · <span class="fromday">from ${fshort(carry.date)}</span>`:''}</div>
       <div class="edit-area" id="ea_${p}${t.id}">
         <div class="erow"><input class="input input-sm" id="et_${p}${t.id}" value="${esc(t.text)}" style="flex:1"/></div>
         <div class="erow">
@@ -2035,9 +2142,9 @@ function tcHTML(t,date,carry,pfx){
       </div>
     </div>
     <div class="chk ${t.done?'on':''}" onclick="togTask('${date}','${t.id}')">${t.done?'✓':''}</div>
-    ${carry&&!t.done?`<button class="ibtn movebtn" title="Move to today" onclick="moveToToday('${date}','${t.id}')">➕</button>`:''}
-    <button class="ibtn" onclick="togEdit('${t.id}','${p}')">✏️</button>
-    <button class="ibtn" onclick="delTask('${date}','${t.id}')">✕</button>
+    ${carry&&!t.done?`<button class="ibtn movebtn" title="Move to today" onclick="moveToToday('${date}','${t.id}')">${ic('plus')}</button>`:''}
+    <button class="ibtn" onclick="togEdit('${t.id}','${p}')">${ic('pencil')}</button>
+    <button class="ibtn" onclick="delTask('${date}','${t.id}')">${ic('x')}</button>
   </div>`;
 }
 
@@ -2105,7 +2212,7 @@ function groupHTML(list,date,editable=false){
       </div>
       ${gr.map(t=>editable?tcHTML(t,date,null,'g'):`<div class="tcard ${t.done?'done':''}">
         <div style="flex:1"><div class="ttext">${esc(t.text)}</div></div>
-        <span style="font-size:16px">${t.done?'✅':'❌'}</span>
+        <span style="font-size:19px;color:${t.done?'var(--acc)':'#FF6B61'}">${ic(t.done?'checkC':'xC')}</span>
       </div>`).join('')}
     </div>`;
   }).join('');
@@ -2133,7 +2240,7 @@ function rToday(){
   const ovd=bkOverdue();
   let h=`<div class="fi">`;
 
-  if(ovd)h+=`<div class="alertbar" onclick="go('plan')">⚠️ ${ovd} planned task${ovd!==1?'s':''} past the finish date — tap to open Task Bank</div>`;
+  if(ovd)h+=`<div class="alertbar" onclick="go('plan')">${ic('alert')} ${ovd} planned task${ovd!==1?'s':''} past the finish date — tap to open Task Bank</div>`;
 
   h+=`<div class="day-ring-row weekly-progress-row">`;
   weekDates.forEach(function(d){
@@ -2161,7 +2268,7 @@ function rToday(){
       <div class="snapshot-meta">Fill the ring today.</div>
     </div>
   </div>`;
-  h+=`<div class="stitle">🎬 Content — Today</div>`;
+  h+=`<div class="stitle">${ic('play')}Content — Today</div>`;
   const ct=contentToday();
   const activeCt=ct.filter(t=>!t.paused),doneCt=activeCt.filter(t=>CC[today]?.[t.id]).length;
   h+=`<div class="cday ${ct.length?'today':''}" style="margin-bottom:12px">
@@ -2170,24 +2277,24 @@ function rToday(){
   ct.forEach(t=>{const dn=!t.paused&&!!CC[today]?.[t.id];h+=`<div class="content-task-box"><div class="ctask ${dn?'done':''}" style="border:0;padding:0;${t.paused?'opacity:.58':''}">${t.paused?`<div class="cbullet" style="background:#6e5821"></div>`:`<div class="chk sm ${dn?'on':''}" onclick="togContent('${t.id}')">${dn?'✓':''}</div>`}<div class="ctxt">${t.time?`<span class="rtime">${t12(t.time)}</span> — `:''}${esc(t.text)}${t.paused?` <span class="cs-badge paused">⏸ Paused</span>`:''}</div></div></div>`;});
   h+=`</div>`;
 
-  h+=`<div class="stitle">☀️ Today’s Tasks</div>`;
+  h+=`<div class="stitle">${ic('sun')}Today’s Tasks</div>`;
   if(!tl.length){h+=`<div class="empty">No tasks for today.<br>Go to <b>Plan</b> to build your day.</div>`;}
   else tl.forEach(t=>{h+=tcHTML(t,today);});
   const rt=routinesFor(today);
   if(rt.length){
-    h+=`<div class="stitle">🔁 Routines — Today</div>`;
-    rt.forEach(r=>{const dn=!!RL[today]?.[r.id];h+=`<div class="tcard ${dn?'done':''}"><div class="chk ${dn?'on':''}" onclick="togRoutine('${today}','${r.id}')">${dn?'✓':''}</div><div style="flex:1;min-width:0"><div class="ttext">${r.time?`<span class="rtime">${t12(r.time)}</span> — `:''}${esc(r.text)}</div><div class="tmeta">🔁 ${rScheduleLbl(r)}</div></div></div>`;});
+    h+=`<div class="stitle">${ic('repeat')}Routines — Today</div>`;
+    rt.forEach(r=>{const dn=!!RL[today]?.[r.id];h+=`<div class="tcard ${dn?'done':''}"><div class="chk ${dn?'on':''}" onclick="togRoutine('${today}','${r.id}')">${dn?'✓':''}</div><div style="flex:1;min-width:0"><div class="ttext">${r.time?`<span class="rtime">${t12(r.time)}</span> — `:''}${esc(r.text)}</div><div class="tmeta">${ic('repeat')} ${rScheduleLbl(r)}</div></div></div>`;});
   }
-  if(tl.length||rt.length){h+=`<button class="btn btn-full" style="margin-top:4px" onclick="copyTasks()">⏰ Copy Today’s Tasks (for alarms)</button>`;}
+  if(tl.length||rt.length){h+=`<button class="btn btn-full" style="margin-top:4px" onclick="copyTasks()">${ic('clock')}Copy Today’s Tasks (for alarms)</button>`;}
 
   const cCar=carriedContent();
   if(cCar.length){
     const cOld=cCar.reduce((m,c)=>Math.max(m,c.days),0),cc=carryCol(cOld);
-    h+=`<div class="rollbar" style="background:${cc.bg};border-color:${cc.bd}" onclick="togRolledContent()"><div class="rollbar-c" style="color:${cc.text}">🎬 ${cCar.length}</div><div style="flex:1;min-width:0"><div class="rollbar-t" style="color:${cc.text}">Content Not Done</div><div class="rollbar-s">${cCar.length} pending · oldest ${cOld} day${cOld!==1?'s':''} ago · tap to ${showRolledContent?'hide':'show'}</div></div><div class="rollbar-a" style="color:${cc.text}">${showRolledContent?'▲':'▼'}</div></div>`;
+    h+=`<div class="rollbar" style="background:${cc.bg};border-color:${cc.bd}" onclick="togRolledContent()"><div class="rollbar-c" style="color:${cc.text}">${ic('play')} ${cCar.length}</div><div style="flex:1;min-width:0"><div class="rollbar-t" style="color:${cc.text}">Content Not Done</div><div class="rollbar-s">${cCar.length} pending · oldest ${cOld} day${cOld!==1?'s':''} ago · tap to ${showRolledContent?'hide':'show'}</div></div><div class="rollbar-a" style="color:${cc.text}">${showRolledContent?'▲':'▼'}</div></div>`;
     if(showRolledContent){
       h+=`<div class="rollwrap">`;
       cCar.forEach(c=>{const col=carryCol(c.days);h+=`<div class="content-task-box" style="border-left:3px solid ${col.line}"><div class="ctask content-carry-row" style="border:0;padding:0"><div class="chk sm" onclick="togContentCarried('${c.date}','${c.it.id}')"></div><div class="ctxt">${esc(c.it.text)} <span class="cbadge" style="background:${col.bg};color:${col.text};border:1px solid ${col.bd}">↻ ${c.days} day${c.days!==1?'s':''} ago</span></div><button class="content-move-btn" title="Add to today's tasks" onclick="event.stopPropagation();moveContentToToday('${c.date}','${c.it.id}')">+</button></div></div>`;});
-      h+=`<button class="btn btn-full" style="margin-top:8px" onclick="copyRolledContent()">⏰ Copy Pending Content</button><button class="btn btn-full btn-outline" onclick="clearPendingContent()">🧹 Clear This List</button></div>`;
+      h+=`<button class="btn btn-full" style="margin-top:8px" onclick="copyRolledContent()">${ic('clock')}Copy Pending Content</button><button class="btn btn-full btn-outline" onclick="clearPendingContent()">${ic('eraser')}Clear This List</button></div>`;
     }
   }
 
@@ -2195,12 +2302,12 @@ function rToday(){
   if(carried.length){
     const left=carried.filter(c=>!c.t.done).length,oldest=carried.reduce((m,c)=>Math.max(m,c.days),0),bc=carryCol(oldest);
     h+=`<div class="rollbar" style="background:${bc.bg};border-color:${bc.bd}" onclick="togRolled()"><div class="rollbar-c" style="color:${bc.text}">↻ ${left}</div><div style="flex:1"><div class="rollbar-t" style="color:${bc.text}">Rolled Over</div><div class="rollbar-s">${left} unfinished · oldest ${oldest} day${oldest!==1?'s':''} ago · tap to ${showRolled?'hide':'show'}</div></div><div class="rollbar-a" style="color:${bc.text}">${showRolled?'▲':'▼'}</div></div>`;
-    if(showRolled){h+=`<div class="rollwrap">`;carried.forEach(c=>{h+=tcHTML(c.t,c.date,c);});h+=`<button class="btn btn-full btn-green" onclick="moveAllToToday()">➕ Add All ${left} to Today</button><button class="btn btn-full" onclick="copyRolled()">⏰ Copy Rolled Over Tasks</button></div>`;}
+    if(showRolled){h+=`<div class="rollwrap">`;carried.forEach(c=>{h+=tcHTML(c.t,c.date,c);});h+=`<button class="btn btn-full btn-green" onclick="moveAllToToday()">${ic('plus')}Add All ${left} to Today</button><button class="btn btn-full" onclick="copyRolled()">${ic('clock')}Copy Rolled Over Tasks</button></div>`;}
   }
 
   const actGT=CG.filter(g=>{const st=cgStats(g);return !st.ended&&!st.notStarted;});
   if(actGT.length){
-    h+=`<div class="stitle">🏆 Challenges — Today</div>`;
+    h+=`<div class="stitle">${ic('trophy')}Challenges — Today</div>`;
     actGT.forEach(g=>{const key=cgKey(g,today),cur=(g.log&&g.log[key])?g.log[key]:{},items=g.items||[],dn=items.filter(it=>cur[it.id]).length;h+=`<div class="cday"><div class="cday-hdr"><div><div class="cday-name">${esc(g.name)}</div><div class="cday-lbl">${dn}/${items.length} today</div></div><span class="cday-badge">${items.length?Math.round(dn/items.length*100):0}%</span></div>`;items.forEach(it=>{const done=!!cur[it.id];h+=`<div class="content-task-box"><div class="ctask ${done?'done':''}" style="border:0;padding:0"><div class="chk sm ${done?'on':''}" onclick="togGroupItem('${g.id}','${it.id}')">${done?'✓':''}</div><div class="ctxt">${esc(it.text)}</div></div></div>`;});h+=`</div>`;});
   }
 
@@ -2226,7 +2333,7 @@ function rPlan(){
   </div>
   <input type="date" class="input" value="${pDate}" onchange="spd(this.value)" style="margin-bottom:12px"/>
   <div style="font-size:13.5px;color:var(--muted2);margin-bottom:14px;font-weight:600">${fdate(pDate)}</div>
-  <button class="btn btn-full paste-plan-btn" style="margin-bottom:12px" onclick="openPasteWholePlan()">📋 Paste Whole Plan</button>
+  <button class="btn btn-full paste-plan-btn" style="margin-bottom:12px" onclick="openPasteWholePlan()">${ic('clipboard')}Paste Whole Plan</button>
   <div class="add-form">
     <div class="add-title">+ Add Task</div>
     <input class="input" id="ntt" placeholder="What will you do?" style="margin-bottom:8px"/>
@@ -2245,7 +2352,7 @@ function rPlan(){
   }
 
   // ---- TASK BANK ----
-  h+=`<div class="divider"></div><div class="stitle">📋 Task Bank${BK.length?' ('+BK.length+')':''}</div>`;
+  h+=`<div class="divider"></div><div class="stitle">${ic('bank')}Task Bank${BK.length?' ('+BK.length+')':''}</div>`;
   if(!BK.length){
     h+=`<div class="empty">Nothing planned. Add a task below.</div>`;
   } else {
@@ -2259,12 +2366,12 @@ function rPlan(){
             <div class="bkmeta">${cat.icon} ${cat.name}${b.due?' · finish by '+fshort(b.due):''}</div>
             <div class="bkdue ${info.cls}">${info.txt}</div>
           </div>
-          <button class="ibtn" onclick="togBankEdit('${b.id}')">✏️</button>
-          <button class="ibtn" style="color:var(--red)" onclick="delBank('${b.id}')">✕</button>
+          <button class="ibtn" onclick="togBankEdit('${b.id}')">${ic('pencil')}</button>
+          <button class="ibtn" style="color:var(--red)" onclick="delBank('${b.id}')">${ic('x')}</button>
         </div>
         <div class="bkbtns">
-          <button class="bkb bkb-today" onclick="sendBank('${b.id}','${tod()}')">➕ Today</button>
-          <button class="bkb bkb-date" onclick="togBankSend('${b.id}')">📅 Pick Date</button>
+          <button class="bkb bkb-today" onclick="sendBank('${b.id}','${tod()}')">${ic('plus')}Today</button>
+          <button class="bkb bkb-date" onclick="togBankSend('${b.id}')">${ic('calendar')}Pick Date</button>
         </div>
         <div class="edit-area" id="bs_${b.id}">
           <div class="flbl">Send this task to</div>
@@ -2295,9 +2402,9 @@ function rPlan(){
   </div>`;
 
   // ---- ROUTINES MANAGER ----
-  h+=`<div class="divider"></div><div class="stitle">🔁 Your Routines${R.length?' ('+R.length+')':''}</div>`;
+  h+=`<div class="divider"></div><div class="stitle">${ic('repeat')}Your Routines${R.length?' ('+R.length+')':''}</div>`;
   if(!R.length){
-    h+=`<div class="empty">No routines yet. Tap ⚡ Add starter routines below, or add your own.</div>`;
+    h+=`<div class="empty">No routines yet. Tap Add starter routines below, or add your own.</div>`;
   } else {
     R.slice().sort(rSort).forEach(r=>{
       const cat=gc(r.catId);
@@ -2331,8 +2438,8 @@ function rPlan(){
             <button class="btn btn-green btn-full" style="padding:9px;font-size:14px;margin-bottom:0" onclick="saveRoutine('${r.id}')">Save</button>
           </div>
         </div>
-        <button class="ibtn" onclick="togRoutineEdit('${r.id}')">✏️</button>
-        <button class="ibtn" style="color:var(--red)" onclick="delRoutine('${r.id}')">✕</button>
+        <button class="ibtn" onclick="togRoutineEdit('${r.id}')">${ic('pencil')}</button>
+        <button class="ibtn" style="color:var(--red)" onclick="delRoutine('${r.id}')">${ic('x')}</button>
       </div>`;
     });
   }
@@ -2360,7 +2467,7 @@ function rPlan(){
       <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nrc">${cOpts()}</select></div>
     </div>
     <button class="btn btn-full" style="margin-bottom:0" onclick="addRoutine()">+ Add Routine</button>
-    <button class="btn btn-full" style="margin-bottom:0;margin-top:8px" onclick="addStarterRoutines()">⚡ Add starter routines</button>
+    <button class="btn btn-full" style="margin-bottom:0;margin-top:8px" onclick="addStarterRoutines()">${ic('zap')}Add starter routines</button>
   </div>`;
 
   h+=`</div>`;
@@ -2391,7 +2498,7 @@ async function openPasteWholePlan(){
     const clip=await navigator.clipboard.readText();
     if(clip&&clip.trim()){reviewWholePlan(clip);return;}
   }catch(e){}
-  pasteOpenShell('Paste your plan',`<div class="pp-title">📋 Paste Whole Plan</div>
+  pasteOpenShell('Paste your plan',`<div class="pp-title">${ic('clipboard')}Paste Whole Plan</div>
     <div class="pp-hint">Paste your plan. Nothing saves until you confirm.</div>
     <textarea id="ppInput" class="pp-text" placeholder="Example:\nMONDAY, OCTOBER 5, 2026\n10:00 AM — Study 2 hours\n\nTUESDAY, OCTOBER 6, 2026\n10:00 AM — Make Xtech videos\n\nEVERY MONDAY AND WEDNESDAY\n6:00 AM — Gym\n9:00 AM — Meditation\n\nEVERY TUESDAY\nCONTENT\nMake 3 Device Guardian videos\n\nTASK BANK\nFinish assignment — due October 10, 2026"></textarea>
     <div class="pp-actions">
@@ -2667,14 +2774,14 @@ function renderPasteReview(ignored){
     }
     if(it.type==='bank')scheduleField=`<div class="pp-field"><div class="flbl">Finish by</div><input type="date" class="input input-sm pp-date" id="pp_date_${i}" value="${it.due||''}"/></div>`;
     let meta=pasteInputLabel(it);
-    if(it.needsSchedule)meta+=' · ⚠️ check schedule';
-    return `<div class="pp-row"><div class="pp-row-top"><div class="pp-row-main"><span class="pp-badge ${it.type}">${pasteTaskTypeLabel(it.type)}</span><span class="pp-meta">${esc(meta)}</span></div><button class="pp-remove" onclick="removePasteItem(${i})">✕</button></div><input class="input input-sm" id="pp_text_${i}" value="${esc(it.text)}" style="margin-bottom:7px"/><div class="pp-grid">${catField}${scheduleField}${timeField}</div></div>`;
+    if(it.needsSchedule)meta+=' · '+ic('alert')+' check schedule';
+    return `<div class="pp-row"><div class="pp-row-top"><div class="pp-row-main"><span class="pp-badge ${it.type}">${pasteTaskTypeLabel(it.type)}</span><span class="pp-meta">${esc(meta)}</span></div><button class="pp-remove" onclick="removePasteItem(${i})">${ic('x')}</button></div><input class="input input-sm" id="pp_text_${i}" value="${esc(it.text)}" style="margin-bottom:7px"/><div class="pp-grid">${catField}${scheduleField}${timeField}</div></div>`;
   }).join('');
-  pasteOpenShell('Review pasted plan',`<div class="pp-title">✅ Review Pasted Plan</div>
+  pasteOpenShell('Review pasted plan',`<div class="pp-title">${ic('checkC')}Review Pasted Plan</div>
     <div class="pp-hint">Check it, then confirm to save.</div>
-    <div class="pp-summary"><b>${pasteWholeDraft.length} items found</b> · ${esc(summary||'Plan items')}${ignored?` · ${ignored} line${ignored!==1?'s':''} ignored`:''}${warnings?` · ⚠️ ${warnings} schedule${warnings!==1?'s':''} to check`:''}.</div>
+    <div class="pp-summary"><b>${pasteWholeDraft.length} items found</b> · ${esc(summary||'Plan items')}${ignored?` · ${ignored} line${ignored!==1?'s':''} ignored`:''}${warnings?` · ${ic('alert')} ${warnings} schedule${warnings!==1?'s':''} to check`:''}.</div>
     ${rows||`<div class="pp-empty">Nothing left to add.</div>`}
-    <div class="pp-actions"><button class="btn paste-plan-btn" onclick="applyPasteWholePlan()">✅ Add Everything</button><button class="btn btn-ghost" onclick="closePasteWholePlan()">Cancel</button></div>`);
+    <div class="pp-actions"><button class="btn paste-plan-btn" onclick="applyPasteWholePlan()">${ic('check')}Add Everything</button><button class="btn btn-ghost" onclick="closePasteWholePlan()">Cancel</button></div>`);
 }
 function removePasteItem(i){syncPasteDraft();pasteWholeDraft.splice(i,1);renderPasteReview(0);}
 function syncPasteDraft(){
@@ -2709,8 +2816,8 @@ function showPasteChoice(){
   const info=pasteTaskConflictInfo();
   pastePendingApply='choose';
   pasteOpenShell('Paste options',`<div class="pp-choice"><h3>Existing tasks on these dates?</h3><p>This paste affects ${info.dates.length} date${info.dates.length!==1?'s':''} that already have ${info.count} task${info.count!==1?'s':''}.</p>
-    <button class="btn btn-full paste-plan-btn" style="margin-bottom:8px" onclick="finishPasteApply('add')">➕ Add to existing</button>
-    <button class="btn btn-full btn-outline" onclick="finishPasteApply('replace')">🔄 Replace tasks on these dates</button>
+    <button class="btn btn-full paste-plan-btn" style="margin-bottom:8px" onclick="finishPasteApply('add')">${ic('plus')}Add to existing</button>
+    <button class="btn btn-full btn-outline" onclick="finishPasteApply('replace')">${ic('restart')}Replace tasks on these dates</button>
     <div class="pp-choice-note">Replace only removes the existing <b>tasks</b> on the affected dates. Your routines, content, Task Bank and other saved data stay safe.</div>
     <div class="pp-actions"><button class="btn btn-ghost" onclick="pastePendingApply=null;renderPasteReview(0)">← Back to review</button><button class="btn btn-ghost" onclick="closePasteWholePlan()">Cancel</button></div></div>`);
 }
@@ -2727,7 +2834,7 @@ function showPasteUndoBanner(){
   const p=pasteUndoState;
   const parts=[];if(p.addedTasks.length)parts.push(`${p.addedTasks.length} task${p.addedTasks.length!==1?'s':''}`);if(p.addedRoutine.length)parts.push(`${p.addedRoutine.length} routine${p.addedRoutine.length!==1?'s':''}`);if(p.addedContent.length)parts.push(`${p.addedContent.length} content item${p.addedContent.length!==1?'s':''}`);if(p.addedBank.length)parts.push(`${p.addedBank.length} Task Bank item${p.addedBank.length!==1?'s':''}`);
   const total=parts.join(' · ')||'pasted items';
-  return `<div class="pp-undo-banner"><div class="pp-undo-main"><b>✅ Paste added.</b><br>${esc(total)}${p.replacedDates.length?` · ${p.replacedDates.length} date${p.replacedDates.length!==1?'s':''} replaced`:''}</div><button class="pp-undo-btn" onclick="undoLastPaste()">↩ Undo Paste</button></div>`;
+  return `<div class="pp-undo-banner"><div class="pp-undo-main"><b>${ic('checkC')}Paste added.</b><br>${esc(total)}${p.replacedDates.length?` · ${p.replacedDates.length} date${p.replacedDates.length!==1?'s':''} replaced`:''}</div><button class="pp-undo-btn" onclick="undoLastPaste()">${ic('undo')}Undo Paste</button></div>`;
 }
 function undoLastPaste(){
   const p=pasteUndoState;if(!p)return toast('Undo window expired');
@@ -2829,7 +2936,7 @@ function rHistory(){
 
     if(missed.length){
       h+=`<div class="missed-box">
-        <div class="missed-title">❌ Not Completed — ${missed.length}</div>`;
+        <div class="missed-title">${ic('xC')}Not Completed — ${missed.length}</div>`;
       missed.forEach(t=>{
         const cat=gc(t.catId);
         h+=`<div class="missed-row">
@@ -2850,7 +2957,7 @@ function rHistory(){
   // Routines for this date — only if any
   const hrt=routinesFor(hDate);
   if(hrt.length){
-    h+=`<div class="divider"></div><div class="stitle">🔁 Routines — This Day</div>`;
+    h+=`<div class="divider"></div><div class="stitle">${ic('repeat')}Routines — This Day</div>`;
     hrt.forEach(r=>{
       const dn=!!RL[hDate]?.[r.id];
       h+=`<div class="ctask ${dn?'done':''}" style="border-bottom:1px solid var(--border)">
@@ -2863,7 +2970,7 @@ function rHistory(){
   // Content history for this date
   const hwd=new Date(hDate+'T00:00:00').getDay();
   const hct=cget(hwd);
-  h+=`<div class="divider"></div><div class="stitle">🎬 Content — ${CDAY_FULL[hwd]}</div>`;
+  h+=`<div class="divider"></div><div class="stitle">${ic('play')}Content — ${CDAY_FULL[hwd]}</div>`;
   if(!hct.length){
     h+=`<div class="empty">No content for this day.</div>`;
   } else {
@@ -2877,7 +2984,7 @@ function rHistory(){
   }
   // Challenge groups for this date
   const actG=CG.filter(g=>hDate>=g.start&&hDate<=g.end);
-  h+=`<div class="divider"></div><div class="stitle">🏆 Challenges — This Day</div>`;
+  h+=`<div class="divider"></div><div class="stitle">${ic('trophy')}Challenges — This Day</div>`;
   if(!actG.length){
     h+=`<div class="empty">No challenge groups active on this day.</div>`;
   } else {
@@ -2934,11 +3041,11 @@ function copyTasks(){
   let ov=document.getElementById('copyOverlay');if(ov)ov.remove();
   ov=document.createElement('div');ov.id='copyOverlay';ov.className='copy-overlay';
   ov.innerHTML=`<div class="copy-modal">
-    <div class="copy-title">⏰ Copy Today's Tasks</div>
+    <div class="copy-title">${ic('clock')}Copy Today's Tasks</div>
     <div class="copy-hint">Only today&#39;s own tasks and routines (no rolled-over, no challenges, no content). Copy and paste to any AI to set alarms.</div>
     <textarea id="copyText" class="copy-text" readonly>${esc(text)}</textarea>
     <div class="copy-btns">
-      <button class="btn" style="flex:1" onclick="doCopy()">📋 Copy</button>
+      <button class="btn" style="flex:1" onclick="doCopy()">${ic('copy')}Copy</button>
       <button class="btn btn-ghost" style="flex:1" onclick="closeCopy()">Close</button>
     </div>
   </div>`;
@@ -3035,7 +3142,7 @@ function restartPanel(g){
       <div style="flex:1"><div class="flbl">New start date</div><input type="date" class="input input-sm" id="rs_${g.id}" value="${tod()}"/></div>
       <div style="flex:1"><div class="flbl">Length (${weekly?'weeks':'days'})</div><input type="number" min="1" class="input input-sm" id="rl_${g.id}" value="${cgLen(g)}"/></div>
     </div>
-    <button class="btn btn-full btn-green" style="padding:10px;font-size:14.5px;margin-bottom:0" onclick="restartGroup('${g.id}')">🔄 Restart Challenge</button>
+    <button class="btn btn-full btn-green" style="padding:10px;font-size:14.5px;margin-bottom:0" onclick="restartGroup('${g.id}')">${ic('restart')}Restart Challenge</button>
   </div>`;
 }
 function cgPreviewPeriods(g){
@@ -3066,7 +3173,7 @@ function cgGridHTML(g,full){
       const past=!p.isFuture&&!p.isCurrent;
       const cls=done?'done':(p.isFuture?'future':(p.isCurrent?'today-cell':'missed'));
       const aria=done?'Completed':past?'Missed':p.isCurrent?'Today':'Upcoming';
-      h+=`<td class="cg-grid-cell ${cls} ${p.isCurrent?'current':''}" onclick="togGroupItemGrid('${g.id}','${it.id}','${p.pdate}')" title="${aria}"><span>${done?'✓':(past?'❌':'')}</span></td>`;
+      h+=`<td class="cg-grid-cell ${cls} ${p.isCurrent?'current':''}" onclick="togGroupItemGrid('${g.id}','${it.id}','${p.pdate}')" title="${aria}"><span>${done?'✓':(past?ic('x'):'')}</span></td>`;
     });
     h+=`<td class="cg-rate">${rate}%</td></tr>`;
   });
@@ -3112,9 +3219,9 @@ function cgCard(g){
     <div class="cadd"><input class="input input-sm" id="gi_${g.id}" placeholder="Add a habit..."/><button class="btn btn-icon" style="width:36px;height:36px;font-size:17px;flex:none" onclick="addGroupItem('${g.id}')">+</button></div>
     <div class="cg-actions">
       <div style="flex:1"></div>
-      <button class="ibtn" style="color:var(--green)" onclick="togGroupRestart('${g.id}')">🔄</button>
-      <button class="ibtn" onclick="togGroupEdit('${g.id}')">✏️</button>
-      <button class="ibtn" style="color:var(--red)" onclick="delGroup('${g.id}')">🗑</button>
+      <button class="ibtn" style="color:var(--green)" onclick="togGroupRestart('${g.id}')">${ic('restart')}</button>
+      <button class="ibtn" onclick="togGroupEdit('${g.id}')">${ic('pencil')}</button>
+      <button class="ibtn" style="color:var(--red)" onclick="delGroup('${g.id}')">${ic('trash')}</button>
     </div>
     ${restartPanel(g)}
     <div class="edit-area" id="ge_${g.id}">
@@ -3144,36 +3251,38 @@ function cgDoneCard(g){
     <div class="cg-actions" style="border-top:none;padding-top:0;margin-top:9px">
       <span class="ch-status" style="color:var(--muted2)">${s.ticks} total check-ins · ${s.itemCount} rules</span>
       <div style="flex:1"></div>
-      <button class="ibtn" style="color:var(--green)" onclick="togGroupRestart('${g.id}')">🔄</button>
-      <button class="ibtn" style="color:var(--red)" onclick="delGroup('${g.id}')">🗑</button>
+      <button class="ibtn" style="color:var(--green)" onclick="togGroupRestart('${g.id}')">${ic('restart')}</button>
+      <button class="ibtn" style="color:var(--red)" onclick="delGroup('${g.id}')">${ic('trash')}</button>
     </div>
     ${restartPanel(g)}
   </div>`;
 }
+let chAddOpen=false;
+function togChAdd(open){chAddOpen=!!open;rChallenges();if(open)setTimeout(()=>document.getElementById('ngn')?.focus(),60);}
 function rChallenges(){
   const m=document.getElementById('main');const t=tod();
-  let h=`<div class="fi"><div class="stitle">🏆 The Challenge</div>
-  <div class="add-form">
-    <div class="add-title">+ Add Challenge Group</div>
+  let h=`<div class="fi"><div class="stitle">${ic('trophy')}The Challenge</div>`;
+  if(!chAddOpen){
+    h+=`<button class="btn btn-full ch-add-btn" onclick="togChAdd(true)">${ic('plus')}Add New Challenge</button>`;
+  }else{
+    h+=`<div class="add-form">
+    <div class="add-title"><span>New Challenge</span><button class="ch-add-cancel" onclick="togChAdd(false)">Cancel</button></div>
     <input class="input" id="ngn" placeholder="Group name (e.g. 90 Day Challenge)" style="margin-bottom:8px"/>
     <div class="irow">
       <div style="flex:1"><div class="flbl">Start</div><input type="date" class="input input-sm" id="ngs" value="${chStart()}"/></div>
       <div style="flex:1"><div class="flbl">End</div><input type="date" class="input input-sm" id="nge" value="${addDays(chStart(),89)}"/></div>
     </div>
     <div class="irow"><select class="input input-sm" id="ngm" style="flex:1"><option value="daily">Daily check-in</option><option value="weekly">Weekly check-in</option></select></div>
-    <button class="btn btn-full" onclick="addGroup()">+ Create Group</button>
-  </div>
-  <div class="irow" style="margin-bottom:14px">
-    <button class="btn btn-outline" style="flex:1;min-width:0;font-size:13px;padding:10px 6px" onclick="backupChallenges()">📥 Backup</button>
-    <label class="btn btn-outline" style="flex:1;min-width:0;font-size:13px;padding:10px 6px;text-align:center;cursor:pointer">📤 Restore<input type="file" accept=".json,application/json" style="display:none" onchange="restoreChallenges(event)"/></label>
+    <button class="btn btn-full" onclick="addGroup()">${ic('plus')}Create Challenge</button>
   </div>`;
+  }
   const active=CG.filter(g=>!cgStats(g).ended);
   const done=CG.filter(g=>cgStats(g).ended);
   h+=`<div class="stitle">Active — ${active.length}</div>`;
   if(!active.length)h+=`<div class="empty">No active groups. Create one above.</div>`;
   active.forEach(g=>{h+=cgCard(g);});
   if(done.length){
-    h+=`<div class="divider"></div><div class="stitle">✅ Completed · Record — ${done.length}</div>`;
+    h+=`<div class="divider"></div><div class="stitle">${ic('checkC')}Completed · Record — ${done.length}</div>`;
     done.forEach(g=>{h+=cgDoneCard(g);});
   }
   h+=`</div>`;
@@ -3202,7 +3311,7 @@ function addGroup(){
   if(!start||!end)return toast('Pick start and end dates!');
   if(end<start)return toast('End must be after start!');
   CG.push({id:uid(),name,start,end,mode,items:[],log:{}});
-  sCG();rChallenges();toast('Group created! 🏆');
+  chAddOpen=false;sCG();rChallenges();toast('Group created! 🏆');
 }
 function saveGroupEdit(id){
   const g=CG.find(x=>x.id===id);if(!g)return;
@@ -3301,7 +3410,7 @@ function renderContentChannel(id){
   const order=[1,2,3,4,5,6,0];
   const logo=CLOG[brand.id];
   let h='<div class="fi">';
-  h+='<button class="btn btn-outline btn-full content-back-btn" onclick="closeContentChannel()">← Back to Content</button>';
+  h+='<button class="btn btn-outline btn-full content-back-btn" onclick="navBack()">← Back to Content</button>';
   h+='<div class="content-channel-hero"><div class="content-channel-icon">'+(logo?'<img src="'+logo+'" alt="'+esc(brand.name)+' logo"/>':brand.icon)+'</div><div style="flex:1;min-width:0"><div class="content-channel-name">'+esc(brand.name)+'</div><div class="content-channel-meta">Plan · Track · Ideas · '+brand.meta+'</div></div></div>';
   h+='<div class="stitle">🎬 '+esc(brand.name)+' — All Content</div>';
   let shown=0;
@@ -3323,7 +3432,7 @@ function renderContentChannel(id){
   h+='</div>';
   m.innerHTML=h;
 }
-function openContentChannel(id){contentChannelView=id;rContent();window.scrollTo({top:0,behavior:'smooth'});}
+function openContentChannel(id){navPush();contentChannelView=id;rContent();window.scrollTo({top:0,behavior:'smooth'});}
 function closeContentChannel(){contentChannelView=null;rContent();window.scrollTo({top:0,behavior:'smooth'});}
 
 function rContent(){
@@ -3426,7 +3535,7 @@ function contentSettingsEditor(t,d){
 }
 function rContentSettings(){
   const m=document.getElementById('main');
-  let h=`<div class="fi"><button class="btn btn-outline btn-full" style="margin-bottom:10px" onclick="settingsMode='main';rSettings()">← Back to Settings</button><div class="stitle">🎬 Content Settings</div>
+  let h=`<div class="fi"><button class="btn btn-outline btn-full" style="margin-bottom:10px" onclick="navBack()">${ic('chevL')} Back to Settings</button><div class="stitle">${ic('play')}Content Settings</div>
     <div class="cs-note">Edit, pause or resume each item.</div>
     <div class="channel-logo-settings">
       ${CONTENT_BRANDS.map(b=>{const logo=CLOG[b.id];return `<div class="channel-logo-setting"><div class="channel-logo-preview">${logo?`<img src="${logo}" alt="${esc(b.name)} logo"/>`:b.icon}</div><div class="channel-logo-main"><div class="channel-logo-name">${b.name}</div><div class="channel-logo-sub">${logo?'Custom logo selected':'No custom logo yet'}</div></div><label class="brand-logo-btn" for="set_clogo_${b.id}">${logo?'Change':'Add'}</label><input class="brand-logo-file" id="set_clogo_${b.id}" type="file" accept="image/*" onchange="setContentLogo(event,'${b.id}')"/>${logo?`<button class="brand-logo-remove" onclick="removeContentLogo('${b.id}')">Remove</button>`:''}</div>`;}).join('')}
@@ -3442,7 +3551,7 @@ function rContentSettings(){
     </div>`;
   for(let d=0;d<7;d++){
     const items=cget(d);
-    h+=`<div class="cs-section"><div class="cs-section-title"><span>🎬</span><strong>${CDAY_FULL[d]}</strong><span class="cs-section-count">${items.length} item${items.length!==1?'s':''}</span></div>`;
+    h+=`<div class="cs-section"><div class="cs-section-title"><span>${ic('calendar')}</span><strong>${CDAY_FULL[d]}</strong><span class="cs-section-count">${items.length} item${items.length!==1?'s':''}</span></div>`;
     if(!items.length)h+=`<div class="empty" style="padding:9px 0">Nothing scheduled.</div>`;
     items.forEach(t=>{
       h+=`<div class="cs-card ${t.paused?'paused':''}">
@@ -3453,9 +3562,9 @@ function rContentSettings(){
             <div class="cs-meta">${t.time?`<span>⏰ ${t12(t.time)}</span>`:`<span>⏰ No time set</span>`}<span class="cs-badge ${t.paused?'paused':'active'}">${t.paused?'⏸ Paused':'▶ Active'}</span>${t.paused?`<span style="color:var(--muted)">Saved data preserved</span>`:''}</div>
           </div>
           <div class="cs-actions">
-            <button class="ibtn" title="Edit" onclick="toggleContentSettingsEdit('${t.id}')">✏️</button>
+            <button class="ibtn" title="Edit" onclick="toggleContentSettingsEdit('${t.id}')">${ic('pencil')}</button>
             <button class="ibtn" title="${t.paused?'Resume':'Pause'}" style="color:${t.paused?'var(--green)':'#f6c45d'}" onclick="toggleContentPaused('${t.id}')">${t.paused?'▶️':'⏸️'}</button>
-            <button class="ibtn" title="Delete" style="color:var(--red)" onclick="deleteContentSetting('${t.id}')">✕</button>
+            <button class="ibtn" title="Delete" style="color:var(--red)" onclick="deleteContentSetting('${t.id}')">${ic('x')}</button>
           </div>
         </div>
         ${contentSettingsEditor(t,d)}
@@ -3510,7 +3619,7 @@ function deleteContentSetting(id){
 // ---- PROGRESS (shown inside Settings) ----
 function progressHTML(){
   const days=Array.from({length:7},(_,i)=>off(i-6));
-  let h=`<div class="stitle">📊 Last 7 Days</div><div class="record-card"><div class="day-ring-row" style="margin:0">`;
+  let h=`<div class="stitle">${ic('chart')}Last 7 Days</div><div class="record-card"><div class="day-ring-row" style="margin:0">`;
   days.forEach(day=>{const{pct}=dayScore(day),d=new Date(day+'T00:00:00'),isT=day===tod(),ring=pct?'#5a3fc7':'#1d2433';h+=`<div class="day-ring-item ${isT?'today':''}"><div class="day-ring ${isT?'active':''}" style="--pct:${pct}%;--ring:${ring}"><div></div></div><div class="day-ring-label">${isT?'Today':DAYS[d.getDay()].slice(0,3)}</div><div class="day-ring-pct">${pct}%</div></div>`;});
   h+=`</div></div>`;
   return h;
@@ -3518,19 +3627,24 @@ function progressHTML(){
 
 // ---- SETTINGS ----
 let settingsMode='main';
+function setRow(mode,icon,title,sub,danger){return `<button class="set-row${danger?' danger':''}" onclick="openSettingsFolder('${mode}')"><span class="set-row-ic">${ic(icon)}</span><span class="set-row-main"><span class="set-row-title">${title}</span><span class="set-row-sub">${sub}</span></span><span class="set-row-chev">${ic('chevR')}</span></button>`;}
+function openSettingsFolder(mode){navPush();settingsMode=mode;rSettings();window.scrollTo(0,0);}
+function setBackBtn(){return `<button class="btn btn-outline btn-full set-back" onclick="navBack()">${ic('chevL')}Back to Settings</button>`;}
 function rSettings(){
   if(settingsMode==='content')return rContentSettings();
   const m=document.getElementById('main');
+  const cr=carriedTasks();
   let h=`<div class="fi">`;
-  h+=`<div class="divider"></div>
-  <div class="stitle">📲 App</div>
+  if(settingsMode==='app'){
+    h+=setBackBtn()+`
+  <div class="stitle">${ic('install')}App</div>
   <div class="app-install-card">
     <div class="app-install-title">Install Philip's Life Tracker</div>
     <div class="app-install-sub">Get it as a real app with its own icon.</div>
-    <button class="btn btn-full" id="installAppBtn" onclick="installApp()">📲 Install Life Tracker</button>
+    <button class="btn btn-full" id="installAppBtn" onclick="installApp()">${ic('install')}Install Life Tracker</button>
     <div class="browser-only-hint" style="font-size:13px;color:var(--muted);text-align:center;margin-top:1px">No prompt? Chrome ⋮ → Install.</div>
   </div>
-  <div class="stitle">📱 Home-screen Icon</div>
+  <div class="stitle">${ic('phone')}Home-screen Icon</div>
   <div class="icon-card">
     <div class="icon-card-preview"><img src="./icons/icon-192.svg" alt="Life Tracker home-screen icon"></div>
     <div style="flex:1;min-width:0">
@@ -3538,56 +3652,64 @@ function rSettings(){
       <div style="font-size:13.5px;color:var(--muted2);line-height:1.55">Your home-screen icon.</div>
     </div>
   </div>
-  <div class="stitle">🖼️ My Image</div>
+  <div class="stitle">${ic('image')}My Image</div>
   <div class="profile-card">
-    <div class="profile-preview" id="profilePreview">👤</div>
+    <div class="profile-preview" id="profilePreview">${ic('user')}</div>
     <div style="font-size:15px;font-weight:800;margin-bottom:4px">Personalize your Life Tracker</div>
     <div style="font-size:13.5px;color:var(--muted2);line-height:1.6;margin-bottom:10px">Add your photo. It's in your backup.</div>
     <div class="profile-row">
       <div style="position:relative;flex:1">
         <input type="file" id="profileFile" accept="image/*" onchange="setProfileImage(event)" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2"/>
-        <button class="btn btn-full" style="margin-bottom:0">🖼️ Add Image</button>
+        <button class="btn btn-full" style="margin-bottom:0">${ic('image')}Add Image</button>
       </div>
       <button class="btn btn-outline" style="width:44%;margin-bottom:0" onclick="removeProfileImage()">Remove</button>
     </div>
   </div>`;
-  const cr=carriedTasks();
-  h+=`<div class="divider"></div>
-  <div class="stitle">Task Settings</div>
+  }else if(settingsMode==='tasks'){
+    h+=setBackBtn()+`
+  <div class="stitle">${ic('tasks')}Task Settings</div>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px">
     <label class="lastday" style="margin-bottom:8px"><input type="checkbox" id="cotog" ${CO?'checked':''} onchange="togCarry()"/> Carry unfinished tasks to the next day</label>
     <div style="font-size:13.5px;color:var(--muted2);line-height:1.7">Unticked tasks stay on Today until done.<br><span style="color:var(--gold);font-weight:700">↻ 1-2d</span> gold · <span style="color:#fb923c;font-weight:700">↻ 3-6d</span> orange · <span style="color:#ef4444;font-weight:700">↻ 7d+</span> red${CO&&cr.length?`<br><br><b style="color:var(--text)">Right now: ${cr.length} task${cr.length!==1?'s':''} carried forward.</b>`:''}</div>
-  </div>
-  <div class="divider"></div>
-  <div class="stitle">🎬 Content Settings</div>
-  <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;margin-bottom:12px">
-    <div style="font-size:13.5px;color:var(--muted2);line-height:1.65;margin-bottom:10px">Edit, add, pause or resume your content.</div>
-    <button class="btn btn-full" style="margin-bottom:0" onclick="settingsMode='content';rSettings()">🎬 Open Content Settings</button>
-  </div>
-  <div class="divider"></div>
-  <div class="stitle">Backup & Restore</div>
+  </div>`;
+  }else if(settingsMode==='backup'){
+    h+=setBackBtn()+`
+  <div class="stitle">${ic('database')}Backup & Restore</div>
   <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px">
-    <div style="font-size:14px;color:var(--muted2);margin-bottom:12px;line-height:1.7">Save all your data. Restore anytime.</div>
-    <button class="btn btn-full" onclick="backup()">📥 Download Backup</button>
+    <div style="font-size:14px;color:var(--muted2);margin-bottom:12px;line-height:1.7">Save all your data, including challenges. Restore anytime.</div>
+    <button class="btn btn-full" onclick="backup()">${ic('download')}Download Backup</button>
     <div style="position:relative">
       <input type="file" id="rf" accept=".json" onchange="restore(event)" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2"/>
-      <button class="btn btn-full btn-outline">📤 Restore from Backup</button>
+      <button class="btn btn-full btn-outline">${ic('upload')}Restore from Backup</button>
     </div>
-  </div>
-  <div class="divider"></div>
-  <div class="stitle">Danger Zone</div>
-  <button class="btn btn-full btn-danger" onclick="clearToday()">🗑 Clear Today's Tasks</button>
-  <button class="btn btn-full btn-danger btn-nuke" onclick="clearAll()">⚠️ Clear All Life Tracker Data</button>
-  <div style="font-size:13px;color:var(--muted2);text-align:center;margin-top:2px;font-weight:600;line-height:1.5">Clears this app only.</div>
   </div>`;
+  }else if(settingsMode==='danger'){
+    h+=setBackBtn()+`
+  <div class="stitle">${ic('alert')}Danger Zone</div>
+  <button class="btn btn-full btn-danger" onclick="clearToday()">${ic('trash')}Clear Today's Tasks</button>
+  <button class="btn btn-full btn-danger btn-nuke" onclick="clearAll()">${ic('alert')}Clear All Life Tracker Data</button>
+  <div style="font-size:13px;color:var(--muted2);text-align:center;margin-top:2px;font-weight:600;line-height:1.5">Clears this app only.</div>`;
+  }else{
+    settingsMode='main';
+    h+=`<div class="stitle">Settings</div><div class="set-list">`
+      +setRow('app','user','App & Profile','Install, home-screen icon, my image')
+      +setRow('tasks','tasks','Tasks',CO?(cr.length?`Carry over on · ${cr.length} carried forward`:'Carry over on'):'Carry over off')
+      +setRow('content','play','Content','Edit, add, pause or resume your content')
+      +setRow('backup','database','Backup & Restore','Save or restore all your data')
+      +`</div><div class="set-list">`
+      +setRow('danger','alert','Danger Zone','Clear today or clear everything',true)
+      +`</div>`;
+  }
+  h+=`</div>`;
   m.innerHTML=h;
   renderProfile();
+  if(settingsMode==='app')updateInstallUI();
 }
 function renderProfile(){
   const a=document.getElementById('profileAvatar');
   const p=document.getElementById('profilePreview');
-  if(a)a.innerHTML=PI?`<img src="${PI}" alt="">`:'👤';
-  if(p)p.innerHTML=PI?`<img src="${PI}" alt="">`:'👤';
+  if(a)a.innerHTML=PI?`<img src="${PI}" alt="">`:ic('user');
+  if(p)p.innerHTML=PI?`<img src="${PI}" alt="">`:ic('user');
 }
 
 function setProfileImage(ev){
@@ -3621,9 +3743,9 @@ function isStandalone(){return window.matchMedia?.('(display-mode: standalone)')
 function updateInstallUI(){
   const b=document.getElementById('installAppBtn');
   if(!b)return;
-  if(isStandalone()){b.textContent='✅ Life Tracker is installed';b.disabled=true;b.style.opacity='.7';return;}
+  if(isStandalone()){b.innerHTML=ic('checkC')+'Life Tracker is installed';b.disabled=true;b.style.opacity='.7';return;}
   b.disabled=false;b.style.opacity='1';
-  b.textContent=deferredInstallPrompt?'📲 Install Life Tracker':'📲 Install Life Tracker';
+  b.innerHTML=ic('install')+'Install Life Tracker';
 }
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;updateInstallUI();});
 window.addEventListener('appinstalled',()=>{deferredInstallPrompt=null;updateInstallUI();toast('Life Tracker installed ✅');});
@@ -3642,7 +3764,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:54,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:55,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -3652,12 +3774,18 @@ function restore(ev){
   const r=new FileReader();
   r.onload=e=>{try{
     const d=JSON.parse(e.target.result);
+    if(d.kind==='plt_challenges'){
+      // Old challenge-only backup file: add its challenges, touch nothing else.
+      const list=Array.isArray(d.CG)?d.CG:[];const have=new Set(CG.map(g=>g.id));let n=0;
+      list.forEach(g=>{if(g&&g.id&&!have.has(g.id)){CG.push(g);n++;}});
+      sCG();render();toast(n+' challenge group'+(n!==1?'s':'')+' restored');return;
+    }
     if(d.T){T={...T,...d.T};sT();}if(d.H){H=d.H;sH();}
     if(d.HL){HL={...HL,...d.HL};sHL();}if(d.C){C=d.C;sC();}
     if(d.PT){PT={...PT,...d.PT};sPT();}
     if(d.CHL){CHL=d.CHL;sCHL();}
     if(d.CPLAN&&(d.CPLVER||0)>=CPLVER){CPLAN=d.CPLAN;if((d.CMIG||0)<CMIG33)migContent33(CPLAN);migContent35(CPLAN);sCPL();}
-    else{CPLAN=JSON.parse(JSON.stringify(DCPLAN));sCPL();}
+    else if(d.CPLAN){CPLAN=JSON.parse(JSON.stringify(DCPLAN));sCPL();}
     sv(SK.cpv,CPLVER);
     if(d.CC){CC={...CC,...d.CC};sCC();}
     if(d.CG){CG=d.CG;sCG();}
@@ -3671,7 +3799,7 @@ function restore(ev){
     Object.keys(T||{}).forEach(k=>(T[k]||[]).forEach(t=>{if(typeof t.time!=='string')t.time='';}));sT();
     toast('Restored! ✅');render();
   }catch{toast('Failed! Check the file.');}};
-  r.readAsText(file);
+  r.readAsText(file);ev.target.value='';
 }
 function togCarry(){
   CO=!CO;sCO();render();
