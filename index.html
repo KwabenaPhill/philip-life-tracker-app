@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v56</title>
+<title>Philip Life Tracker v57</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1486,7 +1486,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="header-date" id="hDate">TUE OCT 6</div>
     <div class="brand-wrap">
       <div class="header-eyebrow">PHILIP'S</div>
-      <div class="header-name">Life Tracker <span class="header-ver">v56</span></div>
+      <div class="header-name">Life Tracker <span class="header-ver">v57</span></div>
     </div>
     <button class="profile-avatar" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
   </div>
@@ -1600,7 +1600,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:56,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:57,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -1895,7 +1895,7 @@ function addRoutine(){
   R.push(base);
   const savedR=R[R.length-1];
   newRDays=[];newRType='weekly';newRLastDay=false;
-  OPEN_ADD.routine=false;sR();rPlan();updHeader();toast(`Saved: ${txt} · ${rScheduleLbl(savedR)}${time?' '+t12(time):''} 🔁`);
+  sR();render();updHeader();toast(`Saved: ${txt} · ${rScheduleLbl(savedR)}${time?' '+t12(time):''} 🔁`);
 }
 let newRDays=[];
 let newRType='weekly';
@@ -1974,7 +1974,7 @@ function addBank(){
   const due=document.getElementById('nbd')?.value||'';
   if(!txt)return toast('Type the task first!');
   BK.push({id:'b'+uid(),text:txt,catId:cat,due,createdAt:Date.now()});
-  OPEN_ADD.bank=false;sBK();rPlan();updHeader();
+  sBK();render();updHeader();
   toast(`Added to bank${due?' \u00b7 by '+fshort(due):''} \u{1F4CB}`);
 }
 function togBankEdit(id){document.getElementById('be_'+id)?.classList.toggle('open');}
@@ -2358,7 +2358,7 @@ function rPlan(){
   // ---- TASK BANK ----
   h+=`<div class="divider"></div><div class="stitle">${ic('bank')}Task Bank${BK.length?' ('+BK.length+')':''}</div>`;
   if(!BK.length){
-    h+=`<div class="empty">Nothing planned. Add a task below.</div>`;
+    h+=`<div class="empty">Nothing planned. Add tasks in Settings, Task Bank.</div>`;
   } else {
     BK.slice().sort(bkSort).forEach(b=>{
       const cat=gc(b.catId),info=bkDueInfo(b.due);
@@ -2395,21 +2395,12 @@ function rPlan(){
       </div>`;
     });
   }
-  if(!OPEN_ADD.bank)h+=`<div style="margin-top:12px">${addOpenBtn('bank','Plan a Task','nbt')}</div>`;
-  else h+=`<div class="add-form" style="margin-top:12px">
-    <div class="add-title"><span>Plan a Task</span>${addCloseBtn('bank')}</div>
-    <input class="input" id="nbt" placeholder="e.g. Finish editing Xtech video" style="margin-bottom:8px"/>
-    <div class="irow" style="margin-bottom:8px">
-      <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nbc">${cOpts()}</select></div>
-      <div style="flex:1"><div class="flbl">Finish by (optional)</div><input type="date" class="input input-sm" id="nbd"/></div>
-    </div>
-    <button class="btn btn-full" style="margin-bottom:0" onclick="addBank()">+ Add to Task Bank</button>
-  </div>`;
+
 
   // ---- ROUTINES MANAGER ----
   h+=`<div class="divider"></div><div class="stitle">${ic('repeat')}Your Routines${R.length?' ('+R.length+')':''}</div>`;
   if(!R.length){
-    h+=`<div class="empty">No routines yet. Tap Add New Routine below.</div>`;
+    h+=`<div class="empty">No routines yet. Add them in Settings, Routines.</div>`;
   } else {
     R.slice().sort(rSort).forEach(r=>{
       const cat=gc(r.catId);
@@ -2448,33 +2439,7 @@ function rPlan(){
       </div>`;
     });
   }
-  if(!OPEN_ADD.routine)h+=`<div style="margin-top:14px">${addOpenBtn('routine','Add New Routine','nrt')}</div>`;
-  else h+=`<div class="add-form" style="margin-top:14px">
-    <div class="add-title"><span>New Routine</span>${addCloseBtn('routine')}</div>
-    <input class="input" id="nrt" placeholder="e.g. Trim hair" style="margin-bottom:10px"/>
-    <div class="flbl">Repeat</div>
-    <div class="rtbar">
-      <button class="rtbtn ${newRType==='weekly'?'on':''}" id="nrtype_weekly" onclick="setNewRType('weekly')">Weekly</button>
-      <button class="rtbtn ${newRType==='monthly'?'on':''}" id="nrtype_monthly" onclick="setNewRType('monthly')">Monthly</button>
-    </div>
-    <div id="nrweeklybox" style="display:${newRType==='weekly'?'':'none'}">
-      <div class="flbl">Repeat on</div>
-      <div class="dchiprow">${DAYS.map((d,i)=>`<button class="dchip ${newRDays.includes(i)?'on':''}" id="ndchip_${i}" onclick="togNewRDay(${i})">${d[0]}</button>`).join('')}</div>
-    </div>
-    <div id="nrmonthlybox" style="display:${newRType==='monthly'?'':'none'}">
-      <label class="lastday"><input type="checkbox" id="nrlastck" ${newRLastDay?'checked':''} onchange="togNewLastDay()"/> Last day of month</label>
-      <div class="irow" id="nrdombox" style="display:${newRLastDay?'none':''}">
-        <div style="flex:1"><div class="flbl">Day of month</div><input type="number" min="1" max="31" class="input input-sm" id="nrdom" placeholder="e.g. 31"/></div>
-        <div style="flex:1"><div class="flbl">Every (months)</div><input type="number" min="1" max="12" class="input input-sm" id="nrinterval" value="1"/></div>
-      </div>
-    </div>
-    <div class="irow" style="margin-bottom:8px;margin-top:8px">
-      <div style="flex:1"><div class="flbl">Time (optional)</div><input type="time" class="input input-sm" id="nrtime"/></div>
-      <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nrc">${cOpts()}</select></div>
-    </div>
-    <button class="btn btn-full" style="margin-bottom:0" onclick="addRoutine()">+ Add Routine</button>
-    <button class="btn btn-full" style="margin-bottom:0;margin-top:8px" onclick="addStarterRoutines()">${ic('zap')}Add starter routines</button>
-  </div>`;
+
 
   h+=`</div>`;
   m.innerHTML=h;
@@ -3220,9 +3185,8 @@ function cgCard(g){
     <div class="cg-view-row"><div class="cg-day">${dayLabel}</div><button class="cg-view-all" onclick="openChallengeAll('${g.id}')">VIEW ALL DAYS</button></div>
     <div class="cg-scorebar"><div><span class="cg-score">${s.todayDone}/${s.itemCount}</span> <span class="cg-scorelbl">${s.weekly?'this week':'today'}</span></div><div class="cg-pct">${s.overallPct}% overall</div></div>
     <div class="cg-bar"><div class="cg-fill" style="width:${s.overallPct}%"></div></div>
-    ${items.length?cgGridHTML(g):`<div class="empty" style="padding:10px 0">No habits yet. Tap Add habit below.</div>`}
+    ${items.length?cgGridHTML(g):`<div class="empty" style="padding:10px 0">No habits yet. Add them in Settings, Challenges.</div>`}
     <div class="cg-grid-summary"><span>Today: <b>${s.todayDone}/${s.itemCount}</b></span><span>Checks: <b>${s.ticks}</b></span><span>Overall: <b>${s.overallPct}%</b></span></div>
-    ${OPEN_ADD['g'+g.id]?`<div class="cadd"><input class="input input-sm" id="gi_${g.id}" placeholder="Add a habit..."/><button class="btn btn-icon" style="width:36px;height:36px;font-size:17px;flex:none" onclick="addGroupItem('${g.id}')">+</button></div><div class="add-mini-close">${addCloseBtn('g'+g.id)}</div>`:addMiniBtn('g'+g.id,'Add habit','gi_'+g.id)}
     <div class="cg-actions">
       <div style="flex:1"></div>
       <button class="ibtn" style="color:var(--green)" onclick="togGroupRestart('${g.id}')">${ic('restart')}</button>
@@ -3274,24 +3238,10 @@ function togChAdd(open){chAddOpen=!!open;rChallenges();if(open)setTimeout(()=>do
 function rChallenges(){
   const m=document.getElementById('main');const t=tod();
   let h=`<div class="fi"><div class="stitle">${ic('trophy')}The Challenge</div>`;
-  if(!chAddOpen){
-    h+=`<button class="btn btn-full ch-add-btn" onclick="togChAdd(true)">${ic('plus')}Add New Challenge</button>`;
-  }else{
-    h+=`<div class="add-form">
-    <div class="add-title"><span>New Challenge</span><button class="ch-add-cancel" onclick="togChAdd(false)">Close</button></div>
-    <input class="input" id="ngn" placeholder="Group name (e.g. 90 Day Challenge)" style="margin-bottom:8px"/>
-    <div class="irow">
-      <div style="flex:1"><div class="flbl">Start</div><input type="date" class="input input-sm" id="ngs" value="${chStart()}"/></div>
-      <div style="flex:1"><div class="flbl">End</div><input type="date" class="input input-sm" id="nge" value="${addDays(chStart(),89)}"/></div>
-    </div>
-    <div class="irow"><select class="input input-sm" id="ngm" style="flex:1"><option value="daily">Daily check-in</option><option value="weekly">Weekly check-in</option></select></div>
-    <button class="btn btn-full" onclick="addGroup()">${ic('plus')}Create Challenge</button>
-  </div>`;
-  }
   const active=CG.filter(g=>!cgStats(g).ended);
   const done=CG.filter(g=>cgStats(g).ended);
   h+=`<div class="stitle">Active — ${active.length}</div>`;
-  if(!active.length)h+=`<div class="empty">No active groups. Create one above.</div>`;
+  if(!active.length)h+=`<div class="empty">No active challenges. Create one in Settings, Challenges.</div>`;
   active.forEach(g=>{h+=cgCard(g);});
   if(done.length){
     h+=`<div class="divider"></div><div class="stitle">${ic('checkC')}Completed · Record — ${done.length}</div>`;
@@ -3323,7 +3273,7 @@ function addGroup(){
   if(!start||!end)return toast('Pick start and end dates!');
   if(end<start)return toast('End must be after start!');
   CG.push({id:uid(),name,start,end,mode,items:[],log:{}});
-  chAddOpen=false;sCG();rChallenges();toast('Group created! 🏆');
+  sCG();render();toast('Challenge created');
 }
 function saveGroupEdit(id){
   const g=CG.find(x=>x.id===id);if(!g)return;
@@ -3346,7 +3296,7 @@ function addGroupItem(id){
   if(!v)return toast('Type a rule first!');
   if(!g.items)g.items=[];
   g.items.push({id:'i'+uid(),text:v});
-  sCG();rChallenges();toast('Rule added ✅');
+  sCG();render();toast('Rule added ✅');
 }
 function editGroupItem(gid,iid){
   const g=CG.find(x=>x.id===gid);if(!g)return;
@@ -3470,7 +3420,7 @@ function rContent(){
     h+=`<div class="cday ${isToday?'today':''}"><div class="cday-hdr"><div><div class="cday-name">${CDAY_FULL[d]}</div><div class="cday-lbl">${CDAY_LBL[d]}</div></div>${isToday?`<span class="cday-badge">TODAY · ${dn}/${activeTasks.length}</span>`:''}</div>`;
     if(!tasks.length)h+=`<div class="empty" style="padding:8px 0">No tasks.</div>`;
     tasks.forEach(t=>{const done=isToday&&!t.paused&&!!dm[t.id];h+=`<div class="content-task-box"><div class="ctask ${done?'done':''}" style="border:0;${t.paused?'opacity:.58':''}">${isToday&&!t.paused?`<div class="chk sm ${done?'on':''}" onclick="togContent('${t.id}')">${done?'✓':''}</div>`:`<div class="cbullet" style="${t.paused?'background:#6e5821':''}"></div>`}<div class="ctxt">${t.time?`<span class="rtime">${t12(t.time)}</span> — `:''}${esc(t.text)}${t.paused?` <span class="cs-badge paused">⏸ Paused</span>`:''}</div></div></div>`;});
-    h+=OPEN_ADD['c'+d]?`<div class="cadd"><input class="input input-sm" id="cadd_${d}" placeholder="Add a task..."/><button class="btn btn-icon" onclick="addContent(${d})">+</button></div><div class="add-mini-close">${addCloseBtn('c'+d)}</div></div>`:`${addMiniBtn('c'+d,'Add task','cadd_'+d)}</div>`;
+    h+=`</div>`;
   });
   h+=`<div style="font-size:12.5px;color:#656e7c;text-align:center;margin-top:4px;line-height:1.5">Pick channel logos above.</div></div>`;
   m.innerHTML=h;
@@ -3639,6 +3589,64 @@ function progressHTML(){
 
 // ---- SETTINGS ----
 let settingsMode='main';
+function bankFormHTML(){let h='';
+  h+=`<div class="add-form" >
+    <div class="add-title"><span>Plan a Task</span></div>
+    <input class="input" id="nbt" placeholder="e.g. Finish editing Xtech video" style="margin-bottom:8px"/>
+    <div class="irow" style="margin-bottom:8px">
+      <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nbc">${cOpts()}</select></div>
+      <div style="flex:1"><div class="flbl">Finish by (optional)</div><input type="date" class="input input-sm" id="nbd"/></div>
+    </div>
+    <button class="btn btn-full" style="margin-bottom:0" onclick="addBank()">+ Add to Task Bank</button>
+  </div>`;
+  return h;}
+function routineFormHTML(){let h='';
+  h+=`<div class="add-form" >
+    <div class="add-title"><span>New Routine</span></div>
+    <input class="input" id="nrt" placeholder="e.g. Trim hair" style="margin-bottom:10px"/>
+    <div class="flbl">Repeat</div>
+    <div class="rtbar">
+      <button class="rtbtn ${newRType==='weekly'?'on':''}" id="nrtype_weekly" onclick="setNewRType('weekly')">Weekly</button>
+      <button class="rtbtn ${newRType==='monthly'?'on':''}" id="nrtype_monthly" onclick="setNewRType('monthly')">Monthly</button>
+    </div>
+    <div id="nrweeklybox" style="display:${newRType==='weekly'?'':'none'}">
+      <div class="flbl">Repeat on</div>
+      <div class="dchiprow">${DAYS.map((d,i)=>`<button class="dchip ${newRDays.includes(i)?'on':''}" id="ndchip_${i}" onclick="togNewRDay(${i})">${d[0]}</button>`).join('')}</div>
+    </div>
+    <div id="nrmonthlybox" style="display:${newRType==='monthly'?'':'none'}">
+      <label class="lastday"><input type="checkbox" id="nrlastck" ${newRLastDay?'checked':''} onchange="togNewLastDay()"/> Last day of month</label>
+      <div class="irow" id="nrdombox" style="display:${newRLastDay?'none':''}">
+        <div style="flex:1"><div class="flbl">Day of month</div><input type="number" min="1" max="31" class="input input-sm" id="nrdom" placeholder="e.g. 31"/></div>
+        <div style="flex:1"><div class="flbl">Every (months)</div><input type="number" min="1" max="12" class="input input-sm" id="nrinterval" value="1"/></div>
+      </div>
+    </div>
+    <div class="irow" style="margin-bottom:8px;margin-top:8px">
+      <div style="flex:1"><div class="flbl">Time (optional)</div><input type="time" class="input input-sm" id="nrtime"/></div>
+      <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nrc">${cOpts()}</select></div>
+    </div>
+    <button class="btn btn-full" style="margin-bottom:0" onclick="addRoutine()">+ Add Routine</button>
+    <button class="btn btn-full" style="margin-bottom:0;margin-top:8px" onclick="addStarterRoutines()">${ic('zap')}Add starter routines</button>
+  </div>`;
+  return h;}
+function challengeFormHTML(){let h='';
+
+    h+=`<div class="add-form">
+    <div class="add-title"><span>New Challenge</span></div>
+    <input class="input" id="ngn" placeholder="Group name (e.g. 90 Day Challenge)" style="margin-bottom:8px"/>
+    <div class="irow">
+      <div style="flex:1"><div class="flbl">Start</div><input type="date" class="input input-sm" id="ngs" value="${chStart()}"/></div>
+      <div style="flex:1"><div class="flbl">End</div><input type="date" class="input input-sm" id="nge" value="${addDays(chStart(),89)}"/></div>
+    </div>
+    <div class="irow"><select class="input input-sm" id="ngm" style="flex:1"><option value="daily">Daily check-in</option><option value="weekly">Weekly check-in</option></select></div>
+    <button class="btn btn-full" onclick="addGroup()">${ic('plus')}Create Challenge</button>
+  </div>`;
+  
+  const act=CG.filter(g=>!cgStats(g).ended);
+  h+=`<div class="stitle">${ic('plus')}Add Habits</div>`;
+  if(!act.length)h+=`<div class="empty">No active challenge yet. Create one above.</div>`;
+  act.forEach(g=>{const its=g.items||[];h+=`<div class="add-form"><div class="add-title"><span>${esc(g.name)}</span><span style="font-size:13px;color:#9A9AA0">${its.length} habit${its.length!==1?'s':''}</span></div>${its.length?`<div style="font-size:13.5px;color:#9A9AA0;line-height:1.6;margin-bottom:8px">${its.map(i=>esc(i.text)).join(' · ')}</div>`:''}<div class="cadd" style="margin-top:0"><input class="input input-sm" id="gi_${g.id}" placeholder="Add a habit..."/><button class="btn btn-icon" style="width:36px;height:36px;font-size:17px;flex:none" onclick="addGroupItem('${g.id}')">+</button></div></div>`;});
+  return h;}
+
 function setRow(mode,icon,title,sub,danger){return `<button class="set-row${danger?' danger':''}" onclick="openSettingsFolder('${mode}')"><span class="set-row-ic">${ic(icon)}</span><span class="set-row-main"><span class="set-row-title">${title}</span><span class="set-row-sub">${sub}</span></span><span class="set-row-chev">${ic('chevR')}</span></button>`;}
 function openSettingsFolder(mode){navPush();settingsMode=mode;rSettings();window.scrollTo(0,0);}
 function setBackBtn(){return `<button class="btn btn-outline btn-full set-back" onclick="navBack()">${ic('chevL')}Back to Settings</button>`;}
@@ -3684,6 +3692,12 @@ function rSettings(){
     <label class="lastday" style="margin-bottom:8px"><input type="checkbox" id="cotog" ${CO?'checked':''} onchange="togCarry()"/> Carry unfinished tasks to the next day</label>
     <div style="font-size:13.5px;color:var(--muted2);line-height:1.7">Unticked tasks stay on Today until done.<br><span style="color:var(--gold);font-weight:700">↻ 1-2d</span> gold · <span style="color:#fb923c;font-weight:700">↻ 3-6d</span> orange · <span style="color:#ef4444;font-weight:700">↻ 7d+</span> red${CO&&cr.length?`<br><br><b style="color:var(--text)">Right now: ${cr.length} task${cr.length!==1?'s':''} carried forward.</b>`:''}</div>
   </div>`;
+  }else if(settingsMode==='bank'){
+    h+=setBackBtn()+`<div class="stitle">${ic('bank')}Task Bank</div>`+bankFormHTML();
+  }else if(settingsMode==='routines'){
+    h+=setBackBtn()+`<div class="stitle">${ic('repeat')}Routines</div>`+routineFormHTML();
+  }else if(settingsMode==='challenges'){
+    h+=setBackBtn()+`<div class="stitle">${ic('trophy')}New Challenge</div>`+challengeFormHTML();
   }else if(settingsMode==='backup'){
     h+=setBackBtn()+`
   <div class="stitle">${ic('database')}Backup & Restore</div>
@@ -3706,7 +3720,10 @@ function rSettings(){
     h+=`<div class="stitle">Settings</div><div class="set-list">`
       +setRow('app','user','App & Profile','Install, home-screen icon, my image')
       +setRow('tasks','tasks','Tasks',CO?(cr.length?`Carry over on · ${cr.length} carried forward`:'Carry over on'):'Carry over off')
-      +setRow('content','play','Content','Edit, add, pause or resume your content')
+      +setRow('bank','bank','Task Bank',BK.length?`Add tasks to do later · ${BK.length} planned`:'Add tasks to do later')
+      +setRow('routines','repeat','Routines',R.length?`Add new routines · ${R.length} saved`:'Add new routines')
+      +setRow('content','play','Content','Add, edit, pause or resume your content')
+      +setRow('challenges','trophy','Challenges','New challenge and habits')
       +setRow('backup','database','Backup & Restore','Save or restore all your data')
       +`</div><div class="set-list">`
       +setRow('danger','alert','Danger Zone','Clear today or clear everything',true)
@@ -3776,7 +3793,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:56,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
+  const data={v:11,appVersion:57,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
