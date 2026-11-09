@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v60</title>
+<title>Philip Life Tracker v61</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1501,6 +1501,10 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
 #appHeader .ltb-mut{color:#7d8799;font-weight:500;}
 @media(max-width:350px){#appHeader .ltb-pill{font-size:11px;}#appHeader .ltb-mut{display:none;}}
 .ltb-start{background:#0b1626;border:1px solid #16304f;color:#9cc6ff;border-radius:14px;padding:10px 12px;font-size:13px;margin:4px 0 12px;text-align:center;}
+
+/* v61 routine cards */
+.rt-group .rt-card{background:#080b10!important;border:1px solid #191f29!important;border-radius:16px!important;padding:11px 10px 11px 12px!important;margin-top:8px!important;border-bottom:1px solid #191f29!important;align-items:flex-start!important;}
+.rt-group .rt-card .cdot{margin-top:7px;}
 </style>
 </head>
 <body>
@@ -1510,7 +1514,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="ltb-top">
       <div class="ltb-brand">
         <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v60</span></div>
+        <div class="ltb-name">Life Tracker <span class="header-ver">v61</span></div>
       </div>
       <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
@@ -1630,7 +1634,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:60,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:61,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -2469,9 +2473,12 @@ function rPlan(){
   if(!R.length){
     h+=`<div class="empty">No routines yet. Add them in Settings, Routines.</div>`;
   } else {
-    R.slice().sort(rSort).forEach(r=>{
+    [['Daily',r=>rEditType(r)==='daily'],['Weekly',r=>rEditType(r)==='weekly'],['Monthly',r=>rEditType(r)==='monthly']].forEach(([gname,gfn])=>{
+    const glist=R.filter(gfn).sort(rSort);if(!glist.length)return;
+    h+=`<div class="cday rt-group"><div class="cday-hdr"><div><div class="cday-name">${gname}</div><div class="cday-lbl">${glist.length} routine${glist.length!==1?'s':''}</div></div></div>`;
+    glist.forEach(r=>{
       const cat=gc(r.catId);
-      h+=`<div class="rrow">
+      h+=`<div class="rrow rt-card">
         <div class="cdot" style="background:${cat.color}"></div>
         <div style="flex:1;min-width:0">
           <div class="rname">${esc(r.text)}</div>
@@ -2509,6 +2516,8 @@ function rPlan(){
         <button class="ibtn" onclick="togRoutineEdit('${r.id}')">${ic('pencil')}</button>
         <button class="ibtn" style="color:var(--red)" onclick="delRoutine('${r.id}')">${ic('x')}</button>
       </div>`;
+    });
+    h+=`</div>`;
     });
   }
 
@@ -3002,13 +3011,16 @@ function rHistory(){
   const hrt=routinesFor(hDate);
   if(hrt.length){
     h+=`<div class="divider"></div><div class="stitle">${ic('repeat')}Routines — This Day</div>`;
+    const hrtDone=hrt.filter(r=>RL[hDate]?.[r.id]).length;
+    h+=`<div class="cday"><div class="cday-hdr"><div><div class="cday-name">${CDAY_FULL[new Date(hDate+'T00:00:00').getDay()]}</div><div class="cday-lbl">${hrtDone}/${hrt.length} complete</div></div><span class="cday-badge">${hrt.length?Math.round(hrtDone/hrt.length*100):0}%</span></div>`;
     hrt.forEach(r=>{
       const dn=!!RL[hDate]?.[r.id];
-      h+=`<div class="ctask ${dn?'done':''}" style="border-bottom:1px solid var(--border)">
+      h+=`<div class="content-task-box"><div class="ctask ${dn?'done':''}" style="border:0;padding:0">
         <div class="chk sm ${dn?'on':''}" onclick="togRoutineDate('${hDate}','${r.id}')">${dn?'✓':''}</div>
         <div class="ctxt">${r.time?`<span class="rtime">${t12(r.time)}</span> — `:''}${esc(r.text)}</div>
-      </div>`;
+      </div></div>`;
     });
+    h+=`</div>`;
   }
 
   // Content history for this date
@@ -3018,13 +3030,16 @@ function rHistory(){
   if(!hct.length){
     h+=`<div class="empty">No content for this day.</div>`;
   } else {
+    const hctAct=hct.filter(t=>!t.paused),hctDone=hctAct.filter(t=>CC[hDate]?.[t.id]).length;
+    h+=`<div class="cday"><div class="cday-hdr"><div><div class="cday-name">${CDAY_FULL[hwd]}</div><div class="cday-lbl">${hctDone}/${hctAct.length} complete</div></div><span class="cday-badge">${hctAct.length?Math.round(hctDone/hctAct.length*100):0}%</span></div>`;
     hct.forEach(t=>{
       const dn=!t.paused&&!!CC[hDate]?.[t.id];
-      h+=`<div class="ctask ${dn?'done':''}" style="border-bottom:1px solid var(--border);${t.paused?'opacity:.58':''}">
+      h+=`<div class="content-task-box"><div class="ctask ${dn?'done':''}" style="border:0;padding:0;${t.paused?'opacity:.58':''}">
         ${t.paused?`<div style="width:24px;text-align:center;color:#f6c45d;font-size:14px;flex-shrink:0">⏸</div>`:`<div class="chk sm ${dn?'on':''}" onclick="togContentDate('${hDate}','${t.id}')">${dn?'✓':''}</div>`}
         <div class="ctxt">${t.time?`<span class="rtime">${t12(t.time)}</span> — `:''}${esc(t.text)}${t.paused?` <span class="cs-badge paused">⏸ Paused</span>`:''}</div>
-      </div>`;
+      </div></div>`;
     });
+    h+=`</div>`;
   }
   // Challenge groups for this date
   const actG=CG.filter(g=>hDate>=g.start&&hDate<=g.end);
@@ -3878,7 +3893,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:60,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:61,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
