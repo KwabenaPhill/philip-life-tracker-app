@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v62</title>
+<title>Philip Life Tracker v63</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1514,7 +1514,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="ltb-top">
       <div class="ltb-brand">
         <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v62</span></div>
+        <div class="ltb-name">Life Tracker <span class="header-ver">v63</span></div>
       </div>
       <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
@@ -1634,7 +1634,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:62,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:63,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -2519,7 +2519,7 @@ function rPlan(){
     });
     h+=`</div>`;
     });
-    if(R.some(r=>rEditType(r)!=='monthly')||[0,1,2,3,4,5,6].some(d=>(CPLAN[d]||[]).some(c=>!c.paused)))h+=`<button class="btn btn-full" style="margin-top:8px" onclick="copyRoutinesOnce()">${ic('clock')}Copy Routines (set once)</button>`;
+    if(R.length)h+=`<button class="btn btn-full" style="margin-top:8px" onclick="copyRoutinesOnce()">${ic('clock')}Copy Routines (set once)</button>`;
   }
 
 
@@ -3088,49 +3088,72 @@ function markDone(tid){
 // ---- COPY TODAY'S TASKS (for alarms) ----
 function copyTasks(){
   const today=tod();
-  const tl=gt(today);
-  const mr=routinesFor(today).filter(r=>r.repeatType==='monthly');
-  if(!tl.length&&!mr.length){toast('Nothing to copy today');return;}
-  const items=[...tl.map(t=>({time:t.time||'',text:t.text,done:!!t.done})),...mr.map(r=>({time:r.time||'',text:r.text+' (monthly)',done:!!(RL[today]&&RL[today][r.id])}))].filter(x=>!x.done);
-  if(!items.length){toast('Everything today is done ✅');return;}
-  const al=items.filter(x=>x.time).sort((a,b)=>a.time<b.time?-1:a.time>b.time?1:0);
-  const rm=items.filter(x=>!x.time);
-  let body='';
-  if(al.length)body+=`⏰ ALARMS (fixed time)\n`+al.map((x,i)=>`${i+1}. ${t12(x.time)} - ${x.text}`).join('\n');
-  if(rm.length){if(body)body+='\n\n';body+=`🔔 REMINDERS (no set time: pick a smart time, set as alarm)\n`+rm.map((x,i)=>`${i+1}. ${x.text}`).join('\n');}
-  const text=`LIFE TRACKER · TODAY · ${fdate(today)}\nSet ONE-TIME alarms for today only. Show me the plan first.\n\n${body}\n\nDaily and weekly routines are not listed. They are set once with "Copy Routines".`;
-  showCopyModal('Copy Today\'s Tasks','Today&#39;s unfinished tasks plus any monthly routine due today. Daily and weekly routines are not included (set them once from Plan, Your Routines).',text);
+  const items=gt(today).filter(t=>!t.done);
+  if(!items.length){toast(gt(today).length?'Everything today is done ✅':'No tasks today');return;}
+  const now=new Date();const nowM=now.getHours()*60+now.getMinutes();
+  const hm=m=>`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
+  let def=Math.max(8*60,Math.ceil((nowM+1)/60)*60);
+  const late=def>=20*60;
+  if(late)def=Math.ceil((nowM+10)/5)*5;
+  const lines=items.sort((x,y)=>(x.time||'99:99')<(y.time||'99:99')?-1:1).map((t,i)=>{
+    let st=def;
+    if(t.time){const [H,M]=t.time.split(':').map(Number);const tm=H*60+M;if(tm>nowM)st=tm;}
+    const rep=(late||st>=20*60)?'no repeat':'repeat every 2 hours until 8:00 PM today';
+    return `${i+1}. "🔔 ${t.text}" - start today ${t12(hm(st))} - ${rep}`;
+  });
+  const text=`Create these as separate Samsung Reminders for today (${fdate(today)}). Use the exact title, start time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n${lines.join('\n')}`;
+  showCopyModal('Copy Today\'s Tasks','Paste into Gemini every morning. Only today&#39;s unfinished tasks. Routines are not here (they are set once). Delete each reminder when the task is done.',[text]);
+}
+function nextStart(match,base,time){
+  const now=new Date();const nowHM=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  let d=base<tod()?tod():base;
+  for(let i=0;i<800;i++){
+    if(match(d)&&(d>tod()||time>nowHM))return d;
+    const x=new Date(d+'T00:00:00');x.setDate(x.getDate()+1);d=`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;
+  }
+  return '';
 }
 function copyRoutinesOnce(){
-  const list=R.filter(r=>rEditType(r)!=='monthly'&&!(r.until&&r.until<tod())).sort(rSort);
-  const hasC=[0,1,2,3,4,5,6].some(d=>(CPLAN[d]||[]).some(c=>!c.paused));
-  if(!list.length&&!hasC){toast('No daily or weekly routines');return;}
-  const extra=r=>(r.from&&r.from>tod()?`, from ${fshort(r.from)}`:'')+(r.until?`, until ${fshort(r.until)}`:'');
-  const al=list.filter(r=>r.time),rm=list.filter(r=>!r.time);
-  let body='';
-  if(al.length)body+=`⏰ REPEATING ALARMS (fixed time)\n`+al.map((r,i)=>`${i+1}. ${t12(r.time)} - ${r.text} - ${rDaysLbl(r)}${extra(r)}`).join('\n');
-  if(rm.length){if(body)body+='\n\n';body+=`🔔 REPEATING REMINDERS (no set time: pick a smart time)\n`+rm.map((r,i)=>`${i+1}. ${r.text} - ${rDaysLbl(r)}${extra(r)}`).join('\n');}
-  const cm={};for(let d=0;d<7;d++)(CPLAN[d]||[]).forEach(c=>{if(c.paused)return;const k=(c.time||'')+'|'+c.text;if(!cm[k])cm[k]={time:c.time||'',text:c.text,days:[]};cm[k].days.push(d);});
-  const cl=Object.values(cm).sort((a,b)=>(a.time||'99:99')<(b.time||'99:99')?-1:1);
-  if(cl.length){const cf=CPS&&CPS>tod()?`, from ${fshort(CPS)}`:'';if(body)body+='\n\n';body+=`🎬 WEEKLY CONTENT (repeating)\n`+cl.map((c,i)=>`${i+1}. ${c.time?t12(c.time)+' - ':''}${c.text} - ${rDaysLbl(c)}${cf}`).join('\n');}
-  const text=`LIFE TRACKER · ROUTINES (SET ONCE) · copied ${fdate(tod())}\nSet each as a REPEATING alarm on the days shown. Set once only. Show me the plan first.\nMonthly routines are not here. They come in Copy Today's Tasks on their day.\n\n${body}`;
-  showCopyModal('Copy Routines (set once)','Daily and weekly routines plus your weekly content plan, as repeating alarms. Use this only when you add or change a routine or the content plan.',text);
+  const out=[];const T0=tod();
+  const fd=d=>fdate(d).replace(',','');
+  const add=(title,time,match,base,rep,until)=>{
+    if(until&&until<T0)return;
+    const st=nextStart(match,base||T0,time);if(!st||(until&&st>until))return;
+    out.push({title,time,st,line:`"${title}" - start ${fd(st)}, ${t12(time)} - ${rep}${rep==='no repeat'?'':until?`, until ${fd(until)}`:', forever'}`});
+  };
+  R.forEach(r=>{
+    const time=r.time||'09:00',base=r.from||T0;
+    if(r.repeatType==='monthly'){add(r.text,time,d=>rMatchesDate({...r,from:'',until:''},d),base,`repeat every ${r.interval||1} month${(r.interval||1)>1?'s':''}`,r.until);return;}
+    const days=(r.days||[]).slice().sort((a,b)=>a-b);
+    if(days.length===7){add(r.text,time,()=>true,base,'repeat every 1 day',r.until);return;}
+    days.forEach(wd=>add(r.text,time,d=>new Date(d+'T00:00:00').getDay()===wd,base,'repeat every 1 week',r.until));
+  });
+  const cm={};for(let d=0;d<7;d++)(CPLAN[d]||[]).forEach(c=>{if(c.paused)return;const k=(c.time||'')+'|'+c.text;if(!cm[k])cm[k]={time:c.time||'08:00',text:c.text,days:[]};cm[k].days.push(d);});
+  Object.values(cm).forEach(c=>{const base=CPS&&CPS>T0?CPS:T0;
+    if(c.days.length===7)add(c.text,c.time,()=>true,base,'repeat every 1 day');
+    else c.days.forEach(wd=>add(c.text,c.time,d=>new Date(d+'T00:00:00').getDay()===wd,base,'repeat every 1 week'));
+  });
+  BK.forEach(b=>{if(b.due&&b.due>=T0)add(b.text,'08:00',d=>d===b.due,b.due,'no repeat');});
+  if(!out.length){toast('No routines to copy');return;}
+  out.sort((x,y)=>(x.st+x.time)<(y.st+y.time)?-1:1);
+  const head=(n,t)=>`Create these as separate Samsung Reminders (batch ${n} of ${t}). Use the exact title, start date, time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n`;
+  const chunks=[];for(let i=0;i<out.length;i+=8)chunks.push(out.slice(i,i+8));
+  const texts=chunks.map((ch,n)=>head(n+1,chunks.length)+ch.map((x,i)=>`${i+1}. ${x.line}`).join('\n'));
+  showCopyModal('Copy Routines (set once)',`Paste each batch into Gemini, one at a time. Do this once, and again only when you add or change a routine. ${out.length} reminders in ${chunks.length} batch${chunks.length!==1?'es':''}.`,texts);
 }
-function showCopyModal(title,hint,text){
+function showCopyModal(title,hint,texts){
+  if(typeof texts==='string')texts=[texts];
   let ov=document.getElementById('copyOverlay');if(ov)ov.remove();
   ov=document.createElement('div');ov.id='copyOverlay';ov.className='copy-overlay';
-  ov.innerHTML=`<div class="copy-modal">
+  ov.innerHTML=`<div class="copy-modal" style="max-height:90vh;overflow-y:auto">
     <div class="copy-title">${ic('clock')}${title}</div>
     <div class="copy-hint">${hint}</div>
-    <textarea id="copyText" class="copy-text" readonly>${esc(text)}</textarea>
-    <div class="copy-btns">
-      <button class="btn" style="flex:1" onclick="doCopy()">${ic('copy')}Copy</button>
-      <button class="btn btn-ghost" style="flex:1" onclick="closeCopy()">Close</button>
-    </div>
+    ${texts.map((t,i)=>`${texts.length>1?`<div class="flbl" style="margin-top:10px">Batch ${i+1}</div>`:''}<textarea id="copyText${i?'_'+i:''}" class="copy-text" readonly>${esc(t)}</textarea>
+    <div class="copy-btns"><button class="btn" style="flex:1" onclick="doCopy(${i})">${ic('copy')}Copy${texts.length>1?' batch '+(i+1):''}</button></div>`).join('')}
+    <div class="copy-btns"><button class="btn btn-ghost" style="flex:1" onclick="closeCopy()">Close</button></div>
   </div>`;
   document.body.appendChild(ov);
   ov.onclick=e=>{if(e.target===ov)closeCopy();};
-  const ta=document.getElementById('copyText');ta.focus();ta.select();
 }
 function copyRolled(){
   const cr=carriedTasks().filter(c=>!c.t.done);
@@ -3152,8 +3175,8 @@ function copyRolled(){
   ov.onclick=e=>{if(e.target===ov)closeCopy();};
   const ta=document.getElementById('copyText');ta.focus();ta.select();
 }
-function doCopy(){
-  const ta=document.getElementById('copyText');if(!ta)return;
+function doCopy(i){
+  const ta=document.getElementById(i?'copyText_'+i:'copyText');if(!ta)return;
   ta.focus();ta.select();ta.setSelectionRange(0,999999);
   let ok=false;
   try{ok=document.execCommand('copy');}catch(e){}
@@ -3913,7 +3936,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:62,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:63,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
