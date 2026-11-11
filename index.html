@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v64</title>
+<title>Philip Life Tracker v65</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1514,7 +1514,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="ltb-top">
       <div class="ltb-brand">
         <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v64</span></div>
+        <div class="ltb-name">Life Tracker <span class="header-ver">v65</span></div>
       </div>
       <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
@@ -1634,7 +1634,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:64,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:65,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -1926,6 +1926,7 @@ function addRoutine(){
   if(from&&until&&until<from)return toast('End date must be after start date!');
   let base={id:'r'+uid(),text:txt,time,catId:cat,repeatType:newRType==='monthly'?'monthly':'weekly'};
   if(from)base.from=from;if(until)base.until=until;
+  if(document.getElementById('nralarm')?.checked)base.alarm=true;
   if(newRType==='monthly'){
     const iv=parseInt(document.getElementById('nrinterval')?.value,10)||1;
     if(iv<1||iv>12)return toast('Months must be 1-12!');
@@ -2009,6 +2010,7 @@ function saveRoutine(id){
     delete r.lastDay;delete r.dayOfMonth;delete r.interval;delete r.anchor;
   }
   r.text=txt;r.time=time;r.catId=cat;r.repeatType=type;
+  if(document.getElementById('realarm_'+id)?.checked)r.alarm=true;else delete r.alarm;
   if(from)r.from=from;else delete r.from;
   if(until)r.until=until;else delete r.until;
   delete r._editType;delete r._editLastDay;
@@ -2206,9 +2208,10 @@ function tcHTML(t,date,carry,pfx){
     <div class="cdot" style="background:${cat.color}"></div>
     <div style="flex:1;min-width:0">
       <div class="ttext">${esc(t.text)}${carry?carryBadge(carry.days):''}</div>
-      <div class="tmeta">${t.time?`${ic('clock')} ${t12(t.time)} · `:''}${cat.icon} ${cat.name}${carry?` · <span class="fromday">from ${fshort(carry.date)}</span>`:''}</div>
+      <div class="tmeta">${t.alarm?'⏰ Alarm · ':''}${t.time?`${ic('clock')} ${t12(t.time)} · `:''}${cat.icon} ${cat.name}${carry?` · <span class="fromday">from ${fshort(carry.date)}</span>`:''}</div>
       <div class="edit-area" id="ea_${p}${t.id}">
         <div class="erow"><input class="input input-sm" id="et_${p}${t.id}" value="${esc(t.text)}" style="flex:1"/></div>
+        <label class="lastday" style="margin:6px 0"><input type="checkbox" id="eal_${p}${t.id}" ${t.alarm?'checked':''}/> ⏰ Clock alarm (leave off = 🔔 Samsung reminder)</label>
         <div class="erow">
           <select class="input input-sm" id="ec_${p}${t.id}" style="flex:1">${cOpts(t.catId)}</select>
           <button class="btn btn-green" style="padding:8px 12px;font-size:14px" onclick="saveEdit('${date}','${t.id}','${p}')">Save</button>
@@ -2259,7 +2262,8 @@ function saveEdit(date,tid,pfx){
   const nc=document.getElementById('ec_'+p+tid)?.value;
   if(!nt)return toast('Task cannot be empty!');
   if(!T[date])return;
-  T[date]=T[date].map(t=>t.id===tid?{...t,text:nt,catId:nc}:t);
+  const na=!!document.getElementById('eal_'+p+tid)?.checked;
+  T[date]=T[date].map(t=>{if(t.id!==tid)return t;const o={...t,text:nt,catId:nc};if(na)o.alarm=true;else delete o.alarm;return o;});
   sT();render();toast('Updated ✅');
 }
 function togTask(date,id){
@@ -2482,7 +2486,7 @@ function rPlan(){
         <div class="cdot" style="background:${cat.color}"></div>
         <div style="flex:1;min-width:0">
           <div class="rname">${esc(r.text)}</div>
-          <div class="rmeta">${rScheduleLbl(r)}${r.time?' · '+t12(r.time):''} · ${cat.icon} ${cat.name}</div>
+          <div class="rmeta">${r.alarm?'⏰ Alarm · ':''}${rScheduleLbl(r)}${r.time?' · '+t12(r.time):''} · ${cat.icon} ${cat.name}</div>
           <div class="edit-area" id="re_${r.id}">
             <input class="input input-sm" id="ret_${r.id}" value="${esc(r.text)}" style="margin-bottom:8px"/>
             <div class="flbl">Repeat</div>
@@ -2510,6 +2514,7 @@ function rPlan(){
               <div style="flex:1"><div class="flbl">Start date</div><input type="date" class="input input-sm" id="refrom_${r.id}" value="${r.from||''}"/></div>
               <div style="flex:1"><div class="flbl">End date</div><input type="date" class="input input-sm" id="reuntil_${r.id}" value="${r.until||''}"/></div>
             </div>
+            <label class="lastday" style="margin:6px 0"><input type="checkbox" id="realarm_${r.id}" ${r.alarm?'checked':''}/> ⏰ Clock alarm (leave off = 🔔 Samsung reminder)</label>
             <button class="btn btn-green btn-full" style="padding:9px;font-size:14px;margin-bottom:0" onclick="saveRoutine('${r.id}')">Save</button>
           </div>
         </div>
@@ -3088,8 +3093,9 @@ function markDone(tid){
 // ---- COPY TODAY'S TASKS (for alarms) ----
 function copyTasks(){
   const today=tod();
-  const items=gt(today).filter(t=>!t.done);
-  if(!items.length){toast(gt(today).length?'Everything today is done ✅':'No tasks today');return;}
+  const all=gt(today).filter(t=>!t.done);
+  const alarms=all.filter(t=>t.alarm),items=all.filter(t=>!t.alarm);
+  if(!all.length){toast(gt(today).length?'Everything today is done ✅':'No tasks today');return;}
   const now=new Date();const nowM=now.getHours()*60+now.getMinutes();
   const hm=m=>`${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;
   let def=Math.max(8*60,Math.ceil((nowM+1)/60)*60);
@@ -3101,8 +3107,10 @@ function copyTasks(){
     const rep=(late||st>=20*60)?'no repeat':'repeat every 2 hours until 8:00 PM today';
     return `${i+1}. "🔔 ${t.text}" - start today ${t12(hm(st))} - ${rep}`;
   });
-  const text=`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders for today (${fdate(today)}). Use the exact title, start time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n${lines.join('\n')}`;
-  showCopyModal('Copy Today\'s Tasks','Paste into Gemini every morning. Only today&#39;s unfinished tasks. Routines are not here (they are set once). Delete each reminder when the task is done.',[text]);
+  const out=[];
+  if(alarms.length)out.push(`FOR CLAUDE · ⏰ CLOCK ALARMS · ${fdate(today)}\nSet these as ONE-TIME Clock alarms for today. Show me the table first, set after I say GO.\n\n`+alarms.sort((x,y)=>(x.time||'99:99')<(y.time||'99:99')?-1:1).map((t,i)=>`${i+1}. ${t.time?t12(t.time):'(no time, suggest one)'} - ⏰ ${t.text}`).join('\n'));
+  if(items.length)out.push(`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders for today (${fdate(today)}). Use the exact title, start time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n${lines.join('\n')}`);
+  showCopyModal('Copy Today\'s Tasks',`${alarms.length?'⏰ Alarms block: paste to Claude. ':''}${items.length?'🔔 Reminders block: paste to Gemini. ':''}Only today&#39;s unfinished tasks. Routines are set once, not here. Delete each reminder when done.`,out,alarms.length?['⏰ For Claude: Clock alarms','🔔 For Gemini: Samsung reminders'].slice(0,out.length):['🔔 For Gemini: Samsung reminders']);
 }
 function nextStart(match,base,time){
   const now=new Date();const nowHM=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
@@ -3121,7 +3129,9 @@ function copyRoutinesOnce(){
     const st=nextStart(match,base||T0,time);if(!st||(until&&st>until))return;
     out.push({title,time,st,line:`"${title}" - start ${fd(st)}, ${t12(time)} - ${rep}${rep==='no repeat'?'':until?`, until ${fd(until)}`:', forever'}`});
   };
+  const ral=[];
   R.forEach(r=>{
+    if(r.alarm){if(r.until&&r.until<T0)return;const dl=r.repeatType==='monthly'?'MONTHLY (cannot repeat in Clock, tell me)':rDaysLbl(r);ral.push(`${t12(r.time||'09:00')} - ⏰ ${r.text} - ${dl}${r.until?`, until ${fdate(r.until)}`:''}`);return;}
     const time=r.time||'09:00',base=r.from||T0;
     if(r.repeatType==='monthly'){add(r.text,time,d=>rMatchesDate({...r,from:'',until:''},d),base,`repeat every ${r.interval||1} month${(r.interval||1)>1?'s':''}`,r.until);return;}
     const days=(r.days||[]).slice().sort((a,b)=>a-b);
@@ -3134,22 +3144,24 @@ function copyRoutinesOnce(){
     else c.days.forEach(wd=>add(c.text,c.time,d=>new Date(d+'T00:00:00').getDay()===wd,base,'repeat every 1 week'));
   });
   BK.forEach(b=>{if(b.due&&b.due>=T0)add(b.text,'08:00',d=>d===b.due,b.due,'no repeat');});
-  if(!out.length){toast('No routines to copy');return;}
+  if(!out.length&&!ral.length){toast('No routines to copy');return;}
   out.sort((x,y)=>(x.st+x.time)<(y.st+y.time)?-1:1);
   const head=(n,t)=>`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders (batch ${n} of ${t}). Use the exact title, start date, time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n`;
   const chunks=[];for(let i=0;i<out.length;i+=8)chunks.push(out.slice(i,i+8));
   const texts=chunks.map((ch,n)=>head(n+1,chunks.length)+ch.map((x,i)=>`${i+1}. ${x.line}`).join('\n'));
-  showCopyModal('Copy Routines (set once)',`Paste each batch into Gemini, one at a time. Do this once, and again only when you add or change a routine. ${out.length} reminders in ${chunks.length} batch${chunks.length!==1?'es':''}.`,texts);
+  const labels=chunks.map((c,n)=>`🔔 For Gemini: batch ${n+1} of ${chunks.length}`);
+  if(ral.length){texts.unshift(`FOR CLAUDE · ⏰ REPEATING CLOCK ALARMS (set once)\nSet each as a REPEATING Clock alarm on the days shown. Show me the table first, set after I say GO.\n\n`+ral.map((x,i)=>`${i+1}. ${x}`).join('\n'));labels.unshift('⏰ For Claude: Clock alarms');}
+  showCopyModal('Copy Routines (set once)',`${ral.length?'⏰ Alarms block: paste to Claude. ':''}🔔 Reminder batches: paste into Gemini one at a time. Do this once, and again only when you add or change a routine.`,texts,labels);
 }
-function showCopyModal(title,hint,texts){
-  if(typeof texts==='string')texts=[texts];
+function showCopyModal(title,hint,texts,labels){
+  if(typeof texts==='string')texts=[texts];labels=labels||[];
   let ov=document.getElementById('copyOverlay');if(ov)ov.remove();
   ov=document.createElement('div');ov.id='copyOverlay';ov.className='copy-overlay';
   ov.innerHTML=`<div class="copy-modal" style="max-height:90vh;overflow-y:auto">
     <div class="copy-title">${ic('clock')}${title}</div>
     <div class="copy-hint">${hint}</div>
-    ${texts.map((t,i)=>`${texts.length>1?`<div class="flbl" style="margin-top:10px">Batch ${i+1}</div>`:''}<textarea id="copyText${i?'_'+i:''}" class="copy-text" readonly>${esc(t)}</textarea>
-    <div class="copy-btns"><button class="btn" style="flex:1" onclick="doCopy(${i})">${ic('copy')}Copy${texts.length>1?' batch '+(i+1):''}</button></div>`).join('')}
+    ${texts.map((t,i)=>`${labels[i]||texts.length>1?`<div class="flbl" style="margin-top:10px;font-weight:700">${labels[i]||'Batch '+(i+1)}</div>`:''}<textarea id="copyText${i?'_'+i:''}" class="copy-text" readonly>${esc(t)}</textarea>
+    <div class="copy-btns"><button class="btn" style="flex:1" onclick="doCopy(${i})">${ic('copy')}Copy${texts.length>1?' '+(labels[i]?labels[i].split(':')[0]:'batch '+(i+1)):''}</button></div>`).join('')}
     <div class="copy-btns"><button class="btn btn-ghost" style="flex:1" onclick="closeCopy()">Close</button></div>
   </div>`;
   document.body.appendChild(ov);
@@ -3763,6 +3775,7 @@ function routineFormHTML(){let h='';
       <div style="flex:1"><div class="flbl">Time (optional)</div><input type="time" class="input input-sm" id="nrtime"/></div>
       <div style="flex:1"><div class="flbl">Category</div><select class="input input-sm" id="nrc">${cOpts()}</select></div>
     </div>
+    <label class="lastday" style="margin:6px 0"><input type="checkbox" id="nralarm" /> ⏰ Clock alarm (leave off = 🔔 Samsung reminder)</label>
     <div class="irow" style="margin-bottom:8px">
       <div style="flex:1"><div class="flbl">Start date (optional)</div><input type="date" class="input input-sm" id="nrfrom"/></div>
       <div style="flex:1"><div class="flbl">End date (optional)</div><input type="date" class="input input-sm" id="nruntil"/></div>
@@ -3936,7 +3949,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:64,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:65,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
