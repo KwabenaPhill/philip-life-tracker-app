@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v63</title>
+<title>Philip Life Tracker v64</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1514,7 +1514,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="ltb-top">
       <div class="ltb-brand">
         <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v63</span></div>
+        <div class="ltb-name">Life Tracker <span class="header-ver">v64</span></div>
       </div>
       <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
@@ -1634,7 +1634,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:63,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:64,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -3101,7 +3101,7 @@ function copyTasks(){
     const rep=(late||st>=20*60)?'no repeat':'repeat every 2 hours until 8:00 PM today';
     return `${i+1}. "🔔 ${t.text}" - start today ${t12(hm(st))} - ${rep}`;
   });
-  const text=`Create these as separate Samsung Reminders for today (${fdate(today)}). Use the exact title, start time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n${lines.join('\n')}`;
+  const text=`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders for today (${fdate(today)}). Use the exact title, start time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n${lines.join('\n')}`;
   showCopyModal('Copy Today\'s Tasks','Paste into Gemini every morning. Only today&#39;s unfinished tasks. Routines are not here (they are set once). Delete each reminder when the task is done.',[text]);
 }
 function nextStart(match,base,time){
@@ -3136,7 +3136,7 @@ function copyRoutinesOnce(){
   BK.forEach(b=>{if(b.due&&b.due>=T0)add(b.text,'08:00',d=>d===b.due,b.due,'no repeat');});
   if(!out.length){toast('No routines to copy');return;}
   out.sort((x,y)=>(x.st+x.time)<(y.st+y.time)?-1:1);
-  const head=(n,t)=>`Create these as separate Samsung Reminders (batch ${n} of ${t}). Use the exact title, start date, time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n`;
+  const head=(n,t)=>`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders (batch ${n} of ${t}). Use the exact title, start date, time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n`;
   const chunks=[];for(let i=0;i<out.length;i+=8)chunks.push(out.slice(i,i+8));
   const texts=chunks.map((ch,n)=>head(n+1,chunks.length)+ch.map((x,i)=>`${i+1}. ${x.line}`).join('\n'));
   showCopyModal('Copy Routines (set once)',`Paste each batch into Gemini, one at a time. Do this once, and again only when you add or change a routine. ${out.length} reminders in ${chunks.length} batch${chunks.length!==1?'es':''}.`,texts);
@@ -3936,7 +3936,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:63,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:64,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
