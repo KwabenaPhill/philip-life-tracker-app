@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v65</title>
+<title>Philip Life Tracker v66</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1514,7 +1514,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="ltb-top">
       <div class="ltb-brand">
         <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v65</span></div>
+        <div class="ltb-name">Life Tracker <span class="header-ver">v66</span></div>
       </div>
       <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
@@ -1634,7 +1634,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:65,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:66,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -3109,7 +3109,7 @@ function copyTasks(){
   });
   const out=[];
   if(alarms.length)out.push(`FOR CLAUDE · ⏰ CLOCK ALARMS · ${fdate(today)}\nSet these as ONE-TIME Clock alarms for today. Show me the table first, set after I say GO.\n\n`+alarms.sort((x,y)=>(x.time||'99:99')<(y.time||'99:99')?-1:1).map((t,i)=>`${i+1}. ${t.time?t12(t.time):'(no time, suggest one)'} - ⏰ ${t.text}`).join('\n'));
-  if(items.length)out.push(`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders for today (${fdate(today)}). Use the exact title, start time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n${lines.join('\n')}`);
+  if(items.length)out.push(`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Keep every title exactly as written, Every Word Capitalised. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders for today (${fdate(today)}). Use the exact title, start time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n${lines.join('\n')}`);
   showCopyModal('Copy Today\'s Tasks',`${alarms.length?'⏰ Alarms block: paste to Claude. ':''}${items.length?'🔔 Reminders block: paste to Gemini. ':''}Only today&#39;s unfinished tasks. Routines are set once, not here. Delete each reminder when done.`,out,alarms.length?['⏰ For Claude: Clock alarms','🔔 For Gemini: Samsung reminders'].slice(0,out.length):['🔔 For Gemini: Samsung reminders']);
 }
 function nextStart(match,base,time){
@@ -3146,8 +3146,8 @@ function copyRoutinesOnce(){
   BK.forEach(b=>{if(b.due&&b.due>=T0)add(b.text,'08:00',d=>d===b.due,b.due,'no repeat');});
   if(!out.length&&!ral.length){toast('No routines to copy');return;}
   out.sort((x,y)=>(x.st+x.time)<(y.st+y.time)?-1:1);
-  const head=(n,t)=>`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders (batch ${n} of ${t}). Use the exact title, start date, time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n`;
-  const chunks=[];for(let i=0;i<out.length;i+=8)chunks.push(out.slice(i,i+8));
+  const head=(n,t)=>`SAMSUNG REMINDER ONLY. Do NOT create Clock alarms. Do NOT change any title, date or time. Keep every title exactly as written, Every Word Capitalised. Do NOT wait for GO: create them now.\n\nCreate these as separate Samsung Reminders (batch ${n} of ${t}). Use the exact title, start date, time and repeat for each. Alert type: full screen, long sound. Confirm with a numbered list when done.\n\n`;
+  const chunks=[];for(let i=0;i<out.length;i+=4)chunks.push(out.slice(i,i+4));
   const texts=chunks.map((ch,n)=>head(n+1,chunks.length)+ch.map((x,i)=>`${i+1}. ${x.line}`).join('\n'));
   const labels=chunks.map((c,n)=>`🔔 For Gemini: batch ${n+1} of ${chunks.length}`);
   if(ral.length){texts.unshift(`FOR CLAUDE · ⏰ REPEATING CLOCK ALARMS (set once)\nSet each as a REPEATING Clock alarm on the days shown. Show me the table first, set after I say GO.\n\n`+ral.map((x,i)=>`${i+1}. ${x}`).join('\n'));labels.unshift('⏰ For Claude: Clock alarms');}
@@ -3476,7 +3476,7 @@ function togGroupItemGrid(gid,iid,date){
 }
 
 // ---- CONTENT ----
-const CDAY_LBL={0:'Plan Next Week',1:'Make Xtech (×7)',2:'Make Device Guardian (×3)',3:'Make Cine Cascade (×2)',4:'Make VelloxPlay (×2)',5:'Check-up Day',6:'EXPORT AND UPLOADS'};
+const CDAY_LBL={0:'Plan Next Week',1:'Make Xtech Guides (×7)',2:'Make Device Guardian (×3)',3:'Make Cine Cascade + Game Zeus (×3 Each)',4:'Make RankX Football (×3)',5:'Check Day',6:'Rest'};
 const CDAY_FULL=['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
 const CONTENT_BRANDS=[
   {id:'xtech',name:'Xtech Guides',icon:'🎬',accent:'#6a45c9',meta:'7 videos / week'},
@@ -3949,7 +3949,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:65,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:66,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
