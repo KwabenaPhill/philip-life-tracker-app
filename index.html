@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v61</title>
+<title>Philip Life Tracker v62</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1514,7 +1514,7 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
     <div class="ltb-top">
       <div class="ltb-brand">
         <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v61</span></div>
+        <div class="ltb-name">Life Tracker <span class="header-ver">v62</span></div>
       </div>
       <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
     </div>
@@ -1634,7 +1634,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:61,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:62,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -2519,6 +2519,7 @@ function rPlan(){
     });
     h+=`</div>`;
     });
+    if(R.some(r=>rEditType(r)!=='monthly')||[0,1,2,3,4,5,6].some(d=>(CPLAN[d]||[]).some(c=>!c.paused)))h+=`<button class="btn btn-full" style="margin-top:8px" onclick="copyRoutinesOnce()">${ic('clock')}Copy Routines (set once)</button>`;
   }
 
 
@@ -3088,20 +3089,39 @@ function markDone(tid){
 function copyTasks(){
   const today=tod();
   const tl=gt(today);
-  const rt=routinesFor(today);
-  if(!tl.length&&!rt.length){toast('Nothing to copy today');return;}
+  const mr=routinesFor(today).filter(r=>r.repeatType==='monthly');
+  if(!tl.length&&!mr.length){toast('Nothing to copy today');return;}
+  const items=[...tl.map(t=>({time:t.time||'',text:t.text,done:!!t.done})),...mr.map(r=>({time:r.time||'',text:r.text+' (monthly)',done:!!(RL[today]&&RL[today][r.id])}))].filter(x=>!x.done);
+  if(!items.length){toast('Everything today is done ✅');return;}
+  const al=items.filter(x=>x.time).sort((a,b)=>a.time<b.time?-1:a.time>b.time?1:0);
+  const rm=items.filter(x=>!x.time);
   let body='';
-  if(tl.length)body+=`TASKS\n`+tl.map((t,i)=>`${i+1}. ${t.time?t12(t.time)+' — ':''}${t.text}`).join('\n');
-  if(rt.length){
-    if(body)body+='\n\n';
-    body+=`ROUTINES\n`+rt.map(r=>r.time?`${t12(r.time)} — ${r.text}`:`${r.text} (no set time)`).join('\n');
-  }
-  const text=`Please set alarms for today (${fdate(today)}):\n\n${body}`;
+  if(al.length)body+=`⏰ ALARMS (fixed time)\n`+al.map((x,i)=>`${i+1}. ${t12(x.time)} - ${x.text}`).join('\n');
+  if(rm.length){if(body)body+='\n\n';body+=`🔔 REMINDERS (no set time: pick a smart time, set as alarm)\n`+rm.map((x,i)=>`${i+1}. ${x.text}`).join('\n');}
+  const text=`LIFE TRACKER · TODAY · ${fdate(today)}\nSet ONE-TIME alarms for today only. Show me the plan first.\n\n${body}\n\nDaily and weekly routines are not listed. They are set once with "Copy Routines".`;
+  showCopyModal('Copy Today\'s Tasks','Today&#39;s unfinished tasks plus any monthly routine due today. Daily and weekly routines are not included (set them once from Plan, Your Routines).',text);
+}
+function copyRoutinesOnce(){
+  const list=R.filter(r=>rEditType(r)!=='monthly'&&!(r.until&&r.until<tod())).sort(rSort);
+  const hasC=[0,1,2,3,4,5,6].some(d=>(CPLAN[d]||[]).some(c=>!c.paused));
+  if(!list.length&&!hasC){toast('No daily or weekly routines');return;}
+  const extra=r=>(r.from&&r.from>tod()?`, from ${fshort(r.from)}`:'')+(r.until?`, until ${fshort(r.until)}`:'');
+  const al=list.filter(r=>r.time),rm=list.filter(r=>!r.time);
+  let body='';
+  if(al.length)body+=`⏰ REPEATING ALARMS (fixed time)\n`+al.map((r,i)=>`${i+1}. ${t12(r.time)} - ${r.text} - ${rDaysLbl(r)}${extra(r)}`).join('\n');
+  if(rm.length){if(body)body+='\n\n';body+=`🔔 REPEATING REMINDERS (no set time: pick a smart time)\n`+rm.map((r,i)=>`${i+1}. ${r.text} - ${rDaysLbl(r)}${extra(r)}`).join('\n');}
+  const cm={};for(let d=0;d<7;d++)(CPLAN[d]||[]).forEach(c=>{if(c.paused)return;const k=(c.time||'')+'|'+c.text;if(!cm[k])cm[k]={time:c.time||'',text:c.text,days:[]};cm[k].days.push(d);});
+  const cl=Object.values(cm).sort((a,b)=>(a.time||'99:99')<(b.time||'99:99')?-1:1);
+  if(cl.length){const cf=CPS&&CPS>tod()?`, from ${fshort(CPS)}`:'';if(body)body+='\n\n';body+=`🎬 WEEKLY CONTENT (repeating)\n`+cl.map((c,i)=>`${i+1}. ${c.time?t12(c.time)+' - ':''}${c.text} - ${rDaysLbl(c)}${cf}`).join('\n');}
+  const text=`LIFE TRACKER · ROUTINES (SET ONCE) · copied ${fdate(tod())}\nSet each as a REPEATING alarm on the days shown. Set once only. Show me the plan first.\nMonthly routines are not here. They come in Copy Today's Tasks on their day.\n\n${body}`;
+  showCopyModal('Copy Routines (set once)','Daily and weekly routines plus your weekly content plan, as repeating alarms. Use this only when you add or change a routine or the content plan.',text);
+}
+function showCopyModal(title,hint,text){
   let ov=document.getElementById('copyOverlay');if(ov)ov.remove();
   ov=document.createElement('div');ov.id='copyOverlay';ov.className='copy-overlay';
   ov.innerHTML=`<div class="copy-modal">
-    <div class="copy-title">${ic('clock')}Copy Today's Tasks</div>
-    <div class="copy-hint">Only today&#39;s own tasks and routines (no rolled-over, no challenges, no content). Copy and paste to any AI to set alarms.</div>
+    <div class="copy-title">${ic('clock')}${title}</div>
+    <div class="copy-hint">${hint}</div>
     <textarea id="copyText" class="copy-text" readonly>${esc(text)}</textarea>
     <div class="copy-btns">
       <button class="btn" style="flex:1" onclick="doCopy()">${ic('copy')}Copy</button>
@@ -3893,7 +3913,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:61,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:62,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
