@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v66</title>
+<title>Philip Life Tracker v67</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1506,33 +1506,221 @@ body{font-feature-settings:"tnum" 1,"cv11" 1;-webkit-font-smoothing:antialiased;
 .rt-group .rt-card{background:#080b10!important;border:1px solid #191f29!important;border-radius:16px!important;padding:11px 10px 11px 12px!important;margin-top:8px!important;border-bottom:1px solid #191f29!important;align-items:flex-start!important;}
 .rt-group .rt-card .cdot{margin-top:7px;}
 </style>
+<style id="v67-design">
+/* ===== v67 RESTYLE (visual layer; data untouched) ===== */
+body{padding-bottom:96px}
+/* header: slim centred card */
+#appHeader.header{padding:10px 14px 4px!important;border-bottom:none!important;background:#000!important}
+#appHeader .v7hdr{border-radius:18px;background:linear-gradient(180deg,#0D1A2A 0%,#111113 80%);border:1px solid #1C1C1F;padding:8px 10px 9px;text-align:center}
+#appHeader .v7hdr-title{font-size:18px;font-weight:800;letter-spacing:-.2px;line-height:1.2;color:#F5F5F7}
+#appHeader .v7hdr-title .header-ver{font-size:11px!important;font-weight:700!important;color:#9A9AA0!important;-webkit-text-fill-color:#9A9AA0!important;margin-left:2px}
+#appHeader .v7pill{margin-top:6px;display:flex;justify-content:space-evenly;align-items:center;padding:5px 4px;border:1px solid #1A3A5E;background:#1A1A1D;border-radius:999px}
+#appHeader .v7pi{display:flex;align-items:center;gap:5px;font-size:12px;white-space:nowrap;color:#F5F5F7}
+#appHeader .v7pi b{font-weight:800}
+#appHeader .v7pi .lic{width:15px;height:15px}
+#appHeader .v7pi .mu{color:#9A9AA0;font-weight:600;font-size:11.5px}
+#appHeader .v7sep{width:1px;height:13px;background:#1A3A5E;flex:none}
+#appHeader #profileAvatar{display:none!important}
+body[data-pg="settings"] #appHeader{display:none!important}
+/* bottom bar: soft pill behind active icon */
+.tabs .tab{font-size:11.5px!important;font-weight:700!important;color:#8B8B92!important;position:relative!important;padding-top:6px!important}
+.tabs .tab.active{color:#3b9eff!important}
+.tabs .tab .tab-icon{position:relative;z-index:1}
+.tabs .tab.active::before{display:block!important;content:''!important;position:absolute!important;top:3px!important;left:50%!important;transform:translateX(-50%)!important;width:54px!important;height:30px!important;border-radius:99px!important;background:#0D1A2A!important;z-index:0!important}
+/* section label */
+.v7sl{display:flex;align-items:center;gap:8px;margin:16px 2px 8px;font-size:11px;font-weight:700;letter-spacing:1.6px;color:#9A9AA0;text-transform:uppercase}
+.v7sl::after{content:"";flex:1;height:1px;background:#232326}
+.v7sl b{order:2;color:#3b9eff;letter-spacing:0;font-size:12px}
+.v7sl b.r{color:#F87171}
+.v7sl:first-child{margin-top:6px}
+/* cards */
+.v7cd{background:#111113;border:1px solid #232326;border-radius:18px;padding:12px;margin-bottom:8px}
+.v7card{background:#111113;border:1px solid #232326;border-radius:18px;padding:12px;margin-bottom:8px}
+.v7card.done{background:#0D1A2A;border-color:#1A3A5E}
+.v7card.done .v7title{color:#9A9AA0;text-decoration:line-through}
+.v7card.miss{background:#160B0B;border-color:#5A1D1D}
+.v7card.today{border:2px solid #0A84FF;padding:11px}
+.v7card-row{display:flex;align-items:center;gap:8px}
+.v7card-main{flex:1;min-width:0}
+.v7tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--tc,#3b9eff);border:1px solid color-mix(in srgb,var(--tc,#3b9eff) 40%,transparent);border-radius:99px;padding:2px 9px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:middle}
+.v7tag.solid{background:#0A84FF;border-color:#0A84FF;color:#fff}
+.v7title{font-size:16px;font-weight:800;margin:6px 0;line-height:1.3;word-break:break-word;color:#F5F5F7}
+.v7chips{display:flex;flex-wrap:wrap;gap:6px}
+.v7chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;background:#232326;border-radius:99px;padding:3px 9px;color:#D4D4D8;white-space:nowrap}
+.v7chip .lic{width:13px;height:13px}
+.v7tick{width:42px;height:42px;border-radius:50%;border:1.5px solid #3F3F46;background:transparent;display:flex;align-items:center;justify-content:center;color:#0A84FF;flex:none;cursor:pointer;padding:0}
+.v7tick .lic{width:20px;height:20px;stroke-width:2.4}
+.v7tick.on{background:#0A84FF;border-color:#0A84FF;color:#fff}
+.v7tick.sm{width:26px;height:26px}.v7tick.sm .lic{width:14px;height:14px}
+.v7more,.v7mini{width:30px;height:36px;border:none;background:transparent;color:#9A9AA0;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer;padding:0;border-radius:10px}
+.v7more .lic{width:20px;height:20px}
+.v7mini{width:34px;height:34px;background:#0A84FF;color:#fff}
+.v7mini .lic{width:17px;height:17px}
+.v7done-btn{height:34px;padding:0 12px;border:none;border-radius:11px;background:#0A84FF;color:#fff;font:inherit;font-size:13px;font-weight:700;display:flex;align-items:center;gap:4px;flex:none;cursor:pointer}
+.v7done-btn .lic{width:15px;height:15px}
+.v7card .edit-area{margin-top:10px}
+.v7del{margin-top:8px;width:100%;height:40px;border-radius:12px;border:1px solid rgba(255,69,58,.4);background:rgba(255,69,58,.12);color:#FF6B61;font:inherit;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+/* week rings */
+.v7week{display:flex;justify-content:space-between;margin:2px 4px 0}
+.v7wd{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11.5px;font-weight:700;color:#9A9AA0}
+.v7wd.today{color:#3b9eff}
+.v7wd svg{display:block}
+.v7wfull{width:34px;height:34px;border-radius:50%;background:#0A84FF;color:#fff;display:flex;align-items:center;justify-content:center}
+.v7wfull .lic{width:17px;height:17px;stroke-width:2.6}
+.v7wd.today .v7ringwrap{border-radius:50%;box-shadow:0 0 0 2px #000,0 0 0 3px #0A84FF}
+/* tiles */
+.v7tiles{display:flex;gap:6px}
+.v7tl{flex:1;background:#1A1A1D;border:1px solid transparent;border-radius:12px;padding:6px 4px;text-align:center;min-width:0}
+.v7tl .k{font-size:11.5px;color:#9A9AA0;white-space:nowrap}
+.v7tl .v{font-size:17px;font-weight:800;line-height:1.25;color:#F5F5F7}
+.v7tl .v small{font-size:12px;color:#9A9AA0;font-weight:700}
+.v7tl.on{border-color:#1A3A5E}.v7tl.on .k,.v7tl.on .v,.v7tl.on .v small{color:#3b9eff}
+.v7tl.red{border-color:#5A1D1D}.v7tl.red .k,.v7tl.red .v{color:#F87171}
+/* warning / catch-up bars */
+.v7warn{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:10px 12px;border-radius:16px;background:#1A1408;border:1px solid #4A3613;cursor:pointer}
+.v7warn .t{font-size:14px;font-weight:800;color:#f5a623}
+.v7warn .s{font-size:12px;color:#9A9AA0;margin-top:2px}
+.v7warn>.lic{color:#f5a623;width:18px;height:18px}
+.v7ib{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none}
+.v7ib .lic{width:17px;height:17px}
+.v7ib.pu{background:#2A1B4A;color:#B39DFF}.v7ib.bl{background:#0D1A2A;color:#3b9eff}.v7ib.am{background:#2E2210;color:#f5a623}.v7ib.gr{background:#0F2A1A;color:#4ADE80}.v7ib.rd{background:#2A0D0D;color:#F87171}
+.v7ib.big{width:40px;height:40px;border-radius:12px}.v7ib.big .lic{width:21px;height:21px}
+.v7ib img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+/* rows */
+.v7rows{background:#111113;border:1px solid #232326;border-radius:18px;padding:2px 12px;margin-bottom:8px}
+.v7row{display:flex;align-items:center;gap:10px;padding:9px 0}
+.v7row+.v7row,.v7row+.edit-area+.v7row{border-top:1px solid #1C1C1F}
+.v7row .rt{flex:1;min-width:0;font-size:14px;font-weight:700;line-height:1.35;word-break:break-word;color:#F5F5F7}
+.v7row .rt small{display:block;font-size:12px;font-weight:500;color:#9A9AA0;margin-top:2px}
+.v7row.done .rt{color:#9A9AA0;text-decoration:line-through}
+.v7row.paused{opacity:.6}
+.v7rows .edit-area{margin:0 0 10px}
+.v7pz{font-size:11px;font-weight:700;color:#f5a623;border:1px solid #4A3613;border-radius:99px;padding:1px 7px;white-space:nowrap}
+.v7bul{width:6px;height:6px;border-radius:50%;background:#3F3F46;flex:none;margin:0 9px}
+.v7fold{cursor:pointer}
+.v7fold .cnt{font-weight:800;font-size:14px;color:#9A9AA0}
+.v7fold .cnt.b{color:#3b9eff}
+.v7fold>.lic{color:#9A9AA0;width:18px;height:18px}
+.v7foldbody{padding:0 0 8px}
+/* chips row (categories) */
+.v7swipe{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.v7swipe::-webkit-scrollbar{display:none}
+.v7cchip{display:flex;align-items:center;gap:6px;background:#111113;border:1px solid #232326;border-radius:99px;padding:6px 11px;white-space:nowrap;font-size:12.5px;font-weight:700;flex:none;color:#F5F5F7}
+.v7cchip .n{color:#9A9AA0}.v7cchip .n.b{color:#3b9eff}
+.v7dot{width:8px;height:8px;border-radius:50%;flex:none;display:inline-block}
+.v7dots{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end;max-width:120px}
+.v7dots i{width:9px;height:9px;border-radius:50%;background:#3F3F46;display:block}
+.v7dots i.on{background:#0A84FF}
+/* buttons */
+.v7btn{width:100%;height:46px;border-radius:14px;border:none;background:#0A84FF;color:#fff;font:inherit;font-size:14.5px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;margin:6px 0 8px;cursor:pointer}
+.v7btn.o{background:#111113;border:1px solid #232326;color:#F5F5F7}
+.v7btn.o .lic{color:#3b9eff}
+.v7btn .lic{width:18px;height:18px}
+.v7note{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:14px;background:#1A1408;border:1px solid #4A3613;font-size:12.5px;font-weight:600;margin-bottom:8px;color:#F5F5F7}
+.v7note .lic{color:#f5a623;width:16px;height:16px}
+.v7empty{text-align:center;color:#9A9AA0;font-size:13.5px;padding:14px 8px;background:#111113;border:1px dashed #232326;border-radius:16px;margin-bottom:8px;line-height:1.5}
+.v7alert{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:#1A1408;border:1px solid #4A3613;color:#f5a623;font-size:13px;font-weight:700;margin-bottom:8px;cursor:pointer}
+/* date strip */
+.v7strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.v7strip::-webkit-scrollbar{display:none}
+.v7dc{flex:none;width:48px;background:#111113;border:1px solid #232326;border-radius:14px;padding:7px 0;text-align:center;cursor:pointer;position:relative;color:#F5F5F7}
+.v7dc .d{font-size:11px;font-weight:700;color:#9A9AA0;letter-spacing:.5px}
+.v7dc .n{font-size:17px;font-weight:800}
+.v7dc .c{font-size:11px;color:#9A9AA0}
+.v7dc.on{background:#0D1A2A;border:2px solid #0A84FF;padding:6px 0}
+.v7dc.on .d,.v7dc.on .c{color:#3b9eff}
+.v7dc.cal{display:flex;align-items:center;justify-content:center;color:#3b9eff}
+.v7dc.cal .lic{width:21px;height:21px}
+.v7dc.cal input{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
+.v7dline{margin:8px 4px 2px;font-size:13px;font-weight:600;color:#9A9AA0}
+.v7dline b{color:#3b9eff;font-weight:700}
+/* add task */
+.v7add .input{margin-bottom:8px!important}
+.v7addrow{display:flex;gap:8px}
+.v7addrow select{flex:1;margin:0!important}
+.v7plus{width:46px;height:46px;border-radius:14px;border:none;background:#0A84FF;color:#fff;display:flex;align-items:center;justify-content:center;flex:none;cursor:pointer}
+.v7plus .lic{width:22px;height:22px}
+/* task bank countdown */
+.v7cnt{width:52px;height:52px;border-radius:14px;text-align:center;flex:none;display:flex;flex-direction:column;justify-content:center;background:#0D1A2A;border:1px solid #1A3A5E;color:#3b9eff}
+.v7cnt .n{font-size:19px;font-weight:800;line-height:1}
+.v7cnt .l{font-size:10.5px;font-weight:700;margin-top:3px;letter-spacing:.5px}
+.v7cnt.over{background:#2A0D0D;border-color:#5A1D1D;color:#F87171}
+.v7cnt.soon{background:#2E2210;border-color:#4A3613;color:#f5a623}
+.v7cnt.none{background:#1A1A1D;border-color:#232326;color:#9A9AA0}
+.v7bank{display:flex;align-items:center;gap:10px}
+.v7bank .rt{flex:1;min-width:0}
+.v7bank .rt b{display:block;font-size:15px;font-weight:800;line-height:1.3;word-break:break-word}
+.v7bank .rt span{font-size:12px;color:#9A9AA0}
+.v7bank .rt span.over{color:#F87171}.v7bank .rt span.soon{color:#f5a623}
+/* routines weekday grid */
+.v7wdg{display:flex;gap:3px;flex:none}
+.v7wdg i{width:17px;height:17px;border-radius:5px;background:#1A1A1D;font-size:10.5px;font-style:normal;font-weight:700;color:#6B6B72;display:flex;align-items:center;justify-content:center}
+.v7wdg i.on{background:#0A84FF;color:#fff}
+.v7rsub{display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.v7rsub .lic{width:13px;height:13px}
+/* history score */
+.v7big{font-size:32px;font-weight:800;color:#3b9eff;line-height:1}
+.v7segs{display:flex;gap:4px;margin:10px 0}
+.v7segs i{flex:1;height:6px;border-radius:6px;background:#232326;display:block}
+.v7segs i.d{background:#0A84FF}.v7segs i.m{background:#5A1D1D}
+/* content tiles (settings-style) */
+.v7g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:8px}
+.v7g2 .v7cd{margin:0;cursor:pointer}
+.v7tt{font-size:15px;font-weight:800;margin-top:10px;line-height:1.25;color:#F5F5F7}
+.v7ts{font-size:12px;color:#9A9AA0;margin-top:2px}
+.v7wide{display:flex;align-items:center;gap:12px;cursor:pointer}
+.v7wide>.lic{color:#6B6B72;width:18px;height:18px}
+.v7wmap{display:flex;gap:4px;margin-top:12px}
+.v7wmap i{flex:1;height:30px;border-radius:9px;background:#1A1A1D;font-size:11px;font-style:normal;font-weight:700;color:#6B6B72;display:flex;align-items:center;justify-content:center}
+.v7wmap i.on{background:#0A84FF;color:#fff}
+.v7back{display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#F5F5F7;background:none;border:none;padding:6px 2px 10px;cursor:pointer;font-family:inherit}
+.v7back .lic{width:18px;height:18px}
+/* settings */
+.v7inst{display:flex;align-items:center;gap:10px;margin-bottom:8px;padding:12px;border-radius:18px;background:#0A84FF;color:#fff;cursor:pointer;border:none;width:100%;font:inherit;text-align:left}
+.v7inst .lic{width:18px;height:18px}
+.v7prof{padding:14px;border-radius:18px;background:linear-gradient(180deg,#0D1A2A,#0B1420);border:1px solid #1A3A5E;margin-bottom:8px}
+.v7prof-top{display:flex;align-items:center;gap:12px}
+.v7av{width:60px;height:60px;border-radius:50%;background:#1A1A1D;border:2px solid #1A3A5E;display:flex;align-items:center;justify-content:center;color:#3b9eff;position:relative;flex:none}
+.v7av>img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.v7av>.lic{width:28px;height:28px}
+.v7cam{position:absolute;right:-3px;bottom:-3px;width:24px;height:24px;border-radius:50%;background:#0A84FF;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.v7cam .lic{width:13px;height:13px}
+.v7cam input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.v7prof .nm{font-size:20px;font-weight:800;color:#F5F5F7}
+.v7prof .mt{font-size:13px;color:#9A9AA0;margin-top:2px}
+.v7link{color:#3b9eff;text-decoration:underline;background:none;border:none;font:inherit;font-weight:700;padding:0;cursor:pointer}
+.v7danger{display:flex;align-items:center;gap:12px;padding:12px;border-radius:18px;background:#160B0B;border:1px solid #5A1D1D;cursor:pointer}
+.v7danger .t{flex:1;font-size:16px;font-weight:800;color:#F87171}
+.v7danger>.lic{color:#6B6B72;width:18px;height:18px}
+.v7bkbtns{display:flex;gap:8px;margin-top:10px}
+.v7bkbtns>*{flex:1;margin:0!important;position:relative}
+.v7bkbtns input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2}
+.v7ring text{font-family:Inter,system-ui,sans-serif}
+.v7row>.v7tag{min-width:48px;text-align:center;flex:none}
+</style>
 </head>
 <body>
 
 <div class="header" id="appHeader">
-  <div class="ltb-card">
-    <div class="ltb-top">
-      <div class="ltb-brand">
-        <div class="ltb-eye">PHILIP'S</div>
-        <div class="ltb-name">Life Tracker <span class="header-ver">v66</span></div>
-      </div>
-      <button class="ltb-av" id="profileAvatar" onclick="openProfileSettings()" aria-label="Open profile photo"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button>
-    </div>
-    <div class="ltb-pills">
-      <div class="ltb-pill"><span class="ltb-dot ltb-d1"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M16 3v4M8 3v4M4 11h16"/></svg></span><span id="hDate">Mon, Nov 9</span></div>
-      <div class="ltb-pill"><span class="ltb-dot ltb-d2"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-4 0-7-3-7-7 0-3 2-5 3-7 1 2 2 3 3 3 0-3 1-5 3-7 1 3 6 6 6 11 0 4-3 7-7 7z"/></svg></span><b id="hStreak">0</b><span class="ltb-mut">streak</span></div>
-      <div class="ltb-pill"><span class="ltb-dot ltb-d3"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg></span><b id="hToday">0/0</b></div>
+  <div class="v7hdr">
+    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v67</span></div>
+    <div class="v7pill">
+      <div class="v7pi"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true" style="color:#3b9eff"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><b id="hDate">Sun, Nov 15</b></div>
+      <div class="v7sep"></div>
+      <div class="v7pi"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true" style="color:#f5a623"><path d="M12 21c-4 0-7-3-7-7 0-3 2-5 3-7 1 2 2 3 3 3 0-3 1-5 3-7 1 3 6 6 6 11 0 4-3 7-7 7z"/></svg><b id="hStreak">0</b><span class="mu">streak</span></div>
+      <div class="v7sep"></div>
+      <div class="v7pi"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true" style="color:#3b9eff"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></svg><b id="hToday">0/0</b><span class="mu">done</span></div>
     </div>
   </div>
 </div>
 
 <div class="tabs">
-  <button class="tab active" onclick="go('today')"><span class="tab-icon">☀️</span>Today</button>
-  <button class="tab" onclick="go('plan')"><span class="tab-icon">📋</span>Plan</button>
-  <button class="tab" onclick="go('history')"><span class="tab-icon">📆</span>History</button>
-  <button class="tab" onclick="go('content')"><span class="tab-icon">🎬</span>Content</button>
-  <button class="tab" onclick="go('challenges')"><span class="tab-icon">🏆</span>Challenges</button>
-  <button class="tab" onclick="go('settings')"><span class="tab-icon">⚙️</span>Settings</button>
+  <button class="tab active" onclick="go('today')"><span class="tab-icon"></span>Today</button>
+  <button class="tab" onclick="go('plan')"><span class="tab-icon"></span>Plan</button>
+  <button class="tab" onclick="go('history')"><span class="tab-icon"></span>History</button>
+  <button class="tab" onclick="go('content')"><span class="tab-icon"></span>Content</button>
+  <button class="tab" onclick="go('challenges')"><span class="tab-icon"></span>Challenges</button>
+  <button class="tab" onclick="go('settings')"><span class="tab-icon"></span>Settings</button>
 </div>
 
 <div class="content" id="main"></div>
@@ -1634,7 +1822,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:66,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:67,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -3949,7 +4137,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:66,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:67,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -3997,6 +4185,477 @@ function clearAll(){
   const mine=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('plt_'))mine.push(k);}
   mine.forEach(k=>localStorage.removeItem(k));T={};H=[];HL={};C=DCATS;PT={};CLOG={};sCLOG();CHL=[];CPLAN={0:[],1:[],2:[],3:[],4:[],5:[],6:[]};CC={};CG=[];R=[];RL={};BK=[];CO=true;CPS='';CST=tod();PI='';sCST();sPI();sH();sC();sCHL();sCPL();sCC();sCG();sR();sRL();sBK();sCO();sv(SK.cpv,CPLVER);sv('plt_cmig',CMIG35);render();toast('All cleared');
 }
+
+// ===================== v67 RESTYLE =====================
+// Visual rebuild of Today, Plan, History, Content and the Settings main page.
+// Uses the same data (all plt_ keys unchanged) and the same action functions.
+// One new key only: plt_lastBackup (date of the last Download Backup).
+Object.assign(ICP,{
+  dots:'<circle cx="12" cy="5" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="12" cy="19" r="1.4"/>',
+  flame:'<path d="M12 21c-4 0-7-3-7-7 0-3 2-5 3-7 1 2 2 3 3 3 0-3 1-5 3-7 1 3 6 6 6 11 0 4-3 7-7 7z"/>',
+  flag:'<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  chevD:'<path d="m6 9 6 6 6-6"/>',
+  chevU:'<path d="m18 15-6-6-6 6"/>',
+  bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  alarm:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M5 3 2 6M22 6l-3-3"/>',
+  camera:'<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/>',
+  grid:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+  movie:'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M7 4v16M17 4v16M2 9h5M2 15h5M17 9h5M17 15h5"/>',
+  gamepad:'<path d="M6 11h4M8 9v4M15 12h.01M18 10h.01"/><path d="M17.3 5H6.7a4 4 0 0 0-4 3.6L2 15a3 3 0 0 0 5.2 2l1.6-2h6.4l1.6 2a3 3 0 0 0 5.2-2l-.7-6.4a4 4 0 0 0-4-3.6z"/>',
+  ball:'<circle cx="12" cy="12" r="10"/><path d="m12 7 4 3-1.5 4.5h-5L8 10z"/><path d="M12 2v5M16 10l5-1.5M14.5 14.5l3 4.5M9.5 14.5l-3 4.5M8 10 3 8.5"/>',
+  tv:'<rect x="2" y="7" width="20" height="14" rx="2"/><path d="m17 2-5 5-5-5"/>',
+  target:'<circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>',
+  rotate:'<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>'
+});
+
+// No emoji in messages or category dropdowns (data itself is untouched).
+const V7_EMO=/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{200D}\u{23E9}-\u{23FA}\u{2300}-\u{23FF}]/gu;
+function v7noemo(s){return String(s==null?'':s).replace(V7_EMO,'').replace(/\s{2,}/g,' ').trim();}
+const _v66toast=toast;
+toast=function(m){_v66toast(v7noemo(m));};
+cOpts=function(sel=''){return C.map(c=>`<option value="${c.id}"${c.id===sel?' selected':''}>${esc(v7noemo(c.name))}</option>`).join('');};
+
+// ---------- small builders ----------
+function v7sl(t,count,red){return `<div class="v7sl"><span>${t}</span>${count!==undefined&&count!==null&&count!==''?`<b${red?' class="r"':''}>${count}</b>`:''}</div>`;}
+function v7ring(pct,size,sw,label,sub){
+  const r=(size-sw)/2-1,c=2*Math.PI*r,off=c*(1-Math.max(0,Math.min(100,pct))/100),cx=size/2;
+  return `<svg class="v7ring" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true"><circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="#232326" stroke-width="${sw}"/>${pct>0?`<circle cx="${cx}" cy="${cx}" r="${r}" fill="none" stroke="#0A84FF" stroke-width="${sw}" stroke-linecap="round" stroke-dasharray="${c.toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}" transform="rotate(-90 ${cx} ${cx})"/>`:''}${label?`<text x="${cx}" y="${sub?cx+1:cx+5}" text-anchor="middle" fill="#F5F5F7" font-size="${Math.round(size/4.4)}" font-weight="800">${label}</text>`:''}${sub?`<text x="${cx}" y="${cx+13}" text-anchor="middle" fill="#9A9AA0" font-size="8" font-weight="700" letter-spacing="1">${sub}</text>`:''}</svg>`;
+}
+function v7tag(text,color,solid){return `<span class="v7tag${solid?' solid':''}"${color?` style="--tc:${color}"`:''}>${esc(v7noemo(text))}</span>`;}
+function v7chip(icon,text,style){return `<span class="v7chip"${style?` style="${style}"`:''}>${icon?ic(icon):''}${text}</span>`;}
+function v7catName(cat){return v7noemo(cat.name)||'Other';}
+function v7day3(d){const dt=new Date(d+'T00:00:00');return DAYS[dt.getDay()].toUpperCase();}
+function v7dnum(d){return new Date(d+'T00:00:00').getDate();}
+function v7tog(id){document.getElementById(id)?.classList.toggle('open');}
+const V7_ORDER=[1,2,3,4,5,6,0];
+const V7_WL=['S','M','T','W','T','F','S'];
+
+// ---------- task card (used by Today, Plan, History, Rolled Over) ----------
+tcHTML=function(t,date,carry,pfx,opt){
+  opt=opt||{};
+  const cat=gc(t.catId),p=pfx||'';
+  const cc=carry?carryCol(carry.days):null;
+  const chips=[v7chip('clock',t.time?t12(t.time):'Any time')];
+  if(t.alarm)chips.push(v7chip('alarm','Alarm'));
+  if(carry)chips.push(v7chip('rotate',`${carry.days} day${carry.days!==1?'s':''} ago · ${fshort(carry.date)}`,`color:${cc.text}`));
+  const tick=opt.missed
+    ?`<button class="v7done-btn" onclick="markDone('${t.id}')">${ic('check')}Done</button>`
+    :`<button class="v7tick ${t.done?'on':''}" onclick="togTask('${date}','${t.id}')" aria-label="Tick">${ic('check')}</button>`;
+  return `<div class="v7card ${t.done?'done':''} ${opt.missed?'miss':''}" id="tc_${p}${t.id}"${cc?` style="border-left:3px solid ${cc.line}"`:''}>
+    <div class="v7card-row">
+      <div class="v7card-main">${opt.missed?v7tag('Missed','#F87171')+' ':''}${v7tag(v7catName(cat),cat.color)}<div class="v7title">${esc(t.text)}</div><div class="v7chips">${chips.join('')}</div></div>
+      ${carry&&!t.done?`<button class="v7mini" title="Move to today" aria-label="Move to today" onclick="moveToToday('${date}','${t.id}')">${ic('plus')}</button>`:''}
+      ${tick}
+      <button class="v7more" onclick="togEdit('${t.id}','${p}')" aria-label="Edit or delete">${ic('dots')}</button>
+    </div>
+    <div class="edit-area" id="ea_${p}${t.id}">
+      <div class="erow"><input class="input input-sm" id="et_${p}${t.id}" value="${esc(t.text)}" style="flex:1"/></div>
+      <label class="lastday" style="margin:6px 0"><input type="checkbox" id="eal_${p}${t.id}" ${t.alarm?'checked':''}/> Clock alarm (leave off = Samsung reminder)</label>
+      <div class="erow">
+        <select class="input input-sm" id="ec_${p}${t.id}" style="flex:1">${cOpts(t.catId)}</select>
+        <button class="btn btn-green" style="padding:8px 14px;font-size:14px" onclick="saveEdit('${date}','${t.id}','${p}')">Save</button>
+      </div>
+      <button class="v7del" onclick="delTask('${date}','${t.id}')">${ic('trash')}Delete task</button>
+    </div>
+  </div>`;
+};
+function v7catChips(list){
+  if(!list.length)return '';
+  const g={};list.forEach(t=>{(g[t.catId]=g[t.catId]||[]).push(t);});
+  return `<div class="v7swipe">${Object.keys(g).map(cid=>{const cat=gc(cid),gr=g[cid],dn=gr.filter(t=>t.done).length;return `<div class="v7cchip"><span class="v7dot" style="background:${cat.color}"></span>${esc(v7catName(cat))} <span class="n ${dn===gr.length?'b':''}">${dn}/${gr.length}</span></div>`;}).join('')}</div>`;
+}
+
+// ---------- header ----------
+const _v66render=render;
+render=function(){document.body.dataset.pg=curTab;_v66render();};
+
+// =====================================================
+// TODAY
+// =====================================================
+rToday=function(){
+  updHeaderStats();
+  const m=document.getElementById('main');
+  const today=tod(),tl=gt(today);
+  const cr=carriedTasks();
+  const rt=routinesFor(today);
+  const cOn=contentOn(today);
+  const ct=contentToday(),ctAct=ct.filter(t=>!t.paused);
+  const ovd=bkOverdue();
+  let h=`<div class="fi">`;
+  if(ovd)h+=`<div class="v7alert" onclick="go('plan')">${ic('alert')} ${ovd} planned task${ovd!==1?'s':''} past the finish date. Tap to open Task Bank.</div>`;
+
+  // Part 1: week rings
+  h+=`<div class="v7week">`+currentWeekDates(today).map(d=>{
+    const ds=dayScore(d),isT=d===today,full=ds.total&&ds.pct===100,dt=new Date(d+'T00:00:00');
+    return `<div class="v7wd ${isT?'today':''}" title="${ds.done} of ${ds.total} done">${V7_WL[dt.getDay()]}<div class="v7ringwrap">${full?`<div class="v7wfull">${ic('check')}</div>`:v7ring(ds.pct,34,4)}</div></div>`;
+  }).join('')+`</div>`;
+
+  // Up next (first unfinished item by time)
+  const cand=[];
+  tl.forEach(t=>{if(!t.done)cand.push({k:'task',time:t.time||'',title:t.text,tag:v7catName(gc(t.catId)),col:gc(t.catId).color,act:`togTask('${today}','${t.id}')`});});
+  cr.forEach(c=>{if(!c.t.done)cand.push({k:'task',time:c.t.time||'',title:c.t.text,tag:v7catName(gc(c.t.catId)),col:gc(c.t.catId).color,act:`togTask('${c.date}','${c.t.id}')`});});
+  rt.forEach(r=>{if(!RL[today]?.[r.id])cand.push({k:'routine',time:r.time||'',title:r.text,tag:'Routine',col:'#3b9eff',act:`togRoutine('${today}','${r.id}')`});});
+  if(cOn)ctAct.forEach(t=>{if(!CC[today]?.[t.id])cand.push({k:'content',time:t.time||'',title:t.text,tag:'Content',col:'#f5a623',act:`togContent('${t.id}')`});});
+  const korder={task:0,routine:1,content:2};
+  cand.sort((a,b)=>{const ta=a.time||'99:99',tb=b.time||'99:99';return ta<tb?-1:ta>tb?1:korder[a.k]-korder[b.k];});
+  const nx=cand[0];
+
+  // Today's progress tiles
+  const tTot=tl.length+cr.length,tDn=tl.filter(t=>t.done).length+cr.filter(c=>c.t.done).length;
+  const rDn=rt.filter(r=>RL[today]?.[r.id]).length;
+  const cDn=cOn?ctAct.filter(t=>CC[today]?.[t.id]).length:0,cTot=cOn?ctAct.length:0;
+  h+=v7sl("Today's progress");
+  h+=`<div class="v7cd" style="padding:8px"><div class="v7tiles">
+    <div class="v7tl ${nx&&nx.k==='task'?'on':''}"><div class="k">Tasks</div><div class="v">${tDn}<small>/${tTot}</small></div></div>
+    <div class="v7tl ${nx&&nx.k==='routine'?'on':''}"><div class="k">Routines</div><div class="v">${rDn}<small>/${rt.length}</small></div></div>
+    <div class="v7tl ${nx&&nx.k==='content'?'on':''}"><div class="k">Content</div><div class="v">${cDn}<small>/${cTot}</small></div></div>
+  </div></div>`;
+
+  h+=v7sl('Up next');
+  if(nx){
+    h+=`<div class="v7card"><div class="v7card-row"><div class="v7card-main">${v7tag(nx.tag,nx.col)}<div class="v7title">${esc(nx.title)}</div><div class="v7chips">${v7chip('clock',nx.time?t12(nx.time):'Any time')}</div></div><button class="v7tick" onclick="${nx.act}" aria-label="Tick">${ic('check')}</button></div></div>`;
+  }else{
+    h+=`<div class="v7card done"><div class="v7card-row"><div class="v7card-main"><div class="v7title" style="text-decoration:none;color:#F5F5F7">${tTot+rt.length+cTot?'All done for today':'Nothing planned for today'}</div><div class="v7chips">${v7chip('checkC',tTot+rt.length+cTot?'One win at a time':'Open Plan to build your day')}</div></div><div class="v7tick on">${ic('check')}</div></div></div>`;
+  }
+
+  // Part 2: Content today
+  h+=v7sl('Content · today',cTot?`${cDn}/${cTot}`:'');
+  if(!ct.length)h+=`<div class="v7empty">${cOn?'No content scheduled for today.':'Content plan starts '+fdate(CPS)+'.'}</div>`;
+  ct.forEach(t=>{
+    const dn=cOn&&!t.paused&&!!CC[today]?.[t.id];
+    h+=`<div class="v7card ${dn?'done':''}" ${t.paused?'style="opacity:.6"':''}><div class="v7card-row"><div class="v7card-main">${v7tag('Content','#f5a623')}${t.paused?' <span class="v7pz">PAUSED</span>':''}<div class="v7title">${esc(t.text)}</div><div class="v7chips">${v7chip('clock',t.time?t12(t.time):'Any time')}</div></div>${!t.paused&&cOn?`<button class="v7tick ${dn?'on':''}" onclick="togContent('${t.id}')" aria-label="Tick">${ic('check')}</button>`:''}</div></div>`;
+  });
+
+  // Today's tasks
+  h+=v7sl("Today's tasks",tl.length?`${tl.filter(t=>t.done).length}/${tl.length}`:'');
+  if(!tl.length)h+=`<div class="v7empty">No tasks for today. Go to <b>Plan</b> to build your day.</div>`;
+  else tl.forEach(t=>{h+=tcHTML(t,today);});
+
+  // Routines today
+  if(rt.length){
+    h+=v7sl('Routines · today',`${rDn}/${rt.length}`);
+    rt.forEach(r=>{
+      const dn=!!RL[today]?.[r.id];
+      h+=`<div class="v7card ${dn?'done':''}"><div class="v7card-row"><div class="v7card-main">${v7tag(rScheduleBase(r),'#3b9eff')}<div class="v7title">${esc(r.text)}</div><div class="v7chips">${v7chip('clock',r.time?t12(r.time):'Any time')}${v7chip(r.alarm?'alarm':'bell',r.alarm?'Alarm':'Reminder')}</div></div><button class="v7tick ${dn?'on':''}" onclick="togRoutine('${today}','${r.id}')" aria-label="Tick">${ic('check')}</button></div></div>`;
+    });
+  }
+  if(tl.length||rt.length)h+=`<button class="v7btn" onclick="copyTasks()">${ic('alarm')}Copy Today's Tasks</button>`;
+
+  // Part 3: catch up
+  const cCar=carriedContent();
+  if(cCar.length||cr.length)h+=v7sl('Catch up');
+  if(cCar.length){
+    const cOld=cCar.reduce((mx,c)=>Math.max(mx,c.days),0);
+    h+=`<div class="v7warn" onclick="togRolledContent()"><div class="v7ib am">${ic('play')}</div><div style="flex:1;min-width:0"><div class="t">Content not done · ${cCar.length}</div><div class="s">Oldest ${cOld} day${cOld!==1?'s':''} ago · tap to ${showRolledContent?'hide':'show'}</div></div>${ic(showRolledContent?'chevU':'chevD')}</div>`;
+    if(showRolledContent){
+      h+=`<div class="v7rows">`;
+      cCar.forEach(c=>{const col=carryCol(c.days);h+=`<div class="v7row"><button class="v7tick sm" onclick="togContentCarried('${c.date}','${c.it.id}')" aria-label="Tick">${ic('check')}</button><div class="rt">${esc(c.it.text)}<small style="color:${col.text}">${c.days} day${c.days!==1?'s':''} ago</small></div><button class="v7mini" title="Add to today's tasks" aria-label="Add to today's tasks" onclick="event.stopPropagation();moveContentToToday('${c.date}','${c.it.id}')">${ic('plus')}</button></div>`;});
+      h+=`</div><button class="v7btn" onclick="copyRolledContent()">${ic('alarm')}Copy Pending Content</button><button class="v7btn o" onclick="clearPendingContent()">${ic('eraser')}Clear This List</button>`;
+    }
+  }
+  if(cr.length){
+    const left=cr.filter(c=>!c.t.done).length,oldest=cr.reduce((mx,c)=>Math.max(mx,c.days),0);
+    h+=`<div class="v7warn" onclick="togRolled()"><div class="v7ib am">${ic('rotate')}</div><div style="flex:1;min-width:0"><div class="t">Rolled over · ${left}</div><div class="s">Oldest ${oldest} day${oldest!==1?'s':''} ago · tap to ${showRolled?'hide':'show'}</div></div>${ic(showRolled?'chevU':'chevD')}</div>`;
+    if(showRolled){
+      cr.forEach(c=>{h+=tcHTML(c.t,c.date,c);});
+      h+=`<button class="v7btn" onclick="moveAllToToday()">${ic('plus')}Add All ${left} to Today</button><button class="v7btn o" onclick="copyRolled()">${ic('alarm')}Copy Rolled Over Tasks</button>`;
+    }
+  }
+
+  // Challenges today
+  const actGT=CG.filter(g=>{const st=cgStats(g);return !st.ended&&!st.notStarted;});
+  if(actGT.length){
+    let tdn=0,ttot=0;
+    const parts=actGT.map(g=>{
+      const st=cgStats(g),key=cgKey(g,today),cur=(g.log&&g.log[key])?g.log[key]:{},items=g.items||[],dn=items.filter(it=>cur[it.id]).length;
+      tdn+=dn;ttot+=items.length;
+      return `<div class="v7card"><div class="v7card-row" style="align-items:flex-start"><div class="v7card-main">${v7tag(`${st.unit} ${st.elapsed} / ${st.totalPeriods}`,'#3b9eff')}<div class="v7title">${esc(g.name)}</div></div><div style="text-align:right;flex:none"><div style="font-size:18px;font-weight:800;color:#3b9eff">${items.length?Math.round(dn/items.length*100):0}%</div><div class="v7dots" style="margin-top:4px">${items.map(it=>`<i class="${cur[it.id]?'on':''}"></i>`).join('')}</div></div></div>
+      <div style="border-top:1px solid #1C1C1F;margin-top:8px">${items.map(it=>{const done=!!cur[it.id];return `<div class="v7row ${done?'done':''}"><button class="v7tick sm ${done?'on':''}" onclick="togGroupItem('${g.id}','${it.id}')" aria-label="Tick">${ic('check')}</button><div class="rt">${esc(it.text)}</div></div>`;}).join('')}</div></div>`;
+    });
+    h+=v7sl('Challenges · today',`${tdn}/${ttot}`)+parts.join('');
+  }
+
+  // By category
+  if(tl.length)h+=v7sl('By category')+v7catChips(tl);
+
+  h+=`</div>`;m.innerHTML=h;
+};
+
+// =====================================================
+// PLAN
+// =====================================================
+rPlan=function(){
+  const m=document.getElementById('main');
+  const today=tod(),tl=gt(pDate);
+  let h=`<div class="fi">${showPasteUndoBanner()}`;
+  h+=v7sl('Pick a date');
+  const days=[];for(let i=0;i<14;i++)days.push(addDays(today,i));
+  const inStrip=days.includes(pDate);
+  h+=`<div class="v7strip" id="v7planStrip">`+days.map(d=>`<div class="v7dc ${d===pDate?'on':''}" onclick="spd('${d}')"><div class="d">${v7day3(d)}</div><div class="n">${v7dnum(d)}</div><div class="c">${gt(d).length}</div></div>`).join('')+`<div class="v7dc cal ${inStrip?'':'on'}" aria-label="Pick any date">${ic('calendar')}<input type="date" value="${pDate}" onchange="spd(this.value)" aria-label="Pick any date"/></div></div>`;
+  const rel=pDate===today?'Today':pDate===addDays(today,1)?'Tomorrow':'';
+  h+=`<div class="v7dline">${fdate(pDate)}${rel?' · '+rel:''} · <b>${tl.length} planned</b></div>`;
+  h+=`<div class="v7cd v7add" style="margin-top:10px"><input class="input" id="ntt" placeholder="What will you do?"/><div class="v7addrow"><select class="input" id="ntc">${cOpts()}</select><button class="v7plus" onclick="addTask()" aria-label="Add task">${ic('plus')}</button></div></div>`;
+  h+=`<button class="v7btn o" onclick="openPasteWholePlan()">${ic('clipboard')}Paste Whole Plan</button>`;
+
+  h+=v7sl('Planned',tl.length);
+  if(!tl.length)h+=`<div class="v7empty">Nothing planned for this day yet.</div>`;
+  else{tl.forEach(t=>{h+=tcHTML(t,pDate);});h+=v7sl('By category')+v7catChips(tl);}
+
+  // Task bank (countdown boxes)
+  h+=v7sl('Task bank',BK.length||'');
+  if(!BK.length)h+=`<div class="v7empty">Nothing planned. Add tasks in Settings, Task Bank.</div>`;
+  else BK.slice().sort(bkSort).forEach(b=>{
+    const cat=gc(b.catId),info=bkDueInfo(b.due);
+    let n='',l='',cls='none';
+    if(b.due){const dd=dDays(today,b.due);if(dd<0){n='-'+Math.abs(dd);l='DAYS';cls='over';}else if(dd===0){n='0';l='TODAY';cls='soon';}else{n=String(dd);l=dd===1?'DAY':'DAYS';cls=dd<=3?'soon':'';}}
+    else{n='–';l='NO DATE';}
+    h+=`<div class="v7card" style="padding:10px">
+      <div class="v7bank"><div class="v7cnt ${cls}"><div class="n">${n}</div><div class="l">${l}</div></div>
+        <div class="rt"><b>${esc(b.text)}</b><span>${esc(v7catName(cat))}${b.due?' · by '+fshort(b.due):''}</span><br><span class="${info.cls==='bk-over'?'over':info.cls==='bk-soon'?'soon':''}">${info.txt}</span></div>
+        <button class="v7mini" onclick="sendBank('${b.id}','${today}')" title="Add to today" aria-label="Add to today">${ic('plus')}</button>
+        <button class="v7more" onclick="v7tog('bm_${b.id}')" aria-label="More">${ic('dots')}</button></div>
+      <div class="edit-area" id="bm_${b.id}">
+        <div class="flbl">Send this task to</div>
+        <div class="erow"><input type="date" class="input input-sm" id="bsd_${b.id}" value="${today}" style="flex:1"/><button class="btn btn-green" style="padding:8px 14px;font-size:14px" onclick="sendBankPicked('${b.id}')">Send</button></div>
+        <div class="flbl" style="margin-top:10px">Edit</div>
+        <input class="input input-sm" id="bet_${b.id}" value="${esc(b.text)}" style="margin-bottom:6px"/>
+        <div class="erow"><select class="input input-sm" id="bec_${b.id}" style="flex:1">${cOpts(b.catId)}</select><input type="date" class="input input-sm" id="bed_${b.id}" value="${b.due||''}" style="flex:1"/></div>
+        <button class="btn btn-green btn-full" style="padding:9px;font-size:14px;margin-bottom:0" onclick="saveBank('${b.id}')">Save</button>
+        <button class="v7del" onclick="delBank('${b.id}')">${ic('trash')}Delete</button>
+      </div></div>`;
+  });
+
+  // Routines (weekday grid)
+  h+=v7sl('Your routines',R.length||'');
+  if(!R.length)h+=`<div class="v7empty">No routines yet. Add them in Settings, Routines.</div>`;
+  else{
+    const tord={daily:0,weekly:1,monthly:2};
+    const list=R.slice().sort((a,b)=>(tord[rEditType(a)]-tord[rEditType(b)])||rSort(a,b));
+    h+=`<div class="v7rows">`;
+    list.forEach(r=>{
+      const cat=gc(r.catId),type=rEditType(r);
+      const right=type==='monthly'
+        ?v7tag(rScheduleBase(r),'#f5a623')
+        :`<div class="v7wdg">${V7_ORDER.map(i=>`<i class="${(r.days||[]).includes(i)?'on':''}">${V7_WL[i]}</i>`).join('')}</div>`;
+      h+=`<div class="v7row"><div class="rt">${esc(r.text)}<small class="v7rsub">${r.time?t12(r.time):'No time'} · ${ic(r.alarm?'alarm':'bell')} · <span class="v7dot" style="background:${cat.color}"></span>${esc(v7catName(cat))}${r.until?' · until '+fshort(r.until):''}${r.from&&r.from>today?' · from '+fshort(r.from):''}</small></div>${right}<button class="v7more" style="width:24px" onclick="togRoutineEdit('${r.id}')" aria-label="Edit or delete">${ic('dots')}</button></div>`;
+      h+=v7routineEditHTML(r);
+    });
+    h+=`</div><button class="v7btn" onclick="copyRoutinesOnce()">${ic('alarm')}Copy Routines (set once)</button>`;
+  }
+  h+=`</div>`;m.innerHTML=h;
+  const st=document.getElementById('v7planStrip'),on=st&&st.querySelector('.v7dc.on');
+  if(st&&on&&!on.classList.contains('cal'))st.scrollLeft=Math.max(0,on.offsetLeft-st.offsetLeft-60);
+};
+function v7routineEditHTML(r){
+  const et=(r._editType||rEditType(r)),ld=(r._editLastDay!==undefined?r._editLastDay:!!r.lastDay);
+  return `<div class="edit-area" id="re_${r.id}">
+    <input class="input input-sm" id="ret_${r.id}" value="${esc(r.text)}" style="margin-bottom:8px"/>
+    <div class="flbl">Repeat</div>
+    <div class="rtbar">
+      <button class="rtbtn ${et==='daily'?'on':''}" id="ertype_daily_${r.id}" onclick="setEditRType('${r.id}','daily')">Daily</button>
+      <button class="rtbtn ${et==='weekly'?'on':''}" id="ertype_weekly_${r.id}" onclick="setEditRType('${r.id}','weekly')">Weekly</button>
+      <button class="rtbtn ${et==='monthly'?'on':''}" id="ertype_monthly_${r.id}" onclick="setEditRType('${r.id}','monthly')">Monthly</button>
+    </div>
+    <div id="erweeklybox_${r.id}" style="display:${et==='weekly'?'':'none'}">
+      <div class="flbl">Repeat on</div>
+      <div class="dchiprow">${DAYS.map((d,i)=>`<button class="dchip ${(r.days||[]).includes(i)?'on':''}" id="edchip_${r.id}_${i}" onclick="togEditRDay('${r.id}',${i})">${d[0]}</button>`).join('')}</div>
+    </div>
+    <div id="ermonthlybox_${r.id}" style="display:${et==='monthly'?'':'none'}">
+      <label class="lastday"><input type="checkbox" id="erlastck_${r.id}" ${ld?'checked':''} onchange="togEditLastDay('${r.id}')"/> Last day of month</label>
+      <div class="irow" id="erdombox_${r.id}" style="display:${ld?'none':''}">
+        <div style="flex:1"><div class="flbl">Day of month</div><input type="number" min="1" max="31" class="input input-sm" id="redom_${r.id}" value="${r.dayOfMonth||''}"/></div>
+        <div style="flex:1"><div class="flbl">Every (months)</div><input type="number" min="1" max="12" class="input input-sm" id="reinterval_${r.id}" value="${r.interval||1}"/></div>
+      </div>
+    </div>
+    <div class="erow" style="margin-top:8px">
+      <input type="time" class="input input-sm" id="retime_${r.id}" value="${r.time||''}" style="flex:1"/>
+      <select class="input input-sm" id="rec_${r.id}" style="flex:1">${cOpts(r.catId)}</select>
+    </div>
+    <div class="irow" style="margin-top:8px">
+      <div style="flex:1"><div class="flbl">Start date</div><input type="date" class="input input-sm" id="refrom_${r.id}" value="${r.from||''}"/></div>
+      <div style="flex:1"><div class="flbl">End date</div><input type="date" class="input input-sm" id="reuntil_${r.id}" value="${r.until||''}"/></div>
+    </div>
+    <label class="lastday" style="margin:6px 0"><input type="checkbox" id="realarm_${r.id}" ${r.alarm?'checked':''}/> Clock alarm (leave off = Samsung reminder)</label>
+    <button class="btn btn-green btn-full" style="padding:9px;font-size:14px;margin-bottom:0" onclick="saveRoutine('${r.id}')">Save</button>
+    <button class="v7del" onclick="delRoutine('${r.id}')">${ic('trash')}Delete routine</button>
+  </div>`;
+}
+
+// =====================================================
+// HISTORY
+// =====================================================
+let v7hOpen={};
+function v7hTog(k){v7hOpen[k]=!v7hOpen[k];rHistory();}
+rHistory=function(){
+  updHeaderStats();
+  const m=document.getElementById('main');
+  const today=tod(),tl=gt(hDate);
+  const{done,total,pct}=comp(hDate);
+  const missed=tl.filter(t=>!t.done),fin=tl.filter(t=>t.done);
+  const hrt=routinesFor(hDate),hrtDone=hrt.filter(r=>RL[hDate]?.[r.id]).length;
+  let h=`<div class="fi">`;
+  h+=v7sl('Pick a past date');
+  const days=[];for(let i=13;i>=0;i--)days.push(addDays(today,-i));
+  const inStrip=days.includes(hDate);
+  h+=`<div class="v7strip" id="v7histStrip"><div class="v7dc cal ${inStrip?'':'on'}" aria-label="Pick any past date">${ic('calendar')}<input type="date" value="${hDate}" max="${today}" onchange="shd(this.value)" aria-label="Pick any past date"/></div>`+days.map(d=>`<div class="v7dc ${d===hDate?'on':''}" onclick="shd('${d}')"><div class="d">${v7day3(d)}</div><div class="n">${v7dnum(d)}</div><div class="c">${dayScore(d).pct}%</div></div>`).join('')+`</div>`;
+  const ago=dDays(hDate,today);
+  h+=`<div class="v7dline">${fdate(hDate)} · <b>${ago===0?'Today':ago===1?'Yesterday':ago+' days ago'}</b></div>`;
+
+  // score card (style 2)
+  if(!tl.length){
+    h+=`<div class="v7empty" style="margin-top:10px">No tasks were planned for this day.<br>Go to <b>Plan</b> to add tasks to any date.</div>`;
+  }else{
+    h+=`<div class="v7cd" style="margin-top:10px">
+      <div style="display:flex;align-items:baseline;justify-content:space-between"><div class="v7big">${pct}%</div><div style="font-size:13px;font-weight:600;color:#9A9AA0">${done} of ${total} tasks</div></div>
+      <div class="v7segs">${tl.map(t=>`<i class="${t.done?'d':'m'}"></i>`).join('')}</div>
+      <div class="v7tiles"><div class="v7tl"><div class="k">Finished</div><div class="v">${done}</div></div><div class="v7tl ${missed.length?'red':''}"><div class="k">Missed</div><div class="v">${missed.length}</div></div><div class="v7tl"><div class="k">Routines</div><div class="v">${hrtDone}<small>/${hrt.length}</small></div></div></div>
+    </div>`;
+  }
+
+  // missed first
+  if(missed.length){
+    h+=v7sl('Missed',missed.length,true);
+    missed.forEach(t=>{h+=tcHTML(t,hDate,null,'m',{missed:true});});
+  }else if(tl.length){
+    h+=`<div class="v7note" style="background:#0D1A2A;border-color:#1A3A5E">${ic('checkC')}<span>Nothing missed on this day.</span></div>`;
+  }
+
+  // folded rows
+  const hwd=new Date(hDate+'T00:00:00').getDay();
+  const hct=contentOn(hDate)?cget(hwd):[],hctAct=hct.filter(t=>!t.paused),hctDone=hctAct.filter(t=>CC[hDate]?.[t.id]).length;
+  const actG=CG.filter(g=>hDate>=g.start&&hDate<=g.end);
+  let cgDn=0,cgTot=0;actG.forEach(g=>{const dm=g.log&&g.log[cgKey(g,hDate)]?g.log[cgKey(g,hDate)]:{};(g.items||[]).forEach(it=>{cgTot++;if(dm[it.id])cgDn++;});});
+  const catCount=new Set(tl.map(t=>t.catId)).size;
+  const row=(k,icon,cls,label,cnt,full)=>`<div class="v7row v7fold" onclick="v7hTog('${k}')"><div class="v7ib ${cls}">${ic(icon)}</div><div class="rt">${label}</div><span class="cnt ${full?'b':''}">${cnt}</span>${ic(v7hOpen[k]?'chevU':'chevD')}</div>`;
+  h+=v7sl('This day');
+  h+=`<div class="v7rows">`;
+  h+=row('fin','checkC','bl','Finished tasks',fin.length,fin.length&&fin.length===tl.length);
+  if(v7hOpen.fin)h+=`<div class="v7foldbody">${fin.length?fin.map(t=>tcHTML(t,hDate,null,'f')).join(''):'<div class="v7empty">No finished tasks.</div>'}</div>`;
+  h+=row('rt','repeat','bl','Routines',`${hrtDone}/${hrt.length}`,hrt.length&&hrtDone===hrt.length);
+  if(v7hOpen.rt)h+=`<div class="v7foldbody">${hrt.length?hrt.map(r=>{const dn=!!RL[hDate]?.[r.id];return `<div class="v7row ${dn?'done':''}"><button class="v7tick sm ${dn?'on':''}" onclick="togRoutineDate('${hDate}','${r.id}')" aria-label="Tick">${ic('check')}</button><div class="rt">${esc(r.text)}${r.time?`<small>${t12(r.time)}</small>`:''}</div></div>`;}).join(''):'<div class="v7empty">No routines on this day.</div>'}</div>`;
+  h+=row('ct','play','am','Content',`${hctDone}/${hctAct.length}`,hctAct.length&&hctDone===hctAct.length);
+  if(v7hOpen.ct)h+=`<div class="v7foldbody">${hct.length?hct.map(t=>{const dn=!t.paused&&!!CC[hDate]?.[t.id];return `<div class="v7row ${dn?'done':''} ${t.paused?'paused':''}">${t.paused?'<span class="v7pz">PAUSED</span>':`<button class="v7tick sm ${dn?'on':''}" onclick="togContentDate('${hDate}','${t.id}')" aria-label="Tick">${ic('check')}</button>`}<div class="rt">${esc(t.text)}${t.time?`<small>${t12(t.time)}</small>`:''}</div></div>`;}).join(''):'<div class="v7empty">No content for this day.</div>'}</div>`;
+  h+=row('cg','trophy','pu','Challenges',`${cgDn}/${cgTot}`,cgTot&&cgDn===cgTot);
+  if(v7hOpen.cg)h+=`<div class="v7foldbody">${actG.length?actG.map(g=>{const dm=g.log&&g.log[cgKey(g,hDate)]?g.log[cgKey(g,hDate)]:{};return `<div style="font-size:12px;font-weight:700;color:#3b9eff;letter-spacing:1px;margin:6px 0 2px">${esc(g.name).toUpperCase()}</div>`+(g.items||[]).map(it=>{const d2=!!dm[it.id];return `<div class="v7row ${d2?'done':''}"><button class="v7tick sm ${d2?'on':''}" onclick="togGroupItemDate('${g.id}','${it.id}','${hDate}')" aria-label="Tick">${ic('check')}</button><div class="rt">${esc(it.text)}</div></div>`;}).join('');}).join(''):'<div class="v7empty">No challenge groups active on this day.</div>'}</div>`;
+  h+=row('cat','grid','pu','By category',catCount,false);
+  if(v7hOpen.cat)h+=`<div class="v7foldbody">${tl.length?v7catChips(tl):'<div class="v7empty">No task categories.</div>'}</div>`;
+  h+=`</div>`;
+
+  h+=`</div>`;m.innerHTML=h;
+  const st=document.getElementById('v7histStrip'),on=st&&st.querySelector('.v7dc.on:not(.cal)');
+  if(st)st.scrollLeft=on?Math.max(0,on.offsetLeft-st.offsetLeft-120):st.scrollWidth;
+};
+
+// =====================================================
+// CONTENT
+// =====================================================
+const V7_CH={xtech:['phone','pu'],device:['shield','bl'],cine:['movie','pu'],vellox:['gamepad','gr'],rankx:['ball','gr'],matchv:['tv','bl'],surestake:['target','rd']};
+function v7chIcon(b,big){const logo=CLOG[b.id],c=V7_CH[b.id]||['play','bl'];return `<div class="v7ib ${c[1]} ${big?'big':''}">${logo?`<img src="${logo}" alt="${esc(b.name)} logo"/>`:ic(c[0])}</div>`;}
+let v7cOpen={};
+function v7cTog(d){v7cOpen[d]=!v7cOpen[d];rContent();}
+rContent=function(){
+  updHeaderStats();
+  if(contentChannelView)return renderContentChannel(contentChannelView);
+  const m=document.getElementById('main');
+  const today=tod(),wd=new Date(today+'T00:00:00').getDay();
+  const cStarted=contentOn(today);
+  let h=`<div class="fi">`;
+  h+=v7sl('Channels',CONTENT_BRANDS.length);
+  if(!cStarted)h+=`<div class="v7note">${ic('info')}<span>Content plan starts ${fdate(CPS)}. Until then it's preview only.</span></div>`;
+  const tile=b=>`<div class="v7cd" role="button" tabindex="0" onclick="openContentChannel('${b.id}')" aria-label="Open ${esc(b.name)}">${v7chIcon(b,true)}<div class="v7tt">${esc(b.name)}</div><div class="v7ts">${esc(b.meta)}</div></div>`;
+  const wide=b=>`<div class="v7cd v7wide" role="button" tabindex="0" onclick="openContentChannel('${b.id}')" aria-label="Open ${esc(b.name)}">${v7chIcon(b,true)}<div style="flex:1;min-width:0"><div class="v7tt" style="margin:0">${esc(b.name)}</div><div class="v7ts">${esc(b.meta)}</div></div>${ic('chevR')}</div>`;
+  const brands=CONTENT_BRANDS.slice(),odd=brands.length%2===1?brands.pop():null;
+  h+=`<div class="v7g2">${brands.map(tile).join('')}</div>`;
+  if(odd)h+=wide(odd);
+
+  h+=v7sl("This week's content");
+  for(let i=0;i<7;i++){
+    const d=(wd+i)%7,date=addDays(today,i),isToday=i===0;
+    const tasks=cget(d),act=tasks.filter(t=>!t.paused);
+    const dn=isToday&&cStarted?act.filter(t=>CC[today]?.[t.id]).length:0;
+    const open=isToday||v7cOpen[d];
+    const tag=`${DAYS[d].toUpperCase()} · ${v7dnum(date)}${isToday?' · TODAY':''}`;
+    h+=`<div class="v7card ${isToday?'today':''}"><div class="v7card-row" ${isToday?'':`onclick="v7cTog(${d})" style="cursor:pointer"`}><div class="v7card-main">${isToday?`<span class="v7tag solid">${tag}</span>`:v7tag(tag,'#3b9eff')}<div class="v7title">${esc(CDAY_LBL[d]||'')}</div><div class="v7chips">${isToday&&cStarted&&act.length?v7chip('tasks',`${dn} of ${act.length} done`):v7chip('tasks',`${tasks.length} task${tasks.length!==1?'s':''}`)}</div></div>${isToday&&cStarted&&act.length?v7ring(act.length?Math.round(dn/act.length*100):0,54,6,(act.length?Math.round(dn/act.length*100):0)+'%'):(isToday?'':`<div class="v7tick" style="color:#6B6B72">${ic(open?'chevU':'chevD')}</div>`)}</div>`;
+    if(open){
+      h+=`<div style="border-top:1px solid #1C1C1F;margin-top:8px">`;
+      if(!tasks.length)h+=`<div class="v7row"><div class="rt" style="color:#9A9AA0;font-weight:500">No tasks.</div></div>`;
+      tasks.forEach(t=>{
+        const done=isToday&&cStarted&&!t.paused&&!!CC[today]?.[t.id];
+        const lead=isToday&&cStarted&&!t.paused?`<button class="v7tick sm ${done?'on':''}" onclick="togContent('${t.id}')" aria-label="Tick">${ic('check')}</button>`:`<span class="v7bul"></span>`;
+        h+=`<div class="v7row ${done?'done':''} ${t.paused?'paused':''}">${lead}<div class="rt">${esc(t.text)}${t.time?`<small>${t12(t.time)}</small>`:''}</div>${t.paused?'<span class="v7pz">PAUSED</span>':''}</div>`;
+      });
+      h+=`</div>`;
+    }
+    h+=`</div>`;
+  }
+  h+=`</div>`;m.innerHTML=h;
+};
+renderContentChannel=function(id){
+  const m=document.getElementById('main');
+  const brand=CONTENT_BRANDS.find(x=>x.id===id)||CONTENT_BRANDS[0];
+  const today=tod(),twd=new Date(today+'T00:00:00').getDay();
+  const per={};let shown=0;
+  V7_ORDER.forEach(d=>{const items=cget(d).filter(t=>contentBrandMatches(brand.id,t,d)||contentIsShared(t));if(items.length){per[d]=items;shown+=items.length;}});
+  let h=`<div class="fi"><button class="v7back" onclick="navBack()">${ic('chevL')}Content</button>`;
+  h+=`<div class="v7cd"><div style="display:flex;align-items:center;gap:12px">${v7chIcon(brand,true)}<div style="min-width:0"><div style="font-size:18px;font-weight:800">${esc(brand.name)}</div><div class="v7ts">${esc(brand.meta)}</div></div></div>
+    <div class="v7wmap">${V7_ORDER.map(d=>`<i class="${per[d]?'on':''}">${V7_WL[d]}</i>`).join('')}</div></div>`;
+  h+=v7sl('All content',shown);
+  if(!shown)h+=`<div class="v7empty">No content items found for this channel.</div>`;
+  else{
+    h+=`<div class="v7rows">`;
+    V7_ORDER.forEach(d=>{(per[d]||[]).forEach(t=>{
+      const isToday=d===twd&&contentOn(today);
+      const done=isToday&&!t.paused&&!!CC[today]?.[t.id];
+      const lead=isToday&&!t.paused?`<button class="v7tick sm ${done?'on':''}" onclick="togContent('${t.id}')" aria-label="Tick">${ic('check')}</button>`:'';
+      h+=`<div class="v7row ${done?'done':''} ${t.paused?'paused':''}">${lead}${v7tag(DAYS[d],'#3b9eff')}<div class="rt">${esc(t.text)}</div>${t.paused?'<span class="v7pz">PAUSED</span>':(t.time?v7chip('',t12(t.time)):'')}</div>`;
+    });});
+    h+=`</div>`;
+  }
+  h+=`</div>`;m.innerHTML=h;
+};
+
+// =====================================================
+// SETTINGS (main page only; every sub-page is unchanged)
+// =====================================================
+const _v66rSettings=rSettings;
+function v7lastBk(){const v=ld('plt_lastBackup','');if(!v)return 'Never downloaded';const d=new Date(v);if(isNaN(d))return 'Never downloaded';const k=d.toISOString().split('T')[0],n=dDays(k,tod());return 'Last download: '+(n===0?'today':n===1?'yesterday':fshort(k)+(n>1?' ('+n+' days ago)':''));}
+rSettings=function(){
+  if(settingsMode&&settingsMode!=='main')return _v66rSettings();
+  settingsMode='main';
+  const m=document.getElementById('main');
+  const cr=carriedTasks();
+  const act=CG.filter(g=>!cgStats(g).ended);
+  const run=act.find(g=>!cgStats(g).notStarted);
+  const chalVal=run?cgStats(run).unit+' '+cgStats(run).elapsed:(act.length?fshort(act.slice().sort((a,b)=>a.start<b.start?-1:1)[0].start):'None');
+  let h=`<div class="fi">`;
+  if(!isStandalone())h+=`<button class="v7inst" onclick="installApp()"><div class="v7ib" style="background:rgba(255,255,255,.18);color:#fff">${ic('install')}</div><div style="flex:1"><div style="font-size:15px;font-weight:800">Install Life Tracker</div><div style="font-size:12px;opacity:.85">Get it as a real app with its own icon</div></div>${ic('chevR')}</button>`;
+  h+=`<div class="v7prof"><div class="v7prof-top">
+      <div class="v7av" id="v7avatar">${PI?`<img src="${PI}" alt="">`:ic('user')}<span class="v7cam">${ic('camera')}<input type="file" accept="image/*" onchange="setProfileImage(event)" aria-label="Change photo"/></span></div>
+      <div style="flex:1;min-width:0;cursor:pointer" onclick="openSettingsFolder('app')"><div class="nm">Philip</div><div class="mt">Life Tracker ${esc((document.querySelector('.header-ver')||{}).textContent||'')}${PI?' · <button class="v7link" onclick="event.stopPropagation();removeProfileImage()">Remove</button>':''}</div></div>
+      <div style="color:#6B6B72;cursor:pointer" onclick="openSettingsFolder('app')">${ic('chevR')}</div>
+    </div>
+    <div class="v7tiles" style="margin-top:12px"><div class="v7tl"><div class="k">Streak</div><div class="v" style="color:#f5a623">${dayStreak()}</div></div><div class="v7tl"><div class="k">Routines</div><div class="v">${R.length}</div></div><div class="v7tl"><div class="k">Challenge</div><div class="v" style="font-size:15px;padding:1px 0">${chalVal}</div></div></div>
+  </div>`;
+  const tl=(mode,icon,cls,title,sub)=>`<div class="v7cd" role="button" tabindex="0" onclick="openSettingsFolder('${mode}')"><div class="v7ib big ${cls}">${ic(icon)}</div><div class="v7tt">${title}</div><div class="v7ts">${sub}</div></div>`;
+  h+=`<div class="v7g2">`
+    +tl('tasks','tasks','pu','Tasks',CO?(cr.length?`Carry over on · ${cr.length}`:'Carry over on'):'Carry over off')
+    +tl('bank','bank','bl','Task Bank',BK.length?`${BK.length} planned`:'Add tasks to do later')
+    +tl('routines','repeat','gr','Routines',R.length?`${R.length} saved`:'Add new routines')
+    +tl('challenges','trophy','am','Challenges',act.length?`${act.length} active`:'New challenge')
+    +`</div>`;
+  h+=`<div class="v7cd v7wide" role="button" tabindex="0" onclick="openSettingsFolder('content')"><div class="v7ib big am">${ic('play')}</div><div style="flex:1;min-width:0"><div class="v7tt" style="margin:0">Content</div><div class="v7ts">Add, edit, pause or resume</div></div>${ic('chevR')}</div>`;
+  h+=`<div class="v7cd"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">Backup</div><span style="font-size:12px;color:#9A9AA0;text-align:right">${v7lastBk()}</span></div>
+    <div class="v7bkbtns"><button class="v7btn" onclick="backup()">${ic('download')}Download</button><div class="v7btn o"><input type="file" accept=".json" onchange="restore(event)" aria-label="Restore from backup"/>${ic('upload')}Restore</div></div></div>`;
+  h+=`<div class="v7danger" role="button" tabindex="0" onclick="openSettingsFolder('danger')"><div class="v7ib rd" style="border-radius:50%">${ic('trash')}</div><div class="t">Clear data</div>${ic('chevR')}</div>`;
+  h+=`</div>`;m.innerHTML=h;
+  renderProfile();
+};
+// Remember when a full backup was downloaded (new key, nothing else changes)
+const _v66backup=backup;
+backup=function(){_v66backup();try{sv('plt_lastBackup',new Date().toISOString());}catch(e){}if(curTab==='settings'&&settingsMode==='main')rSettings();};
+// Install card disappears once installed
+window.addEventListener('appinstalled',()=>{if(curTab==='settings')rSettings();});
 
 // INIT
 pDate=off(1);
