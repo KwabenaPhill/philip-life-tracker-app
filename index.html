@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v68</title>
+<title>Philip Life Tracker v69</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1730,6 +1730,18 @@ body{font-weight:500!important}
 .v7tt{font-size:16px}
 .v7prof .mt{font-size:14px;font-weight:600;color:#B4B4BA}
 .v7inst div[style*="opacity"]{opacity:1!important;font-weight:600}
+/* v69: tidy routine rows */
+.v7rrow{padding:11px 0}
+.v7rrow+.v7rrow,.v7rrow+.edit-area+.v7rrow{border-top:1px solid #1C1C1F}
+.v7rtop{display:flex;align-items:flex-start;gap:8px}
+.v7rtop .nm{flex:1;min-width:0;font-size:15px;font-weight:800;line-height:1.35;color:#F5F5F7;word-break:break-word}
+.v7rtop .v7more{height:24px;width:28px;margin-top:-2px}
+.v7rbot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px}
+.v7rbot .v7wdg i{width:22px;height:22px;font-size:11.5px;border-radius:6px}
+.v7rbot .v7wdg{gap:4px}
+.v7rmeta{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:7px;font-size:12.5px;font-weight:600;color:#B4B4BA}
+.v7rmeta .lic{width:14px;height:14px}
+
 .v7segs+.v7tiles,.v7big+div{font-weight:700}
 
 </style>
@@ -1738,7 +1750,7 @@ body{font-weight:500!important}
 
 <div class="header" id="appHeader">
   <div class="v7hdr">
-    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v68</span></div>
+    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v69</span></div>
     <div class="v7pill">
       <div class="v7pi"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true" style="color:#3b9eff"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><b id="hDate">Sun, Nov 15</b></div>
       <div class="v7sep"></div>
@@ -1857,7 +1869,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:68,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:69,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -4172,7 +4184,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:68,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:69,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -4335,6 +4347,13 @@ rToday=function(){
   const korder={task:0,routine:1,content:2};
   cand.sort((a,b)=>{const ta=a.time||'99:99',tb=b.time||'99:99';return ta<tb?-1:ta>tb?1:korder[a.k]-korder[b.k];});
   const nx=cand[0];
+  const doneC=[];
+  tl.forEach(t=>{if(t.done)doneC.push({time:t.time||'',title:t.text,tag:v7catName(gc(t.catId)),col:gc(t.catId).color,act:`togTask('${today}','${t.id}')`});});
+  cr.forEach(c=>{if(c.t.done)doneC.push({time:c.t.time||'',title:c.t.text,tag:v7catName(gc(c.t.catId)),col:gc(c.t.catId).color,act:`togTask('${c.date}','${c.t.id}')`});});
+  rt.forEach(r=>{if(RL[today]?.[r.id])doneC.push({time:r.time||'',title:r.text,tag:'Routine',col:'#3b9eff',act:`togRoutine('${today}','${r.id}')`});});
+  if(cOn)ctAct.forEach(t=>{if(CC[today]?.[t.id])doneC.push({time:t.time||'',title:t.text,tag:'Content',col:'#f5a623',act:`togContent('${t.id}')`});});
+  doneC.sort((a,b)=>{const ta=a.time||'00:00',tb=b.time||'00:00';return ta<tb?1:ta>tb?-1:0;});
+  const lastDone=doneC[0];
 
   // Today's progress tiles
   const tTot=tl.length+cr.length,tDn=tl.filter(t=>t.done).length+cr.filter(c=>c.t.done).length;
@@ -4350,8 +4369,10 @@ rToday=function(){
   h+=v7sl('Up next');
   if(nx){
     h+=`<div class="v7card"><div class="v7card-row"><div class="v7card-main">${v7tag(nx.tag,nx.col)}<div class="v7title">${esc(nx.title)}</div><div class="v7chips">${v7chip('clock',nx.time?t12(nx.time):'Any time')}</div></div><button class="v7tick" onclick="${nx.act}" aria-label="Tick">${ic('check')}</button></div></div>`;
+  }else if(lastDone){
+    h+=`<div class="v7card done"><div class="v7card-row"><div class="v7card-main">${v7tag('All done for today','#3b9eff')}<div class="v7title">${esc(lastDone.title)}</div><div class="v7chips">${v7chip('clock',lastDone.time?t12(lastDone.time):'Any time')}${v7chip('rotate','Tap the tick to undo')}</div></div><button class="v7tick on" onclick="${lastDone.act}" aria-label="Untick">${ic('check')}</button></div></div>`;
   }else{
-    h+=`<div class="v7card done"><div class="v7card-row"><div class="v7card-main"><div class="v7title" style="text-decoration:none;color:#F5F5F7">${tTot+rt.length+cTot?'All done for today':'Nothing planned for today'}</div><div class="v7chips">${v7chip('checkC',tTot+rt.length+cTot?'One win at a time':'Open Plan to build your day')}</div></div><div class="v7tick on">${ic('check')}</div></div></div>`;
+    h+=`<div class="v7card"><div class="v7card-row"><div class="v7card-main"><div class="v7title">Nothing planned for today</div><div class="v7chips">${v7chip('calendar','Open Plan to build your day')}</div></div></div></div>`;
   }
 
   // Part 2: Content today
@@ -4473,7 +4494,7 @@ rPlan=function(){
       const right=type==='monthly'
         ?v7tag(rScheduleBase(r),'#f5a623')
         :`<div class="v7wdg">${V7_ORDER.map(i=>`<i class="${(r.days||[]).includes(i)?'on':''}">${V7_WL[i]}</i>`).join('')}</div>`;
-      h+=`<div class="v7row"><div class="rt">${esc(r.text)}<small class="v7rsub">${r.time?t12(r.time):'No time'} · ${ic(r.alarm?'alarm':'bell')} · <span class="v7dot" style="background:${cat.color}"></span>${esc(v7catName(cat))}${r.until?' · until '+fshort(r.until):''}${r.from&&r.from>today?' · from '+fshort(r.from):''}</small></div>${right}<button class="v7more" style="width:24px" onclick="togRoutineEdit('${r.id}')" aria-label="Edit or delete">${ic('dots')}</button></div>`;
+      h+=`<div class="v7rrow"><div class="v7rtop"><div class="nm">${esc(r.text)}</div><button class="v7more" onclick="togRoutineEdit('${r.id}')" aria-label="Edit or delete">${ic('dots')}</button></div><div class="v7rbot">${right}<span class="v7chip">${ic('clock')}${r.time?t12(r.time):'No time'}</span></div><div class="v7rmeta">${ic(r.alarm?'alarm':'bell')}<span>${r.alarm?'Alarm':'Reminder'}</span><span class="v7dot" style="background:${cat.color}"></span><span>${esc(v7catName(cat))}</span>${r.from&&r.from>today?`<span>· from ${fshort(r.from)}</span>`:''}${r.until?`<span>· until ${fshort(r.until)}</span>`:''}</div></div>`;
       h+=v7routineEditHTML(r);
     });
     h+=`</div><button class="v7btn" onclick="copyRoutinesOnce()">${ic('alarm')}Copy Routines (set once)</button>`;
