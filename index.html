@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v67</title>
+<title>Philip Life Tracker v68</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1697,13 +1697,48 @@ body[data-pg="settings"] #appHeader{display:none!important}
 .v7bkbtns input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2}
 .v7ring text{font-family:Inter,system-ui,sans-serif}
 .v7row>.v7tag{min-width:48px;text-align:center;flex:none}
+/* v68: thicker, larger small text (readability) */
+body{font-weight:500!important}
+#appHeader .v7hdr-title .header-ver{font-size:12.5px!important;font-weight:800!important}
+#appHeader .v7pi{font-size:13px;font-weight:700}
+#appHeader .v7pi .mu{font-size:12.5px;font-weight:600;color:#B4B4BA}
+.tabs .tab{font-size:12px!important;font-weight:700!important}
+.v7sl{font-size:12px;font-weight:800;color:#A8A8AE}
+.v7sl b{font-size:13px;font-weight:800}
+.v7tag{font-size:12px;font-weight:800;padding:3px 10px}
+.v7chip{font-size:13px;font-weight:600;color:#E4E4E7}
+.v7tl .k{font-size:13px;font-weight:600;color:#B4B4BA}
+.v7tl .v{font-size:18px}
+.v7tl .v small{font-size:13px;font-weight:700;color:#B4B4BA}
+.v7wd{font-size:13px;font-weight:800;color:#B4B4BA}
+.v7warn .s{font-size:12.5px;font-weight:600;color:#B4B4BA}
+.v7row .rt small{font-size:12.5px;font-weight:600;color:#B4B4BA}
+.v7pz{font-size:11.5px;font-weight:800}
+.v7cchip{font-size:13px;font-weight:700}
+.v7cchip .n{color:#B4B4BA;font-weight:700}
+.v7note{font-size:13px;font-weight:700}
+.v7empty{font-size:14px;font-weight:600;color:#B4B4BA}
+.v7alert{font-size:13.5px}
+.v7dc .d{font-size:12px;font-weight:800;color:#B4B4BA}
+.v7dc .c{font-size:12px;font-weight:700;color:#B4B4BA}
+.v7dline{font-size:13.5px;font-weight:700;color:#B4B4BA}
+.v7cnt .l{font-size:11px;font-weight:800}
+.v7bank .rt span{font-size:12.5px;font-weight:600;color:#B4B4BA}
+.v7wdg i{font-size:11px;font-weight:800;color:#8B8B92}
+.v7wmap i{font-size:12px;font-weight:800;color:#8B8B92}
+.v7ts{font-size:13px;font-weight:600;color:#B4B4BA}
+.v7tt{font-size:16px}
+.v7prof .mt{font-size:14px;font-weight:600;color:#B4B4BA}
+.v7inst div[style*="opacity"]{opacity:1!important;font-weight:600}
+.v7segs+.v7tiles,.v7big+div{font-weight:700}
+
 </style>
 </head>
 <body>
 
 <div class="header" id="appHeader">
   <div class="v7hdr">
-    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v67</span></div>
+    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v68</span></div>
     <div class="v7pill">
       <div class="v7pi"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true" style="color:#3b9eff"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><b id="hDate">Sun, Nov 15</b></div>
       <div class="v7sep"></div>
@@ -1822,7 +1857,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:67,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:68,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -3988,7 +4023,7 @@ function challengeFormHTML(){let h='';
   const act=CG.filter(g=>!cgStats(g).ended);
   h+=`<div class="stitle">${ic('plus')}Add Habits</div>`;
   if(!act.length)h+=`<div class="empty">No active challenge yet. Create one above.</div>`;
-  act.forEach(g=>{const its=g.items||[];h+=`<div class="add-form"><div class="add-title"><span>${esc(g.name)}</span><span style="font-size:13px;color:#9A9AA0">${its.length} habit${its.length!==1?'s':''}</span></div>${its.length?`<div style="font-size:13.5px;color:#9A9AA0;line-height:1.6;margin-bottom:8px">${its.map(i=>esc(i.text)).join(' · ')}</div>`:''}<div class="cadd" style="margin-top:0"><input class="input input-sm" id="gi_${g.id}" placeholder="Add a habit..."/><button class="btn btn-icon" style="width:36px;height:36px;font-size:17px;flex:none" onclick="addGroupItem('${g.id}')">+</button></div></div>`;});
+  act.forEach(g=>{const its=g.items||[];h+=`<div class="add-form"><div class="add-title"><span>${esc(g.name)}</span><span style="font-size:13px;font-weight:600;color:#B4B4BA">${its.length} habit${its.length!==1?'s':''}</span></div>${its.length?`<div style="font-size:13.5px;font-weight:600;color:#B4B4BA;line-height:1.6;margin-bottom:8px">${its.map(i=>esc(i.text)).join(' · ')}</div>`:''}<div class="cadd" style="margin-top:0"><input class="input input-sm" id="gi_${g.id}" placeholder="Add a habit..."/><button class="btn btn-icon" style="width:36px;height:36px;font-size:17px;flex:none" onclick="addGroupItem('${g.id}')">+</button></div></div>`;});
   return h;}
 
 function setRow(mode,icon,title,sub,danger){return `<button class="set-row${danger?' danger':''}" onclick="openSettingsFolder('${mode}')"><span class="set-row-ic">${ic(icon)}</span><span class="set-row-main"><span class="set-row-title">${title}</span><span class="set-row-sub">${sub}</span></span><span class="set-row-chev">${ic('chevR')}</span></button>`;}
@@ -4137,7 +4172,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:67,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:68,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -4507,7 +4542,7 @@ rHistory=function(){
     h+=`<div class="v7empty" style="margin-top:10px">No tasks were planned for this day.<br>Go to <b>Plan</b> to add tasks to any date.</div>`;
   }else{
     h+=`<div class="v7cd" style="margin-top:10px">
-      <div style="display:flex;align-items:baseline;justify-content:space-between"><div class="v7big">${pct}%</div><div style="font-size:13px;font-weight:600;color:#9A9AA0">${done} of ${total} tasks</div></div>
+      <div style="display:flex;align-items:baseline;justify-content:space-between"><div class="v7big">${pct}%</div><div style="font-size:14px;font-weight:700;color:#B4B4BA">${done} of ${total} tasks</div></div>
       <div class="v7segs">${tl.map(t=>`<i class="${t.done?'d':'m'}"></i>`).join('')}</div>
       <div class="v7tiles"><div class="v7tl"><div class="k">Finished</div><div class="v">${done}</div></div><div class="v7tl ${missed.length?'red':''}"><div class="k">Missed</div><div class="v">${missed.length}</div></div><div class="v7tl"><div class="k">Routines</div><div class="v">${hrtDone}<small>/${hrt.length}</small></div></div></div>
     </div>`;
@@ -4579,7 +4614,7 @@ rContent=function(){
     h+=`<div class="v7card ${isToday?'today':''}"><div class="v7card-row" ${isToday?'':`onclick="v7cTog(${d})" style="cursor:pointer"`}><div class="v7card-main">${isToday?`<span class="v7tag solid">${tag}</span>`:v7tag(tag,'#3b9eff')}<div class="v7title">${esc(CDAY_LBL[d]||'')}</div><div class="v7chips">${isToday&&cStarted&&act.length?v7chip('tasks',`${dn} of ${act.length} done`):v7chip('tasks',`${tasks.length} task${tasks.length!==1?'s':''}`)}</div></div>${isToday&&cStarted&&act.length?v7ring(act.length?Math.round(dn/act.length*100):0,54,6,(act.length?Math.round(dn/act.length*100):0)+'%'):(isToday?'':`<div class="v7tick" style="color:#6B6B72">${ic(open?'chevU':'chevD')}</div>`)}</div>`;
     if(open){
       h+=`<div style="border-top:1px solid #1C1C1F;margin-top:8px">`;
-      if(!tasks.length)h+=`<div class="v7row"><div class="rt" style="color:#9A9AA0;font-weight:500">No tasks.</div></div>`;
+      if(!tasks.length)h+=`<div class="v7row"><div class="rt" style="color:#B4B4BA;font-weight:600">No tasks.</div></div>`;
       tasks.forEach(t=>{
         const done=isToday&&cStarted&&!t.paused&&!!CC[today]?.[t.id];
         const lead=isToday&&cStarted&&!t.paused?`<button class="v7tick sm ${done?'on':''}" onclick="togContent('${t.id}')" aria-label="Tick">${ic('check')}</button>`:`<span class="v7bul"></span>`;
@@ -4645,7 +4680,7 @@ rSettings=function(){
     +tl('challenges','trophy','am','Challenges',act.length?`${act.length} active`:'New challenge')
     +`</div>`;
   h+=`<div class="v7cd v7wide" role="button" tabindex="0" onclick="openSettingsFolder('content')"><div class="v7ib big am">${ic('play')}</div><div style="flex:1;min-width:0"><div class="v7tt" style="margin:0">Content</div><div class="v7ts">Add, edit, pause or resume</div></div>${ic('chevR')}</div>`;
-  h+=`<div class="v7cd"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">Backup</div><span style="font-size:12px;color:#9A9AA0;text-align:right">${v7lastBk()}</span></div>
+  h+=`<div class="v7cd"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:800">Backup</div><span style="font-size:13px;font-weight:600;color:#B4B4BA;text-align:right">${v7lastBk()}</span></div>
     <div class="v7bkbtns"><button class="v7btn" onclick="backup()">${ic('download')}Download</button><div class="v7btn o"><input type="file" accept=".json" onchange="restore(event)" aria-label="Restore from backup"/>${ic('upload')}Restore</div></div></div>`;
   h+=`<div class="v7danger" role="button" tabindex="0" onclick="openSettingsFolder('danger')"><div class="v7ib rd" style="border-radius:50%">${ic('trash')}</div><div class="t">Clear data</div>${ic('chevR')}</div>`;
   h+=`</div>`;m.innerHTML=h;
