@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v69</title>
+<title>Philip Life Tracker v70</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1601,7 +1601,8 @@ body[data-pg="settings"] #appHeader{display:none!important}
 .v7fold .cnt{font-weight:800;font-size:14px;color:#9A9AA0}
 .v7fold .cnt.b{color:#3b9eff}
 .v7fold>.lic{color:#9A9AA0;width:18px;height:18px}
-.v7foldbody{padding:0 0 8px}
+.v7foldbody{padding:0 0 4px}
+.v7cd.v7fold{margin-bottom:8px}
 /* chips row (categories) */
 .v7swipe{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .v7swipe::-webkit-scrollbar{display:none}
@@ -1750,7 +1751,7 @@ body{font-weight:500!important}
 
 <div class="header" id="appHeader">
   <div class="v7hdr">
-    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v69</span></div>
+    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v70</span></div>
     <div class="v7pill">
       <div class="v7pi"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true" style="color:#3b9eff"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><b id="hDate">Sun, Nov 15</b></div>
       <div class="v7sep"></div>
@@ -1869,7 +1870,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:69,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:70,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -4184,7 +4185,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:69,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:70,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
@@ -4307,6 +4308,10 @@ tcHTML=function(t,date,carry,pfx,opt){
     </div>
   </div>`;
 };
+function v7icard(o){
+  const tick=o.tick?`<button class="v7tick ${o.tick.on?'on':''}" onclick="${o.tick.act}" aria-label="Tick">${ic('check')}</button>`:'';
+  return `<div class="v7card ${o.done?'done':''}" ${o.paused?'style="opacity:.6"':''}><div class="v7card-row"><div class="v7card-main">${o.tag?v7tag(o.tag,o.col):''}${o.paused?' <span class="v7pz">PAUSED</span>':''}<div class="v7title">${esc(o.title)}</div>${o.chips&&o.chips.length?`<div class="v7chips">${o.chips.join('')}</div>`:''}</div>${o.extra||''}${tick}${o.more||''}</div>${o.after||''}</div>`;
+}
 function v7catChips(list){
   if(!list.length)return '';
   const g={};list.forEach(t=>{(g[t.catId]=g[t.catId]||[]).push(t);});
@@ -4405,9 +4410,8 @@ rToday=function(){
     const cOld=cCar.reduce((mx,c)=>Math.max(mx,c.days),0);
     h+=`<div class="v7warn" onclick="togRolledContent()"><div class="v7ib am">${ic('play')}</div><div style="flex:1;min-width:0"><div class="t">Content not done · ${cCar.length}</div><div class="s">Oldest ${cOld} day${cOld!==1?'s':''} ago · tap to ${showRolledContent?'hide':'show'}</div></div>${ic(showRolledContent?'chevU':'chevD')}</div>`;
     if(showRolledContent){
-      h+=`<div class="v7rows">`;
-      cCar.forEach(c=>{const col=carryCol(c.days);h+=`<div class="v7row"><button class="v7tick sm" onclick="togContentCarried('${c.date}','${c.it.id}')" aria-label="Tick">${ic('check')}</button><div class="rt">${esc(c.it.text)}<small style="color:${col.text}">${c.days} day${c.days!==1?'s':''} ago</small></div><button class="v7mini" title="Add to today's tasks" aria-label="Add to today's tasks" onclick="event.stopPropagation();moveContentToToday('${c.date}','${c.it.id}')">${ic('plus')}</button></div>`;});
-      h+=`</div><button class="v7btn" onclick="copyRolledContent()">${ic('alarm')}Copy Pending Content</button><button class="v7btn o" onclick="clearPendingContent()">${ic('eraser')}Clear This List</button>`;
+      cCar.forEach(c=>{const col=carryCol(c.days);h+=v7icard({tag:'Content',col:'#f5a623',title:c.it.text,chips:[v7chip('rotate',`${c.days} day${c.days!==1?'s':''} ago · ${fshort(c.date)}`,`color:${col.text}`)],extra:`<button class="v7mini" title="Add to today's tasks" aria-label="Add to today's tasks" onclick="moveContentToToday('${c.date}','${c.it.id}')">${ic('plus')}</button>`,tick:{on:false,act:`togContentCarried('${c.date}','${c.it.id}')`}});});
+      h+=`<button class="v7btn" onclick="copyRolledContent()">${ic('alarm')}Copy Pending Content</button><button class="v7btn o" onclick="clearPendingContent()">${ic('eraser')}Clear This List</button>`;
     }
   }
   if(cr.length){
@@ -4488,16 +4492,14 @@ rPlan=function(){
   else{
     const tord={daily:0,weekly:1,monthly:2};
     const list=R.slice().sort((a,b)=>(tord[rEditType(a)]-tord[rEditType(b)])||rSort(a,b));
-    h+=`<div class="v7rows">`;
     list.forEach(r=>{
-      const cat=gc(r.catId),type=rEditType(r);
-      const right=type==='monthly'
-        ?v7tag(rScheduleBase(r),'#f5a623')
-        :`<div class="v7wdg">${V7_ORDER.map(i=>`<i class="${(r.days||[]).includes(i)?'on':''}">${V7_WL[i]}</i>`).join('')}</div>`;
-      h+=`<div class="v7rrow"><div class="v7rtop"><div class="nm">${esc(r.text)}</div><button class="v7more" onclick="togRoutineEdit('${r.id}')" aria-label="Edit or delete">${ic('dots')}</button></div><div class="v7rbot">${right}<span class="v7chip">${ic('clock')}${r.time?t12(r.time):'No time'}</span></div><div class="v7rmeta">${ic(r.alarm?'alarm':'bell')}<span>${r.alarm?'Alarm':'Reminder'}</span><span class="v7dot" style="background:${cat.color}"></span><span>${esc(v7catName(cat))}</span>${r.from&&r.from>today?`<span>· from ${fshort(r.from)}</span>`:''}${r.until?`<span>· until ${fshort(r.until)}</span>`:''}</div></div>`;
-      h+=v7routineEditHTML(r);
+      const cat=gc(r.catId);
+      const chips=[v7chip('clock',r.time?t12(r.time):'No time'),v7chip(r.alarm?'alarm':'bell',r.alarm?'Alarm':'Reminder'),`<span class="v7chip"><span class="v7dot" style="background:${cat.color}"></span>${esc(v7catName(cat))}</span>`];
+      if(r.from&&r.from>today)chips.push(v7chip('calendar','from '+fshort(r.from)));
+      if(r.until)chips.push(v7chip('flag','until '+fshort(r.until)));
+      h+=v7icard({tag:rScheduleBase(r),col:'#3b9eff',title:r.text,chips,more:`<button class="v7more" onclick="togRoutineEdit('${r.id}')" aria-label="Edit or delete">${ic('dots')}</button>`,after:v7routineEditHTML(r)});
     });
-    h+=`</div><button class="v7btn" onclick="copyRoutinesOnce()">${ic('alarm')}Copy Routines (set once)</button>`;
+    h+=`<button class="v7btn" onclick="copyRoutinesOnce()">${ic('alarm')}Copy Routines (set once)</button>`;
   }
   h+=`</div>`;m.innerHTML=h;
   const st=document.getElementById('v7planStrip'),on=st&&st.querySelector('.v7dc.on');
@@ -4583,20 +4585,18 @@ rHistory=function(){
   const actG=CG.filter(g=>hDate>=g.start&&hDate<=g.end);
   let cgDn=0,cgTot=0;actG.forEach(g=>{const dm=g.log&&g.log[cgKey(g,hDate)]?g.log[cgKey(g,hDate)]:{};(g.items||[]).forEach(it=>{cgTot++;if(dm[it.id])cgDn++;});});
   const catCount=new Set(tl.map(t=>t.catId)).size;
-  const row=(k,icon,cls,label,cnt,full)=>`<div class="v7row v7fold" onclick="v7hTog('${k}')"><div class="v7ib ${cls}">${ic(icon)}</div><div class="rt">${label}</div><span class="cnt ${full?'b':''}">${cnt}</span>${ic(v7hOpen[k]?'chevU':'chevD')}</div>`;
+  const row=(k,icon,cls,label,cnt,full)=>`<div class="v7cd v7row v7fold" style="padding:10px 12px" onclick="v7hTog('${k}')"><div class="v7ib ${cls}">${ic(icon)}</div><div class="rt">${label}</div><span class="cnt ${full?'b':''}">${cnt}</span>${ic(v7hOpen[k]?'chevU':'chevD')}</div>`;
   h+=v7sl('This day');
-  h+=`<div class="v7rows">`;
   h+=row('fin','checkC','bl','Finished tasks',fin.length,fin.length&&fin.length===tl.length);
   if(v7hOpen.fin)h+=`<div class="v7foldbody">${fin.length?fin.map(t=>tcHTML(t,hDate,null,'f')).join(''):'<div class="v7empty">No finished tasks.</div>'}</div>`;
   h+=row('rt','repeat','bl','Routines',`${hrtDone}/${hrt.length}`,hrt.length&&hrtDone===hrt.length);
-  if(v7hOpen.rt)h+=`<div class="v7foldbody">${hrt.length?hrt.map(r=>{const dn=!!RL[hDate]?.[r.id];return `<div class="v7row ${dn?'done':''}"><button class="v7tick sm ${dn?'on':''}" onclick="togRoutineDate('${hDate}','${r.id}')" aria-label="Tick">${ic('check')}</button><div class="rt">${esc(r.text)}${r.time?`<small>${t12(r.time)}</small>`:''}</div></div>`;}).join(''):'<div class="v7empty">No routines on this day.</div>'}</div>`;
+  if(v7hOpen.rt)h+=`<div class="v7foldbody">${hrt.length?hrt.map(r=>{const dn=!!RL[hDate]?.[r.id];return v7icard({tag:rScheduleBase(r),col:'#3b9eff',title:r.text,done:dn,chips:[v7chip('clock',r.time?t12(r.time):'No time')],tick:{on:dn,act:`togRoutineDate('${hDate}','${r.id}')`}});}).join(''):'<div class="v7empty">No routines on this day.</div>'}</div>`;
   h+=row('ct','play','am','Content',`${hctDone}/${hctAct.length}`,hctAct.length&&hctDone===hctAct.length);
-  if(v7hOpen.ct)h+=`<div class="v7foldbody">${hct.length?hct.map(t=>{const dn=!t.paused&&!!CC[hDate]?.[t.id];return `<div class="v7row ${dn?'done':''} ${t.paused?'paused':''}">${t.paused?'<span class="v7pz">PAUSED</span>':`<button class="v7tick sm ${dn?'on':''}" onclick="togContentDate('${hDate}','${t.id}')" aria-label="Tick">${ic('check')}</button>`}<div class="rt">${esc(t.text)}${t.time?`<small>${t12(t.time)}</small>`:''}</div></div>`;}).join(''):'<div class="v7empty">No content for this day.</div>'}</div>`;
+  if(v7hOpen.ct)h+=`<div class="v7foldbody">${hct.length?hct.map(t=>{const dn=!t.paused&&!!CC[hDate]?.[t.id];return v7icard({tag:'Content',col:'#f5a623',title:t.text,done:dn,paused:t.paused,chips:[v7chip('clock',t.time?t12(t.time):'Any time')],tick:t.paused?null:{on:dn,act:`togContentDate('${hDate}','${t.id}')`}});}).join(''):'<div class="v7empty">No content for this day.</div>'}</div>`;
   h+=row('cg','trophy','pu','Challenges',`${cgDn}/${cgTot}`,cgTot&&cgDn===cgTot);
-  if(v7hOpen.cg)h+=`<div class="v7foldbody">${actG.length?actG.map(g=>{const dm=g.log&&g.log[cgKey(g,hDate)]?g.log[cgKey(g,hDate)]:{};return `<div style="font-size:12px;font-weight:700;color:#3b9eff;letter-spacing:1px;margin:6px 0 2px">${esc(g.name).toUpperCase()}</div>`+(g.items||[]).map(it=>{const d2=!!dm[it.id];return `<div class="v7row ${d2?'done':''}"><button class="v7tick sm ${d2?'on':''}" onclick="togGroupItemDate('${g.id}','${it.id}','${hDate}')" aria-label="Tick">${ic('check')}</button><div class="rt">${esc(it.text)}</div></div>`;}).join('');}).join(''):'<div class="v7empty">No challenge groups active on this day.</div>'}</div>`;
+  if(v7hOpen.cg)h+=`<div class="v7foldbody">${actG.length?actG.map(g=>{const dm=g.log&&g.log[cgKey(g,hDate)]?g.log[cgKey(g,hDate)]:{};return (g.items||[]).map(it=>{const d2=!!dm[it.id];return v7icard({tag:g.name,col:'#B39DFF',title:it.text,done:d2,tick:{on:d2,act:`togGroupItemDate('${g.id}','${it.id}','${hDate}')`}});}).join('');}).join(''):'<div class="v7empty">No challenge groups active on this day.</div>'}</div>`;
   h+=row('cat','grid','pu','By category',catCount,false);
   if(v7hOpen.cat)h+=`<div class="v7foldbody">${tl.length?v7catChips(tl):'<div class="v7empty">No task categories.</div>'}</div>`;
-  h+=`</div>`;
 
   h+=`</div>`;m.innerHTML=h;
   const st=document.getElementById('v7histStrip'),on=st&&st.querySelector('.v7dc.on:not(.cal)');
@@ -4659,14 +4659,11 @@ renderContentChannel=function(id){
   h+=v7sl('All content',shown);
   if(!shown)h+=`<div class="v7empty">No content items found for this channel.</div>`;
   else{
-    h+=`<div class="v7rows">`;
     V7_ORDER.forEach(d=>{(per[d]||[]).forEach(t=>{
       const isToday=d===twd&&contentOn(today);
       const done=isToday&&!t.paused&&!!CC[today]?.[t.id];
-      const lead=isToday&&!t.paused?`<button class="v7tick sm ${done?'on':''}" onclick="togContent('${t.id}')" aria-label="Tick">${ic('check')}</button>`:'';
-      h+=`<div class="v7row ${done?'done':''} ${t.paused?'paused':''}">${lead}${v7tag(DAYS[d],'#3b9eff')}<div class="rt">${esc(t.text)}</div>${t.paused?'<span class="v7pz">PAUSED</span>':(t.time?v7chip('',t12(t.time)):'')}</div>`;
+      h+=v7icard({tag:DAYS[d]+(isToday?' · Today':''),col:'#3b9eff',title:t.text,done,paused:t.paused,chips:[v7chip('clock',t.time?t12(t.time):'Any time')],tick:isToday&&!t.paused?{on:done,act:`togContent('${t.id}')`}:null});
     });});
-    h+=`</div>`;
   }
   h+=`</div>`;m.innerHTML=h;
 };
