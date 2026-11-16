@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Philip Life Tracker v70</title>
+<title>Philip Life Tracker v71</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#000000"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -1705,6 +1705,9 @@ body{font-weight:500!important}
 #appHeader .v7pi .mu{font-size:12.5px;font-weight:600;color:#B4B4BA}
 .tabs .tab{font-size:12px!important;font-weight:700!important}
 .v7sl{font-size:12px;font-weight:800;color:#A8A8AE}
+/* v71: Today section labels in blue so they stand out */
+body[data-pg="today"] .v7sl{color:#3b9eff}
+body[data-pg="today"] .v7sl::after{background:#1A3A5E}
 .v7sl b{font-size:13px;font-weight:800}
 .v7tag{font-size:12px;font-weight:800;padding:3px 10px}
 .v7chip{font-size:13px;font-weight:600;color:#E4E4E7}
@@ -1751,7 +1754,7 @@ body{font-weight:500!important}
 
 <div class="header" id="appHeader">
   <div class="v7hdr">
-    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v70</span></div>
+    <div class="v7hdr-title">Philip's Life Tracker <span class="header-ver">v71</span></div>
     <div class="v7pill">
       <div class="v7pi"><svg class="lic" viewBox="0 0 24 24" aria-hidden="true" style="color:#3b9eff"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><b id="hDate">Sun, Nov 15</b></div>
       <div class="v7sep"></div>
@@ -1870,7 +1873,7 @@ function addStarterRoutines(){
   R=R.concat(add);sR();render();toast(add.length+' routines added ✅');
 }
 function backupChallenges(){
-  const data={kind:'plt_challenges',v:1,appVersion:70,at:new Date().toISOString(),CG};
+  const data={kind:'plt_challenges',v:1,appVersion:71,at:new Date().toISOString(),CG};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_challenges_${tod()}.json`;a.click();toast('Challenges backup downloaded! 📥');
@@ -4185,7 +4188,7 @@ function registerAppServiceWorker(){
 }
 
 function backup(){
-  const data={v:11,appVersion:70,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
+  const data={v:11,appVersion:71,at:new Date().toISOString(),T,H,HL,C,PT,CHL,CPLAN,CC,CPLVER,CG,R,RL,BK,CO,CMIG:CMIG35,CST,PI,CLOG,CPS};
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
   a.download=`philip_tracker_${tod()}.json`;a.click();toast('Backup downloaded! 📥');
